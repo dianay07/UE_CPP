@@ -16,7 +16,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
+protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCMontageComponent* Montages;
 

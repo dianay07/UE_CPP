@@ -23,5 +23,6 @@ void ACCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ACCharacterBase::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
+
 }
 
