@@ -18,6 +18,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		float Pitch;
 
+	UPROPERTY(BlueprintReadOnly)
+		bool IsJump;
+
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;

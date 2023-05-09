@@ -23,4 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+protected:
+	void OnJump();
 };

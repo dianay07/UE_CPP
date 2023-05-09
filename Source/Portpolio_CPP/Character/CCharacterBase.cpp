@@ -1,12 +1,17 @@
 #include "Character/CCharacterBase.h"
 #include "Component/CMontageComponent.h"
 #include "Component/CMovementComponent.h"
+#include "Component/CWeaponComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ACCharacterBase::ACCharacterBase()
 {
-	Montages = Cast<UCMontageComponent>(GetComponentByClass(UCMontageComponent::StaticClass()));
-	Movement = Cast<UCMovementComponent>(GetComponentByClass(UCMovementComponent::StaticClass()));
-	State = Cast<UCStateComponent>(GetComponentByClass(UCStateComponent::StaticClass()));
+	Montages = CreateDefaultSubobject<UCMontageComponent>(TEXT("Montage Component"));
+	Movement = CreateDefaultSubobject<UCMovementComponent>(TEXT("Movement Component"));
+	State = CreateDefaultSubobject<UCStateComponent>(TEXT("State Component"));
+	Weapon = CreateDefaultSubobject<UCWeaponComponent>(TEXT("Weapon Component"));
+
+	Movement->DisableControlRotation();
 }
 
 void ACCharacterBase::BeginPlay()
@@ -25,4 +30,3 @@ void ACCharacterBase::OnStateTypeChanged(EStateType InPrevType, EStateType InNew
 {
 
 }
-

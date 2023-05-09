@@ -1,6 +1,7 @@
 #include "Character/CAnimInstance.h"
 
 #include "CCharacterBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void UCAnimInstance::NativeBeginPlay()
@@ -10,8 +11,6 @@ void UCAnimInstance::NativeBeginPlay()
 	Owner = Cast<ACCharacterBase>(TryGetPawnOwner());
 	if (Owner == nullptr)
 		return;
-
-
 }
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -30,5 +29,5 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	Pitch = UKismetMathLibrary::FInterpTo(Pitch, Owner->GetBaseAimRotation().Pitch, DeltaSeconds, 25);
 
-
+	IsJump = Owner->GetCharacterMovement()->IsFalling();
 }

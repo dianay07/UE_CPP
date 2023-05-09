@@ -5,7 +5,7 @@
 
 UCMovementComponent::UCMovementComponent()
 {
-
+	OwnerCharacter = Cast<ACCharacterBase>(GetOwner());
 }
 
 
@@ -39,7 +39,7 @@ void UCMovementComponent::OnWalk()
 void UCMovementComponent::EnableControlRotation()
 {
 	OwnerCharacter->bUseControllerRotationYaw = true;
-	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void UCMovementComponent::DisableControlRotation()

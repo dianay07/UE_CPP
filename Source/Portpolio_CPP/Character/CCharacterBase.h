@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCStateComponent* State;
 
+	UPROPERTY(VisibleAnywhere)
+		class UCWeaponComponent* Weapon;
+
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
