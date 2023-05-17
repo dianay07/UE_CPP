@@ -24,6 +24,7 @@ private:
 		FString Name;
 		FVector Location;
 		FVector Forward;
+		float TargetArmLength;
 	};
 		
 	FCategoryData PlayerActorData;

@@ -36,18 +36,20 @@ void UCMovementComponent::OnWalk()
 	SetSpeed(ESpeedType::Walk);
 }
 
-void UCMovementComponent::EnableControlRotation()
+void UCMovementComponent::FixedCameraSetting()
 {
-	OwnerCharacter->bUseControllerRotationYaw = true;
-	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
-}
-
-void UCMovementComponent::DisableControlRotation()
-{
+	bFixedCamera = true;
 	OwnerCharacter->bUseControllerRotationYaw = false;
 	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
+void UCMovementComponent::FixedCharacterSetting()
+{
+	bFixedCamera = false;
+	OwnerCharacter->bUseControllerRotationYaw = true;
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+}
+ 
 void UCMovementComponent::OnMoveForward(float InAxis)
 {
 	if (bCanMove == false)
@@ -69,20 +71,3 @@ void UCMovementComponent::OnMoveRight(float InAxis)
 
 	OwnerCharacter->AddMovementInput(direction, InAxis);
 }
-
-void UCMovementComponent::OnHorizontalLook(float InAxis)
-{
-	if (bFixedCamera == true)
-		return;
-
-	OwnerCharacter->AddControllerYawInput(InAxis * HorizontalLook * GetWorld()->GetDeltaSeconds());
-}
-
-void UCMovementComponent::OnVerticalLook(float InAxis)
-{
-	if (bFixedCamera == true)
-		return;
-
-	OwnerCharacter->AddControllerPitchInput(InAxis * VerticalLook * GetWorld()->GetDeltaSeconds());
-}
-

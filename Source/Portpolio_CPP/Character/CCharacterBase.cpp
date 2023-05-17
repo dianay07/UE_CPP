@@ -11,7 +11,7 @@ ACCharacterBase::ACCharacterBase()
 	State = CreateDefaultSubobject<UCStateComponent>(TEXT("State Component"));
 	Weapon = CreateDefaultSubobject<UCWeaponComponent>(TEXT("Weapon Component"));
 
-	Movement->DisableControlRotation();
+	Movement->FixedCharacterSetting();
 }
 
 void ACCharacterBase::BeginPlay()

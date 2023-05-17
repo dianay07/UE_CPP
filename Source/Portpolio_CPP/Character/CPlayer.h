@@ -19,8 +19,16 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
 
+public:
+	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
+
+public:
+	UPROPERTY(VisibleAnywhere)
+		class UCameraControlComponent* CameraController;
+
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

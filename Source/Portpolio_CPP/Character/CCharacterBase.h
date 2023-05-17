@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCWeaponComponent* Weapon;
 
+public:
+	FORCEINLINE UCMovementComponent* GetMovement() { return Movement; }
+
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
