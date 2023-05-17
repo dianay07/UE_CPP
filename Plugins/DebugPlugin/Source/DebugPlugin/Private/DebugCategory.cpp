@@ -1,12 +1,15 @@
 #include "DebugCategory.h"
 #include "CanvasItem.h"
 #include "DrawDebugHelpers.h"
+#include "Character/CPlayer.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Particles/ParticleEventManager.h"
 
 FDebugCategory::FDebugCategory()
 {
+	bShowOnlyWithDebugActor = false;
 }
 
 FDebugCategory::~FDebugCategory()
@@ -22,7 +25,8 @@ void FDebugCategory::CollectData(APlayerController* OwnerPC, AActor* DebugActor)
 {
 	FGameplayDebuggerCategory::CollectData(OwnerPC, DebugActor);
 
-	ACharacter* player = OwnerPC->GetPawn<ACharacter>();
+	//ACharacter* player = OwnerPC->GetPawn<ACharacter>();
+	ACPlayer* player = OwnerPC->GetPawn<ACPlayer>();
 
 	// Player
 	{
@@ -30,6 +34,7 @@ void FDebugCategory::CollectData(APlayerController* OwnerPC, AActor* DebugActor)
 		PlayerActorData.Name = player->GetName();
 		PlayerActorData.Location = player->GetActorLocation();
 		PlayerActorData.Forward = player->GetActorForwardVector();
+		PlayerActorData.TargetArmLength = player->GetSpringArm()->TargetArmLength;
 	}
 
 	// Forward Actor
@@ -67,18 +72,18 @@ void FDebugCategory::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanva
 {
 	FGameplayDebuggerCategory::DrawData(OwnerPC, CanvasContext);
 
-	// 디버그 거리 표시
 	FVector start = PlayerActorData.Location;
 	FVector end = start + PlayerActorData.Forward * TraceDistance;
-	DrawDebugLine(OwnerPC->GetWorld(), start, end, FColor::Red);
-
-	// Debug 창 그리기
+	
 	FCanvasTileItem item(FVector2D(10, 10), FVector2D(300, 215), FLinearColor(0, 0, 0, 0.25f));
+	item.BlendMode = ESimpleElementBlendMode::SE_BLEND_AlphaBlend;
+	CanvasContext.DrawItem(item, CanvasContext.CursorX, CanvasContext.CursorY);
 
 	CanvasContext.Printf(FColor::Green, L"  -- Player Pawn --");
 	CanvasContext.Printf(FColor::White, L"  Name : %s", *PlayerActorData.Name);
 	CanvasContext.Printf(FColor::White, L"  Location : %s", *PlayerActorData.Location.ToString());
 	CanvasContext.Printf(FColor::White, L"  Forward : %s", *PlayerActorData.Forward.ToString());
+	CanvasContext.Printf(FColor::White, L"  TargetArmLength : %f", PlayerActorData.TargetArmLength);
 	CanvasContext.Printf(FColor::White, L"");
 
 	if (ForwardActorData.bDraw)

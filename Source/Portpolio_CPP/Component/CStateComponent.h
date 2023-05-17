@@ -32,7 +32,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void SetIdldeMode();
+	void SetIdleMode();
 	void SetEvadeMode();
 	void SetEquipMode();
 	void SetHittedMode();

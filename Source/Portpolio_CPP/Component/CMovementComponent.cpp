@@ -2,6 +2,7 @@
 
 #include "Character/CCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 UCMovementComponent::UCMovementComponent()
 {
@@ -36,16 +37,26 @@ void UCMovementComponent::OnWalk()
 	SetSpeed(ESpeedType::Walk);
 }
 
-void UCMovementComponent::EnableControlRotation()
+void UCMovementComponent::FixedCameraSetting()
 {
-	OwnerCharacter->bUseControllerRotationYaw = true;
+	bFixedCamera = true;
+	OwnerCharacter->bUseControllerRotationYaw = false;
 	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
-void UCMovementComponent::DisableControlRotation()
+void UCMovementComponent::FixedCharacterSetting()
 {
-	OwnerCharacter->bUseControllerRotationYaw = false;
-	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+	bFixedCamera = false;
+	OwnerCharacter->bUseControllerRotationYaw = true;
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+}
+
+void UCMovementComponent::RotateToTarget(ACCharacterBase* InTarget)
+{
+	FRotator LookAtRotate = 
+		UKismetMathLibrary::FindLookAtRotation(GetOwner()->GetActorLocation(), InTarget->GetActorLocation());
+
+	GetOwner()->SetActorRotation(LookAtRotate);
 }
 
 void UCMovementComponent::OnMoveForward(float InAxis)
@@ -69,20 +80,3 @@ void UCMovementComponent::OnMoveRight(float InAxis)
 
 	OwnerCharacter->AddMovementInput(direction, InAxis);
 }
-
-void UCMovementComponent::OnHorizontalLook(float InAxis)
-{
-	if (bFixedCamera == true)
-		return;
-
-	OwnerCharacter->AddControllerYawInput(InAxis * HorizontalLook * GetWorld()->GetDeltaSeconds());
-}
-
-void UCMovementComponent::OnVerticalLook(float InAxis)
-{
-	if (bFixedCamera == true)
-		return;
-
-	OwnerCharacter->AddControllerPitchInput(InAxis * VerticalLook * GetWorld()->GetDeltaSeconds());
-}
-

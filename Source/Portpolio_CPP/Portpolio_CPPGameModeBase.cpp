@@ -4,5 +4,6 @@
 
 APortpolio_CPPGameModeBase::APortpolio_CPPGameModeBase()
 {
-	DefaultPawnClass = ACPlayer::StaticClass();
+	DefaultPawnClass = ConstructorHelpers::FClassFinder<ACPlayer>(TEXT("Blueprint'/Game/01_Player/BP_CPlayer.BP_CPlayer_C'")).Class;
+		//ACPlayer::StaticClass();
 }

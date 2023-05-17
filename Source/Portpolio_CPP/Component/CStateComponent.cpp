@@ -12,7 +12,7 @@ void UCStateComponent::BeginPlay()
 
 }
 
-void UCStateComponent::SetIdldeMode()
+void UCStateComponent::SetIdleMode()
 {
 	ChangeType(EStateType::Idle);
 }

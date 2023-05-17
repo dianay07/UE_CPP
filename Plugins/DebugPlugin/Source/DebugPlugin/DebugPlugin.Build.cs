@@ -19,5 +19,9 @@ public class DebugPlugin : ModuleRules
         PrivateDependencyModuleNames.Add("Slate");
         PrivateDependencyModuleNames.Add("SlateCore");
         PrivateDependencyModuleNames.Add("GameplayDebugger");
+        PrivateDependencyModuleNames.Add("DesktopPlatform");
+        PrivateDependencyModuleNames.Add("MainFrame");
+        PrivateDependencyModuleNames.Add("EditorStyle");
+        PrivateDependencyModuleNames.Add("UnrealEd");
     }
 }

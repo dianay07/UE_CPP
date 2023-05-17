@@ -27,7 +27,15 @@ protected:
 		class UCStateComponent* State;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
+		class UCStatusComponent* Status;
+
+	UPROPERTY(VisibleAnywhere)
+		class UCTargetComponent* Target;
+
+public:
+	FORCEINLINE UCMovementComponent* GetMovement() { return Movement; }
+	FORCEINLINE UCStatusComponent* GetStatus() { return Status; }
+	FORCEINLINE UCTargetComponent* GetTarget() { return Target; }
 
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

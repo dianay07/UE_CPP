@@ -21,12 +21,15 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		bool IsJump;
 
+	UPROPERTY(BlueprintReadOnly)
+		bool IsFixedCamera;
+
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
-	class ACCharacterBase* Owner;
+	class ACPlayer* Owner;
 
 private:
 	FRotator PrevRotation;

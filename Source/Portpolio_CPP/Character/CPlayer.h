@@ -19,11 +19,27 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
 
+	UPROPERTY(VisibleAnywhere)
+		class UCEquipComponent* Equip;
+
+	UPROPERTY(VisibleAnywhere)
+		class UCJobComponent* Job;
+
+	UPROPERTY(VisibleAnywhere)
+		class UCameraControlComponent* CameraController;
+public:
+	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
+
+
+
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 protected:
 	void OnJump();
+
+	void ToggleTarget();
 };

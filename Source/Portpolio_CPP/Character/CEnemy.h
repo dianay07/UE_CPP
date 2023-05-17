@@ -1,0 +1,21 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Character/CCharacterBase.h"
+#include "CEnemy.generated.h"
+
+UCLASS()
+class PORTPOLIO_CPP_API ACEnemy : public ACCharacterBase
+{
+	GENERATED_BODY()
+
+public:
+	ACEnemy();
+
+public:
+	UPROPERTY(VisibleAnywhere)
+		class UCEquipComponent* Equip;
+
+
+
+};

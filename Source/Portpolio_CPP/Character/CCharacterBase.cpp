@@ -1,7 +1,9 @@
 #include "Character/CCharacterBase.h"
 #include "Component/CMontageComponent.h"
 #include "Component/CMovementComponent.h"
-#include "Component/CWeaponComponent.h"
+#include "Component/CStatusComponent.h"
+#include "Component/CEquipComponent.h"
+#include "Component/CTargetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ACCharacterBase::ACCharacterBase()
@@ -9,9 +11,10 @@ ACCharacterBase::ACCharacterBase()
 	Montages = CreateDefaultSubobject<UCMontageComponent>(TEXT("Montage Component"));
 	Movement = CreateDefaultSubobject<UCMovementComponent>(TEXT("Movement Component"));
 	State = CreateDefaultSubobject<UCStateComponent>(TEXT("State Component"));
-	Weapon = CreateDefaultSubobject<UCWeaponComponent>(TEXT("Weapon Component"));
+	Status = CreateDefaultSubobject<UCStatusComponent>(TEXT("Status Compoenet"));
+	Target = CreateDefaultSubobject<UCTargetComponent>(TEXT("Target Compoenet"));
 
-	Movement->DisableControlRotation();
+	Movement->FixedCharacterSetting();
 }
 
 void ACCharacterBase::BeginPlay()

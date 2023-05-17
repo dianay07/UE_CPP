@@ -15,13 +15,6 @@ class PORTPOLIO_CPP_API UCMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
-		float HorizontalLook = 45;
-
-	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
-		float VerticalLook = 45;
-
 public:
 	FORCEINLINE bool CanMove() { return bCanMove; }
 	FORCEINLINE void Move() { bCanMove = true; }
@@ -31,9 +24,6 @@ public:
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)ESpeedType::Run]; }
 	FORCEINLINE float GetSprintSpeed() { return Speed[(int32)ESpeedType::Sprint]; }
 
-	FORCEINLINE bool GetFixedCamera() { return bFixedCamera; }
-	FORCEINLINE void EnableFixedCamera() { bFixedCamera = true; }
-	FORCEINLINE void DisableFixedCamera() { bFixedCamera = false; }
 
 public:	
 	UCMovementComponent();
@@ -52,18 +42,22 @@ private:
 	void SetSpeed(ESpeedType InType);
 
 public:
+	FORCEINLINE bool IsFixedCamera() { return bFixedCamera; }
+
+public:
 	void OnSprint();
 	void OnRun();
 	void OnWalk();
 
-	void EnableControlRotation();
-	void DisableControlRotation();
+	void FixedCameraSetting();
+	void FixedCharacterSetting();
+
+	// 타겟 바라보는 로테이트
+	void RotateToTarget(ACCharacterBase* InTarget);
 
 public:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);
-	void OnHorizontalLook(float InAxis);
-	void OnVerticalLook(float InAxis);
 
 private:
 	bool bCanMove = true;
