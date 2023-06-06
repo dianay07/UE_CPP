@@ -37,6 +37,9 @@ public:
 	FORCEINLINE UCStatusComponent* GetStatus() { return Status; }
 	FORCEINLINE UCTargetComponent* GetTarget() { return Target; }
 
+public:
+	FORCEINLINE UCMovementComponent* GetMovement() { return Movement; }
+
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
