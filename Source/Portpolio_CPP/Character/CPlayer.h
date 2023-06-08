@@ -27,10 +27,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		class UCameraControlComponent* CameraController;
+
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
-
-
 
 protected:
 	virtual void BeginPlay() override;

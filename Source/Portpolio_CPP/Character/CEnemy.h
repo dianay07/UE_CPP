@@ -9,13 +9,21 @@ class PORTPOLIO_CPP_API ACEnemy : public ACCharacterBase
 {
 	GENERATED_BODY()
 
+public:	
+	UPROPERTY(VisibleAnywhere, Category = "Widgets")
+		class UWidgetComponent* CursorWidget;
+
 public:
 	ACEnemy();
+
+	void BeginPlay() override;
+
+public:
+	void ActiveTargetCursor();
+	void DeactiveTargetCursor();
 
 public:
 	UPROPERTY(VisibleAnywhere)
 		class UCEquipComponent* Equip;
-
-
 
 };

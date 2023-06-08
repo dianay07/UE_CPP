@@ -14,7 +14,7 @@ public class Portpolio_CPP : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "UMG"});
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

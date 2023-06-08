@@ -1,5 +1,6 @@
 #include "Character/CPlayer.h"
 
+#include "CEnemy.h"
 #include "Camera/CameraAnim.h"
 #include "Camera/CameraComponent.h"
 #include "Component/CameraControlComponent.h"
@@ -7,8 +8,10 @@
 #include "Component/CEquipComponent.h"
 #include "Component/CJobComponent.h"
 #include "Component/CTargetComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UI/CUI_TargetingCursor.h"
 
 ACPlayer::ACPlayer()
 {
@@ -99,4 +102,13 @@ void ACPlayer::OnJump()
 void ACPlayer::ToggleTarget()
 {
 	Target->ToggleTarget();
+
+	if(IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
+	{
+		Target->GetTarget()->ActiveTargetCursor();
+	}
+	else
+	{
+		GLog->Log(FText::FromString("Target is Null"));
+	}
 }
