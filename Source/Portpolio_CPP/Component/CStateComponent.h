@@ -25,6 +25,8 @@ public:
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
 
+	EStateType GetType() { return Type; }
+
 public:	
 	UCStateComponent();
 
@@ -47,4 +49,5 @@ public:
 
 private:
 	EStateType Type;
+	
 };

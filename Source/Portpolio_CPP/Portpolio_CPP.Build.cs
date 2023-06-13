@@ -10,11 +10,9 @@ public class Portpolio_CPP : ModuleRules
 
         PublicIncludePaths.Add(ModuleDirectory);
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Niagara" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Niagara", "UMG" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
-
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "UMG"});
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore"});
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

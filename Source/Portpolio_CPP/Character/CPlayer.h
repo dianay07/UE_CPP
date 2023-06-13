@@ -29,6 +29,10 @@ public:
 		class UCameraControlComponent* CameraController;
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		TSubclassOf<class UCUI_TargetInfo> UI_TargetInfoClass;
+
+public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
 
 protected:
@@ -41,4 +45,7 @@ protected:
 	void OnJump();
 
 	void ToggleTarget();
+
+private:
+	UCUI_TargetInfo* UI_TargetInfo;
 };

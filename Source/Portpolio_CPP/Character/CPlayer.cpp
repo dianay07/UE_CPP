@@ -11,6 +11,8 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UI/CUI_TargetInfo.h"
+
 #include "UI/CUI_TargetingCursor.h"
 
 ACPlayer::ACPlayer()
@@ -55,11 +57,20 @@ ACPlayer::ACPlayer()
 		Job = CreateDefaultSubobject<UCJobComponent>(TEXT("Job Component"));
 		Equip = CreateDefaultSubobject<UCEquipComponent>(TEXT("Equip Component"));
 	}
+
+	// Enemy Targeting Ui
+	static ConstructorHelpers::FClassFinder<UCUI_TargetInfo> WB_InfoUI(TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetInfo.BP_CUI_TargetInfo_C'"));
+	if(WB_InfoUI.Succeeded())
+		UI_TargetInfoClass = WB_InfoUI.Class;
 }
 
 void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UI_TargetInfo = Cast<UCUI_TargetInfo>(CreateWidget(GetWorld(), UI_TargetInfoClass));
+	UI_TargetInfo->AddToViewport();
+	UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ACPlayer::Tick(float DeltaSeconds)
@@ -106,9 +117,22 @@ void ACPlayer::ToggleTarget()
 	if(IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
 	{
 		Target->GetTarget()->ActiveTargetCursor();
-	}
+
+		if(!UI_TargetInfo->IsVisible())
+		{
+			UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
+		}
+
+		UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+	}	
 	else
 	{
 		GLog->Log(FText::FromString("Target is Null"));
+
+		if (UI_TargetInfo->IsVisible())
+		{
+			UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
+			UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+		}
 	}
 }

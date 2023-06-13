@@ -81,9 +81,9 @@ void UCTargetComponent::ToggleTarget()
 	}
 	else if(!IsValid(Target))
 	{
-		if (Targets.Num() <= 0)
-			End_Target();
-		else
+		/*if (Targets.Num() <= 0)
+			End_Target();*/
+		//else
 			Begin_Target();
 	}
 		

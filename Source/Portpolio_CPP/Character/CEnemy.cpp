@@ -36,15 +36,15 @@ ACEnemy::ACEnemy()
 	if (UI_TargetingCursor.Succeeded())
 	{
 		CursorWidget->SetWidgetClass(UI_TargetingCursor.Class);
-		CursorWidget->SetDrawSize(FVector2D(200, 30));
+		CursorWidget->SetDrawSize(FVector2D(80, 160));
+		CursorWidget->SetRelativeLocation(FVector(0, 0, 250));
 	}
 	CursorWidget->SetVisibility(false);
 }
-
+ 
 void ACEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ACEnemy::ActiveTargetCursor()

@@ -25,6 +25,8 @@ void UCActiveSkill::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipme
 void UCActiveSkill::ActiveSkill(int InIndex)
 {
 	State->SetActionMode();
+
+	UE_LOG(LogTemp, Display, TEXT("Current Type : Action"));
 }
 
 void UCActiveSkill::Begin_ActiveSkill()
@@ -38,6 +40,7 @@ void UCActiveSkill::End_ActiveSkill()
 
 	State->SetIdleMode();
 
+	UE_LOG(LogTemp, Display, TEXT("Current Type : Idle"));
 }
 
 void UCActiveSkill::PlayEffect(UWorld* InWorld, const FVector& InLocation)

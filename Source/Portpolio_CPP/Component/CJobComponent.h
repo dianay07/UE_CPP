@@ -50,6 +50,7 @@ public:
 
 public:
 	class ACCharacterBase* OwnerCharacter;
+	class UCStateComponent* State;
 
 	EJob JobName;
 };
