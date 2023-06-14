@@ -2,19 +2,14 @@
 
 #include "Character/CCharacterBase.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Utility.h"
 #include "Character/CEnemy.h"
+#include "Components/WidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "UI/CUI_TargetingCursor.h"
 
 UCTargetComponent::UCTargetComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	/*static ConstructorHelpers::FClassFinder<UCUI_TargetingCursor> targetCursor(TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetingCursor.BP_CUI_TargetingCursor_C'"));
-	if (targetCursor.Succeeded())
-	{
-		TargetingCursorClass = targetCursor.Class;
-	}*/
 }
 
 
@@ -23,16 +18,6 @@ void UCTargetComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACCharacterBase>(GetOwner());
-
-	/*if(IsValid(TargetingCursorClass))
-	{
-		TargetingCursor = Cast<UCUI_TargetingCursor>(CreateWidget(GetWorld(), TargetingCursorClass));
-
-		if(IsValid(TargetingCursor))
-		{
-			TargetingCursor->AddToViewport();
-		}
-	}*/
 }
 
 // 거리 밖으로 나갈시 타겟팅 취소
@@ -44,6 +29,12 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	if(IsValid(Target))
 	{
 		UCStateComponent* State = Cast<UCStateComponent>(Target->GetComponentByClass(UCStateComponent::StaticClass()));
+
+		if(GetTarget()->CursorWidget->IsActive() == true)
+		{
+			TickTargeting();
+		}
+
 		if(IsValid(State))
 		{
 			if(State->IsDeadMode() == false)
@@ -55,6 +46,7 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			}
 		}
 	}
+
 }
 
 // 타겟 리턴
@@ -70,7 +62,7 @@ void UCTargetComponent::ToggleTarget()
 {
 	if (IsValid(Target))
 	{
-		Cast<ACEnemy>(Target)->DeactiveTargetCursor();
+		GetTarget()->CursorWidget->SetVisibility(false);
 
 		if (TargetIndex >= Targets.Num() - 1)
 			TargetIndex = 0;
@@ -81,10 +73,7 @@ void UCTargetComponent::ToggleTarget()
 	}
 	else if(!IsValid(Target))
 	{
-		/*if (Targets.Num() <= 0)
-			End_Target();*/
-		//else
-			Begin_Target();
+		Begin_Target();
 	}
 		
 }
@@ -115,12 +104,16 @@ void UCTargetComponent::Begin_Target()
 
 	// 번호 기준 타겟 설정
 	ChangeTarget(Targets[TargetIndex]);
+
+	GetTarget()->CursorWidget->SetVisibility(true);
 }
 
 // 타켓팅 종료
 void UCTargetComponent::End_Target()
 {
-	GetTarget()->DeactiveTargetCursor();
+	if (GetTarget()->CursorWidget->IsActive())
+		GetTarget()->CursorWidget->SetVisibility(false);
+
 	Target = nullptr;
 }
 
@@ -135,8 +128,12 @@ void UCTargetComponent::ChangeTarget(ACCharacterBase* InCandidate)
 
 void UCTargetComponent::TickTargeting()
 {
-	FRotator ControlRotation = OwnerCharacter->GetControlRotation();
-	FRotator OwnerToTarget = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), Target->GetActorLocation());
+	FVector WidgetLocation = GetTarget()->GetActorLocation();
+	FVector PlayerLocation = GetOwner()->GetActorLocation();
+	FRotator Direction = UKismetMathLibrary::FindLookAtRotation(WidgetLocation, PlayerLocation);
+
+	GetTarget()->CursorWidget->SetRelativeRotation(Direction + FRotator(0,90,0));
+	//UE_LOG(LogTemp, Warning, TEXT("%p, %p, %p"), &Direction.Pitch, &Direction.Yaw, &Direction.Roll);
 
 	// 시점 고정
 	/*if(UKismetMathLibrary::EqualEqual_RotatorRotator(ControlRotation, OwnerToTarget, FinishAngle))
@@ -146,4 +143,12 @@ void UCTargetComponent::TickTargeting()
 
 		OwnerCharacter->GetController()->SetControlRotation(ret);
 	}*/
+}
+
+bool UCTargetComponent::IsTargetsArrayEmpty()
+{
+	if (Targets.Num() == 0)
+		return true;
+	else
+		return false;
 }

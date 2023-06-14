@@ -17,13 +17,11 @@ public:
 	ACEnemy();
 
 	void BeginPlay() override;
+	void Tick(float DeltaSeconds) override;
 
-public:
-	void ActiveTargetCursor();
-	void DeactiveTargetCursor();
+	FORCEINLINE UWidgetComponent* GetWidget() { return CursorWidget; }
 
 public:
 	UPROPERTY(VisibleAnywhere)
 		class UCEquipComponent* Equip;
-
 };

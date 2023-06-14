@@ -100,6 +100,8 @@ void UCJobComponent::SkillActivate1()
 	if (GetActiveSkill() == nullptr)
 		return;
 
+	State->SetIsBattle(true);
+
 	// TODO : 글쿨 / 논글쿨 스킬들어가게 작성
 	GetActiveSkill()->ActiveSkill(1);
 }

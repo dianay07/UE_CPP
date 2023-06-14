@@ -42,6 +42,16 @@ void UCStateComponent::SetActionMode()
 	ChangeType(EStateType::Action);
 }
 
+void UCStateComponent::SetIsBattle()
+{
+	IsBattle = true;
+}
+
+void UCStateComponent::SetIsBattle(bool InValue)
+{
+	IsBattle = InValue;
+}
+
 void UCStateComponent::ChangeType(EStateType InType)
 {
 	EStateType prevType = Type;

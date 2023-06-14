@@ -12,9 +12,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Display")
 		UDecalComponent* Decal;
 
-	//UPROPERTY(VisibleAnywhere, Category = "Display")
-	//	TSubclassOf<class UCUI_TargetingCursor> TargetingCursorClass;
-
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Settings")
 		float TraceDistance = 2000.0f;
@@ -43,6 +40,7 @@ public:
 	void End_Target();											// 타겟팅 종료
 	void ChangeTarget(class ACCharacterBase* InCandidate);		// 타겟 변경
 	void TickTargeting();										// 시점 고정용 함수였으나 미사용
+	bool IsTargetsArrayEmpty();
 
 private:
 	class ACCharacterBase* OwnerCharacter;

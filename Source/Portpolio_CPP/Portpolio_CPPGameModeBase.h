@@ -11,5 +11,5 @@ class PORTPOLIO_CPP_API APortpolio_CPPGameModeBase : public AGameModeBase
 
 public:
 	APortpolio_CPPGameModeBase();
-
+	
 };

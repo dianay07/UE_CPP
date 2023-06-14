@@ -116,7 +116,7 @@ void ACPlayer::ToggleTarget()
 
 	if(IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
 	{
-		Target->GetTarget()->ActiveTargetCursor();
+		//Target->GetTarget()->ActiveTargetCursor();
 
 		if(!UI_TargetInfo->IsVisible())
 		{
