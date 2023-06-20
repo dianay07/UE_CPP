@@ -14,77 +14,97 @@ void UCStatusComponent::BeginPlay()
 	
 }
 
-float UCStatusComponent::SetStrength(float InValue)
+void UCStatusComponent::SetHealth(float InValue)
 {
-	return Strength += InValue;
+	Health = GetHealth() + InValue;
 }
 
-float UCStatusComponent::SetDexterity(float InValue)
+void UCStatusComponent::SetMaxHealth(float InValue)
 {
-	return Dexterity += InValue;
+	MaxHealth = InValue;
 }
 
-float UCStatusComponent::SetConstitution(float InValue)
+void UCStatusComponent::SetMana(float InValue)
 {
-	return Constitution += InValue;
+	Mana = GetMana() + InValue;
 }
 
-float UCStatusComponent::SetIntelligence(float InValue)
+void UCStatusComponent::SetMaxMana(float InValue)
 {
-	return Intelligence += InValue;
+	MaxMana = InValue;
 }
 
-float UCStatusComponent::SetMind(float InValue)
+void UCStatusComponent::SetStrength(float InValue)
 {
-	return Mind += InValue;
+	Strength = GetStrength() + InValue;
 }
 
-float UCStatusComponent::SetCriticalHitRate(float InValue)
+void UCStatusComponent::SetDexterity(float InValue)
 {
-	return 0;
+	Dexterity = GetDexterity() + InValue;
 }
 
-float UCStatusComponent::SetDetermination(float InValue)
+void UCStatusComponent::SetConstitution(float InValue)
 {
-	return 0;
+	Constitution = GetConstitution() + InValue;
 }
 
-float UCStatusComponent::SetDirectHitRate(float InValue)
+void UCStatusComponent::SetIntelligence(float InValue)
 {
-	return 0;
+	Intelligence = GetIntelligence() + InValue;
 }
 
-float UCStatusComponent::SetDefense(float InValue)
+void UCStatusComponent::SetMind(float InValue)
 {
-	return 0;
+	Mind = GetMind() + InValue;
 }
 
-float UCStatusComponent::SetMagicDefense(float InValue)
+void UCStatusComponent::SetCriticalHitRate(float InValue)
 {
-	return 0;
+	
 }
 
-float UCStatusComponent::SetAttackPower(float InValue)
+void UCStatusComponent::SetDetermination(float InValue)
 {
-	return 0;
+	
 }
 
-float UCStatusComponent::SetSkillSpeed(float InValue)
+void UCStatusComponent::SetDirectHitRate(float InValue)
 {
-	return 0;
+	
 }
 
-float UCStatusComponent::SetAttackMagicPotency(float InValue)
+void UCStatusComponent::SetDefense(float InValue)
 {
-	return 0;
+	
 }
 
-float UCStatusComponent::SetHealingMagicPotency(float InValue)
+void UCStatusComponent::SetMagicDefense(float InValue)
 {
-	return 0;
+	
 }
 
-float UCStatusComponent::SetSpellSpeed(float InValue)
+void UCStatusComponent::SetAttackPower(float InValue)
 {
-	return 0;
+
+}
+
+void UCStatusComponent::SetSkillSpeed(float InValue)
+{
+	
+}
+
+void UCStatusComponent::SetAttackMagicPotency(float InValue)
+{
+	
+}
+
+void UCStatusComponent::SetHealingMagicPotency(float InValue)
+{
+	
+}
+
+void UCStatusComponent::SetSpellSpeed(float InValue)
+{
+	
 }

@@ -13,6 +13,20 @@ class PORTPOLIO_CPP_API UCStatusComponent : public UActorComponent
 	GENERATED_BODY()
 
 private:
+	UPROPERTY(VisibleAnywhere, Category = "Status")
+		uint32 Health;
+
+	UPROPERTY(VisibleAnywhere, Category = "Status")
+		uint32 MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, Category = "Status")
+		uint32 Mana;
+
+	UPROPERTY(VisibleAnywhere, Category = "Status")
+		uint32 MaxMana;
+
+///////////////////////////////////////////////////// 
+
 	UPROPERTY(VisibleAnywhere, Category = "Basic Status")
 		float Strength;		// Èû
 
@@ -80,6 +94,11 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	FORCEINLINE uint32 GetHealth() { return Health; }
+	FORCEINLINE uint32 GetMaxHealth() { return MaxHealth; }
+	FORCEINLINE uint32 GetMana() { return Mana; }
+	FORCEINLINE uint32 GetMaxMana() { return MaxMana; }
+
 	FORCEINLINE float GetStrength() { return Strength; }
 	FORCEINLINE float GetDexterity() { return Dexterity; }
 	FORCEINLINE float GetConstitution() { return Constitution; }
@@ -109,30 +128,33 @@ public:
 	//void AddEquipmentAdditionalStatus(class ACEquipment InEquipped);
 
 public:
-	float SetStrength(float InValue);
-	float SetDexterity(float InValue);
-	float SetConstitution(float InValue);
-	float SetIntelligence(float InValue);
-	float SetMind(float InValue);
+	void SetHealth(float InValue);
+	void SetMaxHealth(float InValue);
+	void SetMana(float InValue);
+	void SetMaxMana(float InValue);
 
-	float SetCriticalHitRate(float InValue);
-	float SetDetermination(float InValue);
-	float SetDirectHitRate(float InValue);
+	void SetStrength(float InValue);
+	void SetDexterity(float InValue);
+	void SetConstitution(float InValue);
+	void SetIntelligence(float InValue);
+	void SetMind(float InValue);
 
-	float SetDefense(float InValue);
-	float SetMagicDefense(float InValue);
+	void SetCriticalHitRate(float InValue);
+	void SetDetermination(float InValue);
+	void SetDirectHitRate(float InValue);
 
-	float SetAttackPower(float InValue);
-	float SetSkillSpeed(float InValue);
+	void SetDefense(float InValue);
+	void SetMagicDefense(float InValue);
 
-	float SetAttackMagicPotency(float InValue);
-	float SetHealingMagicPotency(float InValue);
-	float SetSpellSpeed(float InValue);
+	void SetAttackPower(float InValue);
+	void SetSkillSpeed(float InValue);
 
-	float SetitemLevelAverage(float InValue);
+	void SetAttackMagicPotency(float InValue);
+	void SetHealingMagicPotency(float InValue);
+	void SetSpellSpeed(float InValue);
+
+	void SetitemLevelAverage(float InValue);
 	
-	float SetTenacity(float InValue);
-	float SetPiety(float InValue);
-
-
+	void SetTenacity(float InValue);
+	void SetPiety(float InValue);
 };

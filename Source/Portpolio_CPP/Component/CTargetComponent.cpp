@@ -1,10 +1,10 @@
 #include "Component/CTargetComponent.h"
 
 #include "Character/CCharacterBase.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Character/CEnemy.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "UI/CUI_TargetingCursor.h"
 
 UCTargetComponent::UCTargetComponent()
@@ -57,7 +57,7 @@ ACEnemy* UCTargetComponent::GetTarget()
 	return ret;
 }
 
-// 타겟 시작 or 변경
+// Tab키로 타겟 온
 void UCTargetComponent::ToggleTarget()
 {
 	if (IsValid(Target))
@@ -69,43 +69,57 @@ void UCTargetComponent::ToggleTarget()
 		else
 			TargetIndex++;
 
-		Begin_Target();
+		Begin_Target(Target);
 	}
 	else if(!IsValid(Target))
 	{
 		Begin_Target();
 	}
-		
+}
+
+// 타겟 시작 or 변경
+void UCTargetComponent::ToggleTarget(class ACCharacterBase* InTarget)
+{
+	Begin_Target(InTarget);
 }
 
 // 타켓팅 할때마다 주변 타켓가능 객체들 체크
-void UCTargetComponent::Begin_Target()
+void UCTargetComponent::Begin_Target(ACCharacterBase* InTarget)
 {
-	// 물체 판정용 파라미터
-	FVector start = OwnerCharacter->GetActorLocation();		// 시작 지점
-	FVector end = start;									// 끝 지점
-	TArray<AActor*> param;									// 무시대상
-	param.Add(OwnerCharacter);
-
-	TArray<FHitResult> Output;								// 결과물 반환받을 배열
-	
-	UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), start, end, TraceDistance, "Targeting", false, param, EDrawDebugTrace::None, Output, true);
-
-	for(FHitResult hitResult : Output)
+	if(IsValid(InTarget) == false)
 	{
-		if(hitResult.Actor->GetClass() != OwnerCharacter->GetClass() && Cast<ACCharacterBase>(hitResult.Actor))
+		// 물체 판정용 파라미터
+		FVector start = OwnerCharacter->GetActorLocation();		// 시작 지점
+		FVector end = start;									// 끝 지점
+		TArray<AActor*> param;									// 무시대상
+		param.Add(OwnerCharacter);
+
+		TArray<FHitResult> Output;								// 결과물 반환받을 배열
+
+		UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), start, end, TraceDistance, "Targeting", false, param, EDrawDebugTrace::None, Output, true);
+
+		for (FHitResult hitResult : Output)
 		{
-			Targets.AddUnique(Cast<ACCharacterBase>(hitResult.Actor));
+			if (hitResult.Actor->GetClass() != OwnerCharacter->GetClass() && Cast<ACCharacterBase>(hitResult.Actor))
+			{
+				Targets.AddUnique(Cast<ACCharacterBase>(hitResult.Actor));
+			}
 		}
+
+		// 시야각 기준 타겟 설정
+		//ChangeTarget(Utility::GetNearlyFrontAngle(OwnerCharacter, Targets));
+
+		// 번호 기준 타겟 설정
+		ChangeTarget(Targets[TargetIndex]);
+
+		GetTarget()->CursorWidget->SetVisibility(true);
+	}
+	else
+	{
+		ChangeTarget(InTarget);
 	}
 
-	// 시야각 기준 타겟 설정
-	//ChangeTarget(Utility::GetNearlyFrontAngle(OwnerCharacter, Targets));
-
-	// 번호 기준 타겟 설정
-	ChangeTarget(Targets[TargetIndex]);
-
-	GetTarget()->CursorWidget->SetVisibility(true);
+	ControlCursor(Target);
 }
 
 // 타켓팅 종료
@@ -115,6 +129,21 @@ void UCTargetComponent::End_Target()
 		GetTarget()->CursorWidget->SetVisibility(false);
 
 	Target = nullptr;
+}
+
+// Control Cursor
+void UCTargetComponent::ControlCursor(ACCharacterBase* InTarget)
+{
+	ACEnemy* enemy = Cast<ACEnemy>(InTarget);
+
+	if(enemy->CursorWidget->IsWidgetVisible() == false)
+	{
+		enemy->CursorWidget->SetVisibility(true);
+	}
+	else
+	{
+		enemy->CursorWidget->SetVisibility(false);
+	}
 }
 
 // 타겟 변경

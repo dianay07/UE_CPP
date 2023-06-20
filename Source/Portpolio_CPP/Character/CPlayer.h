@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Character/CCharacterBase.h"
+#include "ICharacter.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API ACPlayer : public ACCharacterBase
+class PORTPOLIO_CPP_API ACPlayer : public ACCharacterBase, public IICharacter
 {
 	GENERATED_BODY()
 	
@@ -45,7 +46,13 @@ protected:
 	void OnJump();
 
 	void ToggleTarget();
+	void ToggleTarget(ACCharacterBase* InOther);
+
+	void ClickOnTarget();
+
+	virtual void Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData) override;
 
 private:
 	UCUI_TargetInfo* UI_TargetInfo;
+	APlayerController* Controller;
 };

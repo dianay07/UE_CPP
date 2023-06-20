@@ -4,16 +4,17 @@
 #include "Camera/CameraAnim.h"
 #include "Camera/CameraComponent.h"
 #include "Component/CameraControlComponent.h"
-#include "Component/CMovementComponent.h"
 #include "Component/CEquipComponent.h"
 #include "Component/CJobComponent.h"
+#include "Component/CMovementComponent.h"
+#include "Component/CStatusComponent.h"
 #include "Component/CTargetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UI/CUI_TargetInfo.h"
 
-#include "UI/CUI_TargetingCursor.h"
+#include "Kismet/GameplayStatics.h"
 
 ACPlayer::ACPlayer()
 {
@@ -71,6 +72,9 @@ void ACPlayer::BeginPlay()
 	UI_TargetInfo = Cast<UCUI_TargetInfo>(CreateWidget(GetWorld(), UI_TargetInfoClass));
 	UI_TargetInfo->AddToViewport();
 	UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
+
+	Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	Controller->SetShowMouseCursor(true);
 }
 
 void ACPlayer::Tick(float DeltaSeconds)
@@ -102,6 +106,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Job, &UCJobComponent::SkillActivate1);
 		PlayerInputComponent->BindAction("Targeting", EInputEvent::IE_Pressed, this, &ACPlayer::ToggleTarget);
+
+		PlayerInputComponent->BindAction("ClickedTarget", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
 	}
 }
 
@@ -112,12 +118,10 @@ void ACPlayer::OnJump()
 
 void ACPlayer::ToggleTarget()
 {
-	Target->ToggleTarget();
+	Target->ToggleTarget(nullptr);
 
 	if(IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
 	{
-		//Target->GetTarget()->ActiveTargetCursor();
-
 		if(!UI_TargetInfo->IsVisible())
 		{
 			UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
@@ -134,5 +138,76 @@ void ACPlayer::ToggleTarget()
 			UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 			UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
 		}
+	}
+}
+
+void ACPlayer::ToggleTarget(ACCharacterBase* InOther)
+{
+	Target->ToggleTarget(InOther);
+
+	if (IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
+	{
+		if (!UI_TargetInfo->IsVisible())
+		{
+			UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
+		}
+
+		UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+	}
+	else
+	{
+		GLog->Log(FText::FromString("Target is Null"));
+
+		if (UI_TargetInfo->IsVisible())
+		{
+			UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
+			UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+		}
+	}
+}
+
+void ACPlayer::ClickOnTarget()
+{
+	FVector start;
+	FVector direction;
+	Controller->DeprojectMousePositionToWorld(start, direction);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *start.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *direction.ToString());
+
+	float distance = 10000.0f;
+	FVector end = start + direction * distance;
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;	// 히트 가능한 오브젝트 유형 담을 배열
+	TEnumAsByte<EObjectTypeQuery> Pawn = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn);
+	ObjectTypes.Add(Pawn);
+
+	TArray<AActor*> ignores;
+	ignores.AddUnique(this);
+
+	FHitResult hitResult;
+	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), start, end, ObjectTypes, false,
+		ignores, EDrawDebugTrace::ForDuration, hitResult, true);
+
+	//UE_LOG(LogTemp, Display, TEXT("%s"), *hitResult.GetActor()->GetName());
+
+	if(Cast<ACEnemy>(hitResult.GetActor()))
+	{
+		ToggleTarget(Cast<ACCharacterBase>(hitResult.GetActor()));
+		//UE_LOG(LogTemp, Warning, TEXT("%s"), *hitResult.GetActor()->GetName());
+	}
+}
+
+void ACPlayer::Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData)
+{
+	if (IsValid(Target) == false)
+		return;
+
+	for (ACharacter* candi : InDamagedObjs)
+	{
+		ACEnemy* enemy = Cast<ACEnemy>(candi);
+		UCStatusComponent* status = Cast<UCStatusComponent>(enemy->GetComponentByClass(UCStatusComponent::StaticClass()));
+
+		status->SetHealth(100);
 	}
 }

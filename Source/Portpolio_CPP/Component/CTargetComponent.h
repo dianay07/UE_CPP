@@ -35,9 +35,14 @@ public:
 	class ACEnemy* GetTarget();									// 타겟 리턴
 
 public:
-	void ToggleTarget();										// 타겟 시작 or 변경
-	void Begin_Target();										// 타겟팅 할때마다 주변 타겟 가능 객체들 체크
+	void ToggleTarget();
+	void ToggleTarget(class ACCharacterBase* InTarget = nullptr);										// 타겟 시작 or 변경
+
+	void Begin_Target(class ACCharacterBase* InTarget = nullptr);										// 타겟팅 할때마다 주변 타겟 가능 객체들 체크
 	void End_Target();											// 타겟팅 종료
+
+	void ControlCursor(ACCharacterBase* InTarget);
+
 	void ChangeTarget(class ACCharacterBase* InCandidate);		// 타겟 변경
 	void TickTargeting();										// 시점 고정용 함수였으나 미사용
 	bool IsTargetsArrayEmpty();

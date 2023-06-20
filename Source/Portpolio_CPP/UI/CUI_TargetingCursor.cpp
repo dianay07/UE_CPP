@@ -1,7 +1,10 @@
 #include "UI/CUI_TargetingCursor.h"
 
+#include "Component/CStateComponent.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 void UCUI_TargetingCursor::NativeConstruct()
 {
@@ -15,6 +18,11 @@ void UCUI_TargetingCursor::NativeTick(const FGeometry& MyGeometry, float InDelta
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	APlayerCameraManager* CameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
-	FVector CamLocation = CameraManager->GetCameraLocation();
+	UCStateComponent* State = Cast<UCStateComponent>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetComponentByClass(UCStateComponent::StaticClass()));
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *State->GetName());
+
+	if (!State->IsInBattle())
+		Image->SetBrushTintColor(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f)));
+	else
+		Image->SetBrushTintColor(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f)));
 }
