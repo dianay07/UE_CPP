@@ -55,3 +55,12 @@ void ACEnemy::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 }
+
+void ACEnemy::SetWidgetVisble()
+{
+	if (CursorWidget->IsVisible() == true)
+		CursorWidget->SetVisibility(false);
+	else
+		CursorWidget->SetVisibility(true);
+
+}

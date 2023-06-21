@@ -1,7 +1,9 @@
 #include "Component/CTargetComponent.h"
 
+#include "Camera/CameraComponent.h"
 #include "Character/CCharacterBase.h"
 #include "Character/CEnemy.h"
+#include "Character/CPlayer.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -30,50 +32,49 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		UCStateComponent* State = Cast<UCStateComponent>(Target->GetComponentByClass(UCStateComponent::StaticClass()));
 
-		if(GetTarget()->CursorWidget->IsActive() == true)
-		{
-			TickTargeting();
-		}
-
 		if(IsValid(State))
 		{
-			if(State->IsDeadMode() == false)
+
+			if (State->IsDeadMode() == true)
+			{
+				ControlCursor(Target);
+				Targets.Remove(Target);
+			}
+			else
 			{
 				if (OwnerCharacter->GetDistanceTo(Target) <= TraceDistance)
 					TickTargeting();
 				else
-					End_Target();
+				{
+					ControlCursor(Target);
+					Target = nullptr;
+				}
 			}
 		}
 	}
-
 }
 
-// 타겟 리턴
-ACEnemy* UCTargetComponent::GetTarget()
+// 타겟이 된 캐릭터 반환
+ACCharacterBase* UCTargetComponent::GetTarget()
 {
-	ACEnemy* ret = Cast<ACEnemy>(Target);
-
-	return ret;
+	return Target;
 }
 
 // Tab키로 타겟 온
 void UCTargetComponent::ToggleTarget()
 {
-	if (IsValid(Target))
-	{
-		GetTarget()->CursorWidget->SetVisibility(false);
-
-		if (TargetIndex >= Targets.Num() - 1)
-			TargetIndex = 0;
-		else
-			TargetIndex++;
-
-		Begin_Target(Target);
-	}
-	else if(!IsValid(Target))
-	{
+	// Tab키로 들어오면 타겟 목표가 없이 들어옴
+	// 처음 들어오면 타겟들 배열에 아무것도 없으니까 처리
+	if(Targets.Num() < 1)
 		Begin_Target();
+	else
+	{
+		TargetIndex++;
+
+		if (TargetIndex >= Targets.Num())
+			TargetIndex = 0;
+
+		Begin_Target(Targets[TargetIndex]);
 	}
 }
 
@@ -86,6 +87,7 @@ void UCTargetComponent::ToggleTarget(class ACCharacterBase* InTarget)
 // 타켓팅 할때마다 주변 타켓가능 객체들 체크
 void UCTargetComponent::Begin_Target(ACCharacterBase* InTarget)
 {
+	// 마우스 클릭 아닌 Tab키로 타겟기능 켯을 때
 	if(IsValid(InTarget) == false)
 	{
 		// 물체 판정용 파라미터
@@ -111,57 +113,62 @@ void UCTargetComponent::Begin_Target(ACCharacterBase* InTarget)
 
 		// 번호 기준 타겟 설정
 		ChangeTarget(Targets[TargetIndex]);
-
-		GetTarget()->CursorWidget->SetVisibility(true);
 	}
-	else
+	else	// 마우스 클릭으로 타겟이 지정 됫을 때
 	{
 		ChangeTarget(InTarget);
 	}
-
-	ControlCursor(Target);
 }
 
 // 타켓팅 종료
 void UCTargetComponent::End_Target()
 {
-	if (GetTarget()->CursorWidget->IsActive())
-		GetTarget()->CursorWidget->SetVisibility(false);
-
-	Target = nullptr;
+	ControlCursor(Target);
+	Targets.Remove(Target);
 }
 
-// Control Cursor
+// Control Cursor = 커서 On / Off
 void UCTargetComponent::ControlCursor(ACCharacterBase* InTarget)
 {
 	ACEnemy* enemy = Cast<ACEnemy>(InTarget);
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 
-	if(enemy->CursorWidget->IsWidgetVisible() == false)
+	if(OnControlWidget.IsBound() == false)
 	{
-		enemy->CursorWidget->SetVisibility(true);
+		OnControlWidget.AddUObject(enemy, &ACEnemy::SetWidgetVisble);
+		OnControlWidget.AddUObject(player, &ACPlayer::OffTargetInfo);
 	}
-	else
-	{
-		enemy->CursorWidget->SetVisibility(false);
-	}
+	OnControlWidget.Broadcast();
+	OnControlWidget.Clear();
 }
 
 // 타겟 변경
 void UCTargetComponent::ChangeTarget(ACCharacterBase* InCandidate)
 {
+	// 혹시 지정된 타겟이 없다면
 	if(IsValid(InCandidate) == false)
 		End_Target();
 
+	if(Target != nullptr)
+		ControlCursor(Target);
+
+	// 선택된 캐릭터 타겟으로 지정
 	Target = InCandidate;
+	ControlCursor(Target);
 }
 
 void UCTargetComponent::TickTargeting()
 {
 	FVector WidgetLocation = GetTarget()->GetActorLocation();
-	FVector PlayerLocation = GetOwner()->GetActorLocation();
+	//FVector PlayerLocation = GetOwner()->GetActorLocation();
+	ACPlayer* player = Cast<ACPlayer>(GetOwner());
+	UCameraComponent* camera = Cast<UCameraComponent>(player->GetComponentByClass(UCameraComponent::StaticClass()));
+
+	FVector PlayerLocation = camera->GetComponentLocation();
+
 	FRotator Direction = UKismetMathLibrary::FindLookAtRotation(WidgetLocation, PlayerLocation);
 
-	GetTarget()->CursorWidget->SetRelativeRotation(Direction + FRotator(0,90,0));
+	Cast<ACEnemy>(Target)->CursorWidget->SetRelativeRotation(Direction + FRotator(0,90,0));
 	//UE_LOG(LogTemp, Warning, TEXT("%p, %p, %p"), &Direction.Pitch, &Direction.Yaw, &Direction.Roll);
 
 	// 시점 고정

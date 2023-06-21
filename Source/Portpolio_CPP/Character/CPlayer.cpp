@@ -105,9 +105,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Released, Movement, &UCMovementComponent::FixedCharacterSetting);
 
 		PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Job, &UCJobComponent::SkillActivate1);
-		PlayerInputComponent->BindAction("Targeting", EInputEvent::IE_Pressed, this, &ACPlayer::ToggleTarget);
 
-		PlayerInputComponent->BindAction("ClickedTarget", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Tab", EInputEvent::IE_Pressed, this, &ACPlayer::TabOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
 	}
 }
 
@@ -116,58 +116,40 @@ void ACPlayer::OnJump()
 	Jump();
 }
 
-void ACPlayer::ToggleTarget()
+void ACPlayer::DisplayTargetInfo(ACCharacterBase* InOther)
 {
-	Target->ToggleTarget(nullptr);
+	// 타겟 컴포넌트에 선택된 타겟이 없으면
+	if (IsValid(Target->GetTarget()) == false)
+		return;
 
-	if(IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
-	{
-		if(!UI_TargetInfo->IsVisible())
-		{
-			UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
-		}
+	// UI가 안켜져 있으면 켜주고
+	if(UI_TargetInfo->IsVisible() == false)
+		UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
 
-		UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
-	}	
-	else
-	{
-		GLog->Log(FText::FromString("Target is Null"));
-
-		if (UI_TargetInfo->IsVisible())
-		{
-			UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
-			UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
-		}
-	}
+	// 표시될 데이터 설정
+	UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+	UI_TargetInfo->SetLevelText(" LV : 00 ");
 }
 
-void ACPlayer::ToggleTarget(ACCharacterBase* InOther)
+void ACPlayer::OffTargetInfo()
 {
-	Target->ToggleTarget(InOther);
-
-	if (IsValid(Cast<ACCharacterBase>(Target->GetTarget())))
-	{
-		if (!UI_TargetInfo->IsVisible())
-		{
-			UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
-		}
-
-		UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
-	}
-	else
-	{
-		GLog->Log(FText::FromString("Target is Null"));
-
-		if (UI_TargetInfo->IsVisible())
-		{
-			UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
-			UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
-		}
-	}
+	if (UI_TargetInfo->IsVisible() == true)
+		UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 }
 
+// 지정 없이 타겟팅 실행
+void ACPlayer::TabOnTarget()
+{
+	Target->ToggleTarget();
+
+	if (Target != nullptr)
+		DisplayTargetInfo(Target->GetTarget());
+}
+
+// 타겟이 될 물체 클릭 이벤트
 void ACPlayer::ClickOnTarget()
 {
+	/* 마우스 커서 위치로부터 스크린 라인 트레이스  */
 	FVector start;
 	FVector direction;
 	Controller->DeprojectMousePositionToWorld(start, direction);
@@ -193,11 +175,14 @@ void ACPlayer::ClickOnTarget()
 
 	if(Cast<ACEnemy>(hitResult.GetActor()))
 	{
-		ToggleTarget(Cast<ACCharacterBase>(hitResult.GetActor()));
-		//UE_LOG(LogTemp, Warning, TEXT("%s"), *hitResult.GetActor()->GetName());
+		// hitActor를 CharacterBase로 형변환 후 전달
+		ACCharacterBase* character = Cast<ACCharacterBase>(hitResult.GetActor());
+		Target->ToggleTarget(character);
+		DisplayTargetInfo(character);
 	}
 }
 
+// TODO :: 데미지 체크
 void ACPlayer::Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData)
 {
 	if (IsValid(Target) == false)

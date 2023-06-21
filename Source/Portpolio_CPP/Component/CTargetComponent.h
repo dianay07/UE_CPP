@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "CTargetComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnControlWidget);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PORTPOLIO_CPP_API UCTargetComponent : public UActorComponent
 {
@@ -32,20 +34,24 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	class ACEnemy* GetTarget();									// 타겟 리턴
+	class ACCharacterBase* GetTarget();		// 타겟이 된 캐릭터 반환
 
 public:
-	void ToggleTarget();
-	void ToggleTarget(class ACCharacterBase* InTarget = nullptr);										// 타겟 시작 or 변경
+	void ToggleTarget();					// Tab키로 타겟 시작할 때
+	// 타겟이 마우스 클릭으로 지정 됬을 때
+	void ToggleTarget(class ACCharacterBase* InTarget);
 
-	void Begin_Target(class ACCharacterBase* InTarget = nullptr);										// 타겟팅 할때마다 주변 타겟 가능 객체들 체크
-	void End_Target();											// 타겟팅 종료
+	void Begin_Target(class ACCharacterBase* InTarget = nullptr);	// 타겟 기능 실행
+	void End_Target();												// 타겟 기능 종료
+	void ChangeTarget(class ACCharacterBase* InCandidate);			// 타겟 변경
 
-	void ControlCursor(ACCharacterBase* InTarget);
+	void ControlCursor(ACCharacterBase* InTarget);					// 타겟된 액터 커서 On/Off
 
-	void ChangeTarget(class ACCharacterBase* InCandidate);		// 타겟 변경
-	void TickTargeting();										// 시점 고정용 함수였으나 미사용
+	void TickTargeting();											// 
 	bool IsTargetsArrayEmpty();
+
+public:
+	FOnControlWidget OnControlWidget;
 
 private:
 	class ACCharacterBase* OwnerCharacter;
@@ -54,3 +60,6 @@ private:
 
 	int TargetIndex = 0;
 };
+
+
+// TODO :: 몬스터가 죽으면 Target 배열에서 지워줘야함

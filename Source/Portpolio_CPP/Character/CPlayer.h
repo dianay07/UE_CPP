@@ -45,10 +45,12 @@ protected:
 protected:
 	void OnJump();
 
-	void ToggleTarget();
-	void ToggleTarget(ACCharacterBase* InOther);
+	void DisplayTargetInfo(ACCharacterBase* InOther);		// 타겟이 된 캐릭터 정보 UI에 표시
 
-	void ClickOnTarget();
+public:
+	void OffTargetInfo();
+	void TabOnTarget();										// 지정 없이 타겟팅 실행
+	void ClickOnTarget();									// 타겟이 될 물체 클릭 이벤트
 
 	virtual void Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData) override;
 
