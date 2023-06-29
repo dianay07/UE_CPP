@@ -25,8 +25,8 @@ public class AssetEditor : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
-            }
+				"Core", "Portpolio_CPP", "Niagara"
+			}
 			);
 			
 		
@@ -39,8 +39,8 @@ public class AssetEditor : ModuleRules
 				"SlateCore",
 				"UnrealEd",
 				"EditorStyle",
-				"InputCore", 
-                "Portpolio_CPP"
+				"InputCore",
+                //"Portpolio_CPP"
             }
 			);
 		

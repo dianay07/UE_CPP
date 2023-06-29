@@ -46,6 +46,7 @@ protected:
 	void OnJump();
 
 	void DisplayTargetInfo(ACCharacterBase* InOther);		// 타겟이 된 캐릭터 정보 UI에 표시
+	void TestKeyBinding();
 
 public:
 	void OffTargetInfo();

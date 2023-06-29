@@ -11,6 +11,7 @@
 #include "Component/CTargetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UI/CUI_TargetInfo.h"
 
@@ -75,6 +76,8 @@ void ACPlayer::BeginPlay()
 
 	Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	Controller->SetShowMouseCursor(true);
+
+	TestKeyBinding();
 }
 
 void ACPlayer::Tick(float DeltaSeconds)
@@ -104,10 +107,14 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::FixedCameraSetting);
 		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Released, Movement, &UCMovementComponent::FixedCharacterSetting);
 
-		PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Job, &UCJobComponent::SkillActivate1);
-
 		PlayerInputComponent->BindAction("Targeting_Tab", EInputEvent::IE_Pressed, this, &ACPlayer::TabOnTarget);
 		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
+
+		// 키 테스팅
+		PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSkill);
+
+		PlayerInputComponent->BindAction("SwapToWarrior", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetWarrior);
+		PlayerInputComponent->BindAction("SwapToDragoon", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetDragoon);
 	}
 }
 
@@ -129,6 +136,12 @@ void ACPlayer::DisplayTargetInfo(ACCharacterBase* InOther)
 	// 표시될 데이터 설정
 	UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
 	UI_TargetInfo->SetLevelText(" LV : 00 ");
+}
+
+void ACPlayer::TestKeyBinding()
+{
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::Q, true));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::W, true));
 }
 
 void ACPlayer::OffTargetInfo()

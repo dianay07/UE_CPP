@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SAssetEditorLeftArea.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
 class ASSETEDITOR_API FAssetEditorWindow
@@ -16,11 +17,18 @@ private:
 private:
 	void Open(FString InAssetName);
 
+protected:
+	bool OnRequestClose() override;
+
 public:
 	void RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager) override;
 
 private:
-	TSharedRef<SDockTab> Spawn_ListViewTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_DetailsViewTab(const FSpawnTabArgs& InArgs);
+
+private:
+	void OnListViewSelectedItem(FAssetRowDataPtr InDataPtr);
 
 public:
 	virtual FName GetToolkitFName() const override;
@@ -30,6 +38,7 @@ public:
 
 private:
 	TSharedPtr<class SAssetEditorLeftArea> LeftArea;
+	TSharedPtr<class IDetailsView> DetailsView;
 
 private:
 	static const FName EditorName;

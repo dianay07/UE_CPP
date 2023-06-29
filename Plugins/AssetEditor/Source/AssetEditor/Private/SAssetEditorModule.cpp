@@ -1,11 +1,10 @@
-#include "AssetEditorModule.h"
+#include "SAssetEditorModule.h"
 
-#include "AssetContextMenu.h"
-#include "AssetEditorCommand.h"
+#include "SAssetContextMenu.h"
+#include "SAssetEditorCommand.h"
 #include "AssetToolsModule.h"
 #include "IAssetTools.h"
 #include "JobEditorStyle.h"
-#include "Dom/JsonObject.h"
 
 #define LOCTEXT_NAMESPACE "FAssetEditorModule"
 IMPLEMENT_MODULE(FAssetEditorModule, AssetEditor)

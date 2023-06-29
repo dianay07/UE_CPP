@@ -1,5 +1,6 @@
-#include "AssetContextMenu.h"
+#include "SAssetContextMenu.h"
 
+#include "SAssetEditorWindow.h"
 #include "Job/CJobDataAsset.h"
 
 FAssetContextMenu::FAssetContextMenu(EAssetTypeCategories::Type InCategory)
@@ -32,4 +33,6 @@ void FAssetContextMenu::OpenAssetEditor(const TArray<UObject*>& InObjects,
 {
 	if (InObjects.Num() < 1)
 		return;
+
+	FAssetEditorWindow::OpenWindow();
 }

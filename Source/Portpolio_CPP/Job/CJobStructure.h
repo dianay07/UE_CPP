@@ -28,10 +28,10 @@ public:
 		class UAnimMontage* Montage;
 
 	UPROPERTY(EditAnywhere)
-		float PlayRate;
+		float PlayRate = 1;
 
 	UPROPERTY(EditAnywhere)
-		bool bUseControllerRotate;
+		bool bUseControllerRotate = true;
 };
 
 USTRUCT()
@@ -41,22 +41,31 @@ struct FSkillData
 
 public:
 	UPROPERTY(EditAnywhere)
-		int DemandLevel;
+		int DemandLevel = 0;
 
 	UPROPERTY(EditAnywhere)
 		class UAnimMontage* Montage;
 
 	UPROPERTY(EditAnywhere)
-		float PlayRate = 1;
+		float PlayRate = 1.0f;
 
 	UPROPERTY(EditAnywhere)
-		bool bUseControllerRotate;
+		bool bUseControllerRotate = false;
 
 	UPROPERTY(EditAnywhere)
 		ESkillCoolType Type = ESkillCoolType::Global;
 
 	UPROPERTY(EditAnywhere)
-		float SkillCooltime;
+		float SkillCooltime = 0.0f;
+
+	UPROPERTY(EditAnywhere)
+		class UFXSystemAsset* Effect;
+
+	UPROPERTY(EditAnywhere)
+		FVector EffectLocation = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere)
+		FVector EffectScale = FVector::OneVector;
 
 public:
 	void ActiveSkill(class ACCharacterBase* InOwner);
@@ -70,10 +79,10 @@ struct FHitData
 
 public:
 	UPROPERTY(EditAnywhere)
-		float PlayRate = 1;
+		float PlayRate = 1.0f;
 
 	UPROPERTY(EditAnywhere)
-		float Damage;
+		float Damage = 0.0f;
 
 	UPROPERTY(EditAnywhere)
 		class USoundWave* Sound;

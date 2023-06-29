@@ -6,6 +6,7 @@
 #include "CJobComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FJobChanged, EJob, InPrevJob, EJob, InNewJob);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActivateSkill, int, InSkillIndex);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PORTPOLIO_CPP_API UCJobComponent : public UActorComponent
@@ -43,10 +44,12 @@ public:
 	void ChangeJob(EJob InJobType);
 	void ChangeType(EJob InJobType);
 
-	void SkillActivate1();
+	void UseSkill();
+	void SkillActivate(int InCount);
 	
 public:
 	FJobChanged OnJobChanged;
+	FActivateSkill OnSkillActivate;
 
 public:
 	class ACCharacterBase* OwnerCharacter;

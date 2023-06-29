@@ -1,7 +1,7 @@
-﻿#include "AssetEditorCommand.h"
+﻿#include "SAssetEditorCommand.h"
 
 #include "JobEditorStyle.h"
-#include "AssetEditorWindow.h"
+#include "SAssetEditorWindow.h"
 #include "LevelEditor.h"
 
 FAssetEditorCommand::FAssetEditorCommand()

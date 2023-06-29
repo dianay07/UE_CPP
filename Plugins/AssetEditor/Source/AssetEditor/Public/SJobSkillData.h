@@ -1,0 +1,18 @@
+#pragma once
+
+#include "CoreMinimal.h"
+
+class ASSETEDITOR_API SJobSkillData
+	: public IPropertyTypeCustomization
+{
+public:
+	static TSharedRef<IPropertyTypeCustomization> MakeInstance();
+	static TSharedPtr<class SAssetCheckBoxes> AddCheckBoxes();
+	static void EmptyCheckBoxes();
+
+	void CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle, FDetailWidgetRow& InHeaderRow, IPropertyTypeCustomizationUtils& InCustomizationUtils) override;
+	void CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder& InChildBuilder, IPropertyTypeCustomizationUtils& InCustomizationUtils) override;
+
+private:
+	static TArray<TSharedPtr<class SAssetCheckBoxes>> CheckBoxes;
+};

@@ -50,3 +50,41 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 			data.SkillCooltime = 2.14f;
 	}
 }
+
+int32 UCJobDataAsset::GetSkillDataCount()
+{
+	UE_LOG(LogTemp, Display, TEXT("%d"), SkillDatas.Num());
+	return SkillDatas.Num();
+}
+
+#if WITH_EDITOR
+void UCJobDataAsset::PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeChainProperty(PropertyChangedEvent);
+
+	if (FApp::IsGame() == true)
+		return;
+
+	bool bRefresh = false;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("SkillDatas") == 0;
+
+	if(bRefresh)
+	{
+		bool bCheck = false;
+		bCheck |= PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd;
+		bCheck |= PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayRemove;
+		bCheck |= PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayClear;
+		bCheck |= PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate;
+
+		if(bCheck)
+		{
+			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+			TSharedPtr<IDetailsView> detailsView = prop.FindDetailView("AssetEditorDetailsView");
+
+			if (detailsView.IsValid())
+				detailsView->ForceRefresh();
+		}
+	}
+}
+#endif
+

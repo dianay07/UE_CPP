@@ -12,22 +12,22 @@ class PORTPOLIO_CPP_API UCJobDataAsset : public UDataAsset
 
 private:
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class ACAttachment> AttachmentClass;
+		TSubclassOf<class ACAttachment> AttachmentClass;				// Attachment 클래스
 
 	UPROPERTY(EditAnywhere)
-		FEquipData EquipData;
+		FEquipData EquipData;											// 장착 애니메이션
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class UCEquipment> EquipmentClass;
+		TSubclassOf<class UCEquipment> EquipmentClass;					// 장착 관리 클래스
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class UCActiveSkill> ActiveSkillClass;
+		TSubclassOf<class UCActiveSkill> ActiveSkillClass;				// 스킬 작동 클래스
 
 	UPROPERTY(EditAnywhere)
-		TArray<FSkillData> SkillDatas;
+		TArray<FSkillData> SkillDatas;									// 스킬 데이터
 
 	UPROPERTY(EditAnywhere)
-		TArray<FHitData> HitDatas;
+		TArray<FHitData> HitDatas;										// 히트 데이터
 
 public:
 	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }
@@ -39,6 +39,10 @@ public:
 
 	void BeginPlay(class ACCharacterBase* InOwner);
 
+public:
+	int32 GetSkillDataCount();
+
+public:
 	UPROPERTY(EditAnywhere)
 		EJob JobName;
 
@@ -51,4 +55,9 @@ private:
 
 	UPROPERTY()
 		class UCActiveSkill* ActiveSkill;
+
+#if WITH_EDITOR
+	void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
+#endif
+
 };
