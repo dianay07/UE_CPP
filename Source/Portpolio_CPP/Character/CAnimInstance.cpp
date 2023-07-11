@@ -12,6 +12,12 @@ void UCAnimInstance::NativeBeginPlay()
 	Owner = Cast<ACPlayer>(TryGetPawnOwner());
 	if (Owner == nullptr)
 		return;
+
+	Job = Cast<UCJobComponent>(Owner->GetComponentByClass(UCJobComponent::StaticClass()));
+	if(!!Job)
+	{
+		Job->OnJobChanged.AddDynamic(this, &UCAnimInstance::OnJobTypeChanged);
+	}
 }
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -34,4 +40,9 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	//
 	IsFixedCamera = Owner->GetMovement()->IsFixedCamera();
+}
+
+void UCAnimInstance::OnJobTypeChanged(EJob InPrevType, EJob InNewType)
+{
+	JobType = InNewType;
 }

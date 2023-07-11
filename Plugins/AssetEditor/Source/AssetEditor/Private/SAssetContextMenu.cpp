@@ -34,5 +34,5 @@ void FAssetContextMenu::OpenAssetEditor(const TArray<UObject*>& InObjects,
 	if (InObjects.Num() < 1)
 		return;
 
-	FAssetEditorWindow::OpenWindow();
+	FAssetEditorWindow::OpenWindow(InObjects[0]->GetName());
 }

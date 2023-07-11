@@ -7,14 +7,6 @@
 
 void FSkillData::ActiveSkill(ACCharacterBase* InOwner)
 {
-	UCMovementComponent* movement = Cast<UCMovementComponent>(InOwner->GetComponentByClass(UCMovementComponent::StaticClass()));
-
-	if(!!movement)
-	{
-		if (bUseControllerRotate)
-			movement->RotateToTarget(InOwner);
-	}
-
 	if (!!Montage)
 		InOwner->PlayAnimMontage(Montage, PlayRate);
 }
@@ -26,7 +18,7 @@ void FSkillData::SetSkillCooltime(float InTime)
 
 //////////////////////////////////////////////////////
 
-void FHitData::SendDamage(ACCharacterBase* InAttacker, AActor* InAttackCauser, ACCharacterBase* InOther)
+void FSkillDamageData::SendDamage(ACCharacterBase* InAttacker, AActor* InAttackCauser, ACCharacterBase* InOther)
 {
 	FSkillDamageEvent e;
 	e.HitData = this;
@@ -34,7 +26,7 @@ void FHitData::SendDamage(ACCharacterBase* InAttacker, AActor* InAttackCauser, A
 	InOther->TakeDamage(Damage, e, InAttacker->GetController(), InAttackCauser);
 }
 
-void FHitData::PlaySoundWave(ACCharacterBase* InOwner)
+void FSkillDamageData::PlaySoundWave(ACCharacterBase* InOwner)
 {
 	if (Sound == nullptr)
 		return;
@@ -45,7 +37,7 @@ void FHitData::PlaySoundWave(ACCharacterBase* InOwner)
 	UGameplayStatics::SpawnSoundAtLocation(world, Sound, location);
 }
 
-void FHitData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
+void FSkillDamageData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
 {
 	if (Effect == nullptr)
 		return;
@@ -58,7 +50,7 @@ void FHitData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
 	Utility::PlayEffect(InWorld, Effect, transform);
 }
 
-void FHitData::PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation)
+void FSkillDamageData::PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation)
 {
 	if (Effect == nullptr)
 		return;

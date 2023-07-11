@@ -6,7 +6,9 @@
 #include "CPlayer.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API ACPlayer : public ACCharacterBase, public IICharacter
+class PORTPOLIO_CPP_API ACPlayer
+	: public ACCharacterBase
+	, public IICharacter
 {
 	GENERATED_BODY()
 	
@@ -35,6 +37,7 @@ public:
 
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
+	FORCEINLINE ACCharacterBase* GetTargetActor() { return TargetActor; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -53,9 +56,8 @@ public:
 	void TabOnTarget();										// 지정 없이 타겟팅 실행
 	void ClickOnTarget();									// 타겟이 될 물체 클릭 이벤트
 
-	virtual void Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData) override;
-
 private:
 	UCUI_TargetInfo* UI_TargetInfo;
+	ACCharacterBase* TargetActor;
 	APlayerController* Controller;
 };

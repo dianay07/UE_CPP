@@ -27,6 +27,7 @@ public:
 	void CheckDefaultValue(int32 InIndex, float InValue);
 	void CheckDefaultValue(int32 InIndex, bool InValue);
 	void CheckDefaultValue(int32 InIndex, const FVector& InValue);
+	void CheckDefaultValue(int32 InIndex, const FText& InValue);
 	void CheckDefaultValue(int32 InIndex,  uint8 InValue);
 
 private:

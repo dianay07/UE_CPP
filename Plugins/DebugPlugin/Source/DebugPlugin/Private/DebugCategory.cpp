@@ -75,10 +75,10 @@ void FDebugCategory::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanva
 	FVector start = PlayerActorData.Location;
 	FVector end = start + PlayerActorData.Forward * TraceDistance;
 	
-	FCanvasTileItem item(FVector2D(10, 10), FVector2D(300, 215), FLinearColor(0, 0, 0, 0.25f));
+	FCanvasTileItem item(FVector2D(10, 10), FVector2D(400, 215), FLinearColor(0, 0, 0, 0.25f));
 	item.BlendMode = ESimpleElementBlendMode::SE_BLEND_AlphaBlend;
 	CanvasContext.DrawItem(item, CanvasContext.CursorX, CanvasContext.CursorY);
-
+	
 	CanvasContext.Printf(FColor::Green, L"  -- Player Pawn --");
 	CanvasContext.Printf(FColor::White, L"  Name : %s", *PlayerActorData.Name);
 	CanvasContext.Printf(FColor::White, L"  Location : %s", *PlayerActorData.Location.ToString());

@@ -1,11 +1,17 @@
 #pragma once
 
+/*
+ *	게임에서 Job( =직업) 관련 데이터 선언 집합
+ *	각 Job이 가지고 있을 장착(Drwa), 스킬 데이터, 데미지 구조체 등을 정의
+ */
+
+
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "CJobStructure.generated.h"
 
 // 직업군
-UENUM()
+UENUM(BlueprintType)
 enum class EJob : uint8
 {
 	Warrior, Dragoon, Max
@@ -19,7 +25,7 @@ enum class ESkillCoolType : uint8
 };
 
 USTRUCT()
-struct FEquipData
+struct FDrawWeaponData			// 장착 애니메이션
 {
 	GENERATED_BODY()
 
@@ -35,28 +41,34 @@ public:
 };
 
 USTRUCT()
-struct FSkillData
+struct FSkillData			// 스킬 데이터
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Basic Info")
 		int DemandLevel = 0;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Basic Info")
+		FText Name;
+
+	UPROPERTY(EditAnywhere, Category = "Basic Info")
+		FText Description;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
 		class UAnimMontage* Montage;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 		float PlayRate = 1.0f;
 
 	UPROPERTY(EditAnywhere)
-		bool bUseControllerRotate = false;
+		float SkillCooltime = 2.5f;
 
 	UPROPERTY(EditAnywhere)
-		ESkillCoolType Type = ESkillCoolType::Global;
+		bool IsRequireTarget = false;
 
 	UPROPERTY(EditAnywhere)
-		float SkillCooltime = 0.0f;
+		UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere)
 		class UFXSystemAsset* Effect;
@@ -73,7 +85,7 @@ public:
 };
 
 USTRUCT()
-struct FHitData
+struct FSkillDamageData
 {
 	GENERATED_BODY()
 
@@ -109,7 +121,7 @@ struct FSkillDamageEvent : public FDamageEvent
 	GENERATED_BODY()
 
 public:
-	FHitData* HitData;
+	FSkillDamageData* HitData;
 };
 
 UCLASS()

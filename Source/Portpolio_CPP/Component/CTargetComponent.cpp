@@ -20,6 +20,7 @@ void UCTargetComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACCharacterBase>(GetOwner());
+	State = Cast<UCStateComponent>(OwnerCharacter->GetComponentByClass(UCStateComponent::StaticClass()));
 }
 
 // 거리 밖으로 나갈시 타겟팅 취소
@@ -30,12 +31,12 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	if(IsValid(Target))
 	{
-		UCStateComponent* State = Cast<UCStateComponent>(Target->GetComponentByClass(UCStateComponent::StaticClass()));
+		UCStateComponent* TargetState = Cast<UCStateComponent>(Target->GetComponentByClass(UCStateComponent::StaticClass()));
 
-		if(IsValid(State))
+		if(IsValid(TargetState))
 		{
 
-			if (State->IsDeadMode() == true)
+			if (TargetState->IsDeadMode() == true)
 			{
 				ControlCursor(Target);
 				Targets.Remove(Target);
@@ -52,12 +53,6 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			}
 		}
 	}
-}
-
-// 타겟이 된 캐릭터 반환
-ACCharacterBase* UCTargetComponent::GetTarget()
-{
-	return Target;
 }
 
 // Tab키로 타겟 온
@@ -127,6 +122,21 @@ void UCTargetComponent::End_Target()
 	Targets.Remove(Target);
 }
 
+// 타겟 변경
+void UCTargetComponent::ChangeTarget(ACCharacterBase* InCandidate)
+{
+	// 혹시 지정된 타겟이 없다면
+	if (IsValid(InCandidate) == false)
+		End_Target();
+
+	if (Target != nullptr)
+		ControlCursor(Target);
+
+	// 선택된 캐릭터 타겟으로 지정
+	Target = InCandidate;
+	ControlCursor(Target);
+}
+
 // Control Cursor = 커서 On / Off
 void UCTargetComponent::ControlCursor(ACCharacterBase* InTarget)
 {
@@ -142,42 +152,32 @@ void UCTargetComponent::ControlCursor(ACCharacterBase* InTarget)
 	OnControlWidget.Clear();
 }
 
-// 타겟 변경
-void UCTargetComponent::ChangeTarget(ACCharacterBase* InCandidate)
-{
-	// 혹시 지정된 타겟이 없다면
-	if(IsValid(InCandidate) == false)
-		End_Target();
-
-	if(Target != nullptr)
-		ControlCursor(Target);
-
-	// 선택된 캐릭터 타겟으로 지정
-	Target = InCandidate;
-	ControlCursor(Target);
-}
-
 void UCTargetComponent::TickTargeting()
 {
-	FVector WidgetLocation = GetTarget()->GetActorLocation();
-	//FVector PlayerLocation = GetOwner()->GetActorLocation();
 	ACPlayer* player = Cast<ACPlayer>(GetOwner());
-	UCameraComponent* camera = Cast<UCameraComponent>(player->GetComponentByClass(UCameraComponent::StaticClass()));
 
-	FVector PlayerLocation = camera->GetComponentLocation();
-
-	FRotator Direction = UKismetMathLibrary::FindLookAtRotation(WidgetLocation, PlayerLocation);
-
-	Cast<ACEnemy>(Target)->CursorWidget->SetRelativeRotation(Direction + FRotator(0,90,0));
-	//UE_LOG(LogTemp, Warning, TEXT("%p, %p, %p"), &Direction.Pitch, &Direction.Yaw, &Direction.Roll);
-
-	// 시점 고정
-	/*if(UKismetMathLibrary::EqualEqual_RotatorRotator(ControlRotation, OwnerToTarget, FinishAngle))
+	// 타겟 위젯 방향 조절
 	{
-		FRotator direction = UKismetMathLibrary::MakeRotator(OwnerToTarget.Roll, ControlRotation.Pitch, OwnerToTarget.Yaw);
-		FRotator ret = UKismetMathLibrary::RInterpTo(ControlRotation, direction, GetWorld()->GetDeltaSeconds(), InterpSpeed);
+		FVector WidgetLocation = GetTargetActor()->GetActorLocation();
+		FVector CameraLocation = Cast<UCameraComponent>(player->GetComponentByClass(UCameraComponent::StaticClass()))->GetComponentLocation();
+		FRotator Direction = UKismetMathLibrary::FindLookAtRotation(WidgetLocation, CameraLocation);
 
-		OwnerCharacter->GetController()->SetControlRotation(ret);
+		//UE_LOG(LogTemp, Warning, TEXT("%p, %p, %p"), &Direction.Pitch, &Direction.Yaw, &Direction.Roll);
+		Cast<ACEnemy>(Target)->CursorWidget->SetRelativeRotation(Direction + FRotator(0, 90, 0));
+	}
+
+	// 타겟팅 시 캐릭터 방향 조절
+	/*{
+		FRotator ControlRotation = player->GetActorRotation();
+		FRotator OwnerToTarget = UKismetMathLibrary::FindLookAtRotation(player->GetActorLocation(), Target->GetActorLocation());
+
+		if (UKismetMathLibrary::EqualEqual_RotatorRotator(ControlRotation, OwnerToTarget, FinishAngle))
+		{
+			FRotator direction = UKismetMathLibrary::MakeRotator(ControlRotation.Roll, ControlRotation.Pitch, OwnerToTarget.Yaw);
+			FRotator ret = UKismetMathLibrary::RInterpTo(OwnerCharacter->GetActorRotation(), direction, GetWorld()->GetDeltaSeconds(), InterpSpeed);
+
+			OwnerCharacter->GetController()->SetControlRotation(ret);
+		}
 	}*/
 }
 

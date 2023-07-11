@@ -14,8 +14,7 @@ class PORTPOLIO_CPP_API UCEquipment : public UObject
 	GENERATED_BODY()
 
 public:
-	// 오버로딩 안되면 오버라이드 하러 다시와야됨
-	virtual void BeginPlay(class ACCharacterBase* InOwner, const FEquipData& InEquipData);
+	virtual void BeginPlay(class ACCharacterBase* InOwner, const FDrawWeaponData& InEquipData);
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
@@ -41,7 +40,7 @@ public:
 protected:
 	class ACCharacterBase* Owner;
 
-	FEquipData Data;
+	FDrawWeaponData Data;
 
 protected:
 	class UCMovementComponent* Movement;

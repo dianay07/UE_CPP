@@ -28,6 +28,7 @@ public:
 	EStateType GetType() { return Type; }
 
 	FORCEINLINE bool IsInBattle() { return IsBattle; }
+	void SetInBattle(bool InValue);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -46,11 +47,11 @@ public:
 	void SetHittedMode();
 	void SetDeadMode();
 	void SetActionMode();
-	void SetIsBattle();
 	void SetIsBattle(bool InValue);
 
 private:
-	void ChangeType(EStateType InType);
+	UFUNCTION()
+		void ChangeType(EStateType InType);
 
 public:
 	FStateTypeChanged OnStateTypeChanged;

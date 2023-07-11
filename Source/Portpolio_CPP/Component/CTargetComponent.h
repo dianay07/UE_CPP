@@ -34,12 +34,11 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	class ACCharacterBase* GetTarget();		// 타겟이 된 캐릭터 반환
+	FORCEINLINE class ACCharacterBase* GetTargetActor() { return Target; }		// 타겟이 된 캐릭터 반환
 
 public:
-	void ToggleTarget();					// Tab키로 타겟 시작할 때
-	// 타겟이 마우스 클릭으로 지정 됬을 때
-	void ToggleTarget(class ACCharacterBase* InTarget);
+	void ToggleTarget();											// Tab키로 타겟 시작할 때
+	void ToggleTarget(class ACCharacterBase* InTarget);				// 타겟이 마우스 클릭으로 지정 됬을 때
 
 	void Begin_Target(class ACCharacterBase* InTarget = nullptr);	// 타겟 기능 실행
 	void End_Target();												// 타겟 기능 종료
@@ -56,10 +55,9 @@ public:
 private:
 	class ACCharacterBase* OwnerCharacter;
 	class ACCharacterBase* Target;
+
+	class UCStateComponent* State;
 	TArray<class ACCharacterBase*> Targets;
 
 	int TargetIndex = 0;
 };
-
-
-// TODO :: 몬스터가 죽으면 Target 배열에서 지워줘야함

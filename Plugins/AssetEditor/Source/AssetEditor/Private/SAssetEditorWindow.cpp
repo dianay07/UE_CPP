@@ -14,8 +14,23 @@ TSharedPtr<FAssetEditorWindow> FAssetEditorWindow::Instance = nullptr;
 
 void FAssetEditorWindow::OpenWindow(FString InAssetName)
 {
-	if(Instance.IsValid())
+	if (Instance.IsValid())
 	{
+		if (Instance->LeftArea.IsValid())
+		{
+			FAssetRowDataPtr ptr = nullptr;
+
+			if (InAssetName.Len() > 0)
+				ptr = Instance->LeftArea->GetRowDataPtrByName(InAssetName);
+
+			if (ptr.IsValid() == false)
+				ptr = Instance->LeftArea->GetFirstDataPtr();
+
+			Instance->LeftArea->SelectDataPtr(ptr->Asset);
+
+			return;
+		}
+
 		Instance->CloseWindow();
 
 		Instance.Reset();
@@ -104,7 +119,19 @@ void FAssetEditorWindow::Open(FString InAssetName)
 		);
 
 	UCJobDataAsset* asset = nullptr;
-	asset = LeftArea->GetFirstDataPtr()->Asset;
+	if (InAssetName.Len() > 0)
+	{
+		FAssetRowDataPtr ptr = LeftArea->GetRowDataPtrByName(InAssetName);
+
+		if (LeftArea->SelectedRowDataPtrName() == InAssetName)
+			return;
+
+		if (ptr.IsValid())
+			asset = ptr->Asset;
+	}
+
+	if (asset == nullptr)
+		asset = LeftArea->GetFirstDataPtr()->Asset;
 
 	FAssetEditorToolkit::InitAssetEditor(EToolkitMode::Standalone, TSharedPtr<IToolkitHost>(), EditorName, layout, true, true, asset);
 	//DetailsView->SetObject(asset);
@@ -152,17 +179,6 @@ void FAssetEditorWindow::RegisterTabSpawners(const TSharedRef<FTabManager>& InTa
 
 TSharedRef<SDockTab> FAssetEditorWindow::Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs)
 {
-	/*TSharedPtr<SDockTab> tab = SNew(SDockTab)
-		[
-			SNew(SButton)
-			.OnClicked(this, &FAssetEditorWindow::OnClicked)
-			[
-				SNew(STextBlock)
-				.Text(FText::FromString("Test"))
-			]
-		];
-
-	return tab.ToSharedRef();*/
 	return SNew(SDockTab)
 	[
 		LeftArea.ToSharedRef()

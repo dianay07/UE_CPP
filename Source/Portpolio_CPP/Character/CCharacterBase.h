@@ -14,9 +14,6 @@ public:
 	ACCharacterBase();
 
 protected:
-	virtual void BeginPlay() override;
-
-protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCMontageComponent* Montages;
 
@@ -36,12 +33,4 @@ public:
 	FORCEINLINE UCMovementComponent* GetMovement() { return Movement; }
 	FORCEINLINE UCStatusComponent* GetStatus() { return Status; }
 	FORCEINLINE UCTargetComponent* GetTarget() { return Target; }
-
-public:	
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-private:
-	UFUNCTION()
-		void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
-
 };

@@ -15,24 +15,28 @@ private:
 		TSubclassOf<class ACAttachment> AttachmentClass;				// Attachment 클래스
 
 	UPROPERTY(EditAnywhere)
-		FEquipData EquipData;											// 장착 애니메이션
-
-	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UCEquipment> EquipmentClass;					// 장착 관리 클래스
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class UCActiveSkill> ActiveSkillClass;				// 스킬 작동 클래스
+		TSubclassOf<class UCSkillBase> ActiveSkillClass;				// 스킬 작동 클래스
+
+public:
+	UPROPERTY(EditAnywhere)
+		FDrawWeaponData DrawWeaponData;					// 장착 애니메이션
+
+	UPROPERTY(EditAnywhere)
+		TArray<UAnimMontage*> AutoAttackMontages;
 
 	UPROPERTY(EditAnywhere)
 		TArray<FSkillData> SkillDatas;									// 스킬 데이터
 
 	UPROPERTY(EditAnywhere)
-		TArray<FHitData> HitDatas;										// 히트 데이터
+		TArray<FSkillDamageData> HitDatas;										// 히트 데이터
 
 public:
 	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE class UCEquipment* GetEquipment() { return Equipment; }
-	FORCEINLINE class UCActiveSkill* GetActiveSkill() { return ActiveSkill; }
+	FORCEINLINE class UCSkillBase* GetActiveSkill() { return ActiveSkill; }
 
 public:
 	UCJobDataAsset();
@@ -54,7 +58,7 @@ private:
 		class UCEquipment* Equipment;
 
 	UPROPERTY()
-		class UCActiveSkill* ActiveSkill;
+		class UCSkillBase* ActiveSkill;
 
 #if WITH_EDITOR
 	void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;

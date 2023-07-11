@@ -55,7 +55,6 @@ void SJobSkillData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle
 	int32 index = InPropertyHandle->GetIndexInArray();
 	CheckBoxes[index]->SetUtilities(InCustomizationUtils.GetPropertyUtilities());
 
-	// 왜 이름 안바뀜?
 	FString name = InPropertyHandle->GetPropertyDisplayName().ToString();
 	name = "Skill Data - " + name;
 

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Item/CActiveSkill.h"
+#include "Item/CSkillBase.h"
 #include "CActiveSkill_Global.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API UCActiveSkill_Global : public UCActiveSkill
+class PORTPOLIO_CPP_API UCActiveSkill_Global : public UCSkillBase
 {
 	GENERATED_BODY()
 

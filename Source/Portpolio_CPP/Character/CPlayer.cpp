@@ -7,7 +7,6 @@
 #include "Component/CEquipComponent.h"
 #include "Component/CJobComponent.h"
 #include "Component/CMovementComponent.h"
-#include "Component/CStatusComponent.h"
 #include "Component/CTargetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -85,7 +84,6 @@ void ACPlayer::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
-
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -126,7 +124,7 @@ void ACPlayer::OnJump()
 void ACPlayer::DisplayTargetInfo(ACCharacterBase* InOther)
 {
 	// 타겟 컴포넌트에 선택된 타겟이 없으면
-	if (IsValid(Target->GetTarget()) == false)
+	if (IsValid(Target->GetTargetActor()) == false)
 		return;
 
 	// UI가 안켜져 있으면 켜주고
@@ -134,14 +132,14 @@ void ACPlayer::DisplayTargetInfo(ACCharacterBase* InOther)
 		UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
 
 	// 표시될 데이터 설정
-	UI_TargetInfo->SetLevelName(Target->GetTarget()->GetName());
+	UI_TargetInfo->SetLevelName(Target->GetTargetActor()->GetName());
 	UI_TargetInfo->SetLevelText(" LV : 00 ");
 }
 
 void ACPlayer::TestKeyBinding()
 {
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::Q, true));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::W, true));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::One, true));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::Two, true));
 }
 
 void ACPlayer::OffTargetInfo()
@@ -156,7 +154,7 @@ void ACPlayer::TabOnTarget()
 	Target->ToggleTarget();
 
 	if (Target != nullptr)
-		DisplayTargetInfo(Target->GetTarget());
+		DisplayTargetInfo(Target->GetTargetActor());
 }
 
 // 타겟이 될 물체 클릭 이벤트
@@ -188,24 +186,15 @@ void ACPlayer::ClickOnTarget()
 
 	if(Cast<ACEnemy>(hitResult.GetActor()))
 	{
+		if(GetTarget()->GetTargetActor() == hitResult.GetActor())
+		{
+			State->SetIsBattle(true);
+			Job->OnAutoAttack();
+		}
+
 		// hitActor를 CharacterBase로 형변환 후 전달
 		ACCharacterBase* character = Cast<ACCharacterBase>(hitResult.GetActor());
 		Target->ToggleTarget(character);
 		DisplayTargetInfo(character);
-	}
-}
-
-// TODO :: 데미지 체크
-void ACPlayer::Damage(ACharacter* InAttacker, TArray<ACharacter*> InDamagedObjs, FHitData InHitData)
-{
-	if (IsValid(Target) == false)
-		return;
-
-	for (ACharacter* candi : InDamagedObjs)
-	{
-		ACEnemy* enemy = Cast<ACEnemy>(candi);
-		UCStatusComponent* status = Cast<UCStatusComponent>(enemy->GetComponentByClass(UCStatusComponent::StaticClass()));
-
-		status->SetHealth(100);
 	}
 }

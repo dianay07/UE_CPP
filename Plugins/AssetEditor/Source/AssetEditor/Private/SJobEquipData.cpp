@@ -45,28 +45,5 @@ void SJobEquipData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle
 void SJobEquipData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder& InChildBuilder,
 	IPropertyTypeCustomizationUtils& InCustomizationUtils)
 {
-	/*uint32 number = 0;
-	InPropertyHandle->GetNumChildren(number);
-
-	for(uint32 i = 0; i < number; i++)
-	{
-		TSharedPtr<IPropertyHandle> handle = InPropertyHandle->GetChildHandle(i);
-		IDetailPropertyRow& row = InChildBuilder.AddProperty(handle.ToSharedRef());
-
-		FString name = FString("Name ") + FString::FromInt(i + 1);
-
-		row.CustomWidget()
-			.NameContent()
-			[
-				handle->CreatePropertyNameWidget()
-			] 
-			.ValueContent()
-			.MinDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MinDesiredWidth"))
-			.MaxDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MaxDesiredWidth"))
-			[
-				handle->CreatePropertyValueWidget()
-			];
-	}*/
-
 	CheckBoxes->DrawProperties(InPropertyHandle, &InChildBuilder);
 }

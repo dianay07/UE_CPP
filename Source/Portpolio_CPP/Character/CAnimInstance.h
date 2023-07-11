@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/CJobComponent.h"
 #include "Animation/AnimInstance.h"
 #include "CAnimInstance.generated.h"
 
@@ -24,14 +25,22 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		bool IsFixedCamera;
 
+protected:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+		EJob JobType = EJob::Max;
+
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
 	class ACPlayer* Owner;
+	UCJobComponent* Job;
 
 private:
 	FRotator PrevRotation;
+
+	UFUNCTION()
+		void OnJobTypeChanged(EJob InPrevType, EJob InNewType);
 
 };

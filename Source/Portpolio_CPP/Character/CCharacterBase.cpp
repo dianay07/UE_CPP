@@ -2,9 +2,7 @@
 #include "Component/CMontageComponent.h"
 #include "Component/CMovementComponent.h"
 #include "Component/CStatusComponent.h"
-#include "Component/CEquipComponent.h"
 #include "Component/CTargetComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 ACCharacterBase::ACCharacterBase()
 {
@@ -15,21 +13,4 @@ ACCharacterBase::ACCharacterBase()
 	Target = CreateDefaultSubobject<UCTargetComponent>(TEXT("Target Compoenet"));
 
 	Movement->FixedCharacterSetting();
-}
-
-void ACCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void ACCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-void ACCharacterBase::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
-{
-
 }

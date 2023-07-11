@@ -1,7 +1,7 @@
 #include "Notifies/CAnimNotify_BeginAction.h"
 
 #include "Component/CJobComponent.h"
-#include "Item/CActiveSkill.h"
+#include "Item/CSkillBase.h"
 
 FString UCAnimNotify_BeginAction::GetNotifyName_Implementation() const
 {

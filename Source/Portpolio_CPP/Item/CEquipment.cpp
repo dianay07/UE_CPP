@@ -3,7 +3,7 @@
 #include "Character/CCharacterBase.h"
 #include "Component/CMovementComponent.h"
 
-void UCEquipment::BeginPlay(ACCharacterBase* InOwner, const FEquipData& InEquipData)
+void UCEquipment::BeginPlay(ACCharacterBase* InOwner, const FDrawWeaponData& InEquipData)
 {
 	Owner = InOwner;
 	Data = InEquipData;
@@ -16,7 +16,21 @@ void UCEquipment::Equip_Implementation()
 {
 	State->SetEquipMode();
 
-	// 상속 후 구현
+	//if (Data.bCanMove == false)
+	//	Movement->Stop();
+
+	//if (Data.bUseControlRotation)
+	//	Movement->EnableControlRotation();
+
+	if (!!Data.Montage)
+	{
+		Owner->PlayAnimMontage(Data.Montage, Data.PlayRate);
+	}
+	else
+	{
+		Begin_Equip();
+		End_Equip();
+	}
 }
 
 void UCEquipment::Begin_Equip_Implementation()

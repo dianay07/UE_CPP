@@ -2,14 +2,14 @@
 
 #include "Component/CStateComponent.h"
 
-float UCActiveSkill_Global::GlobalCoolTime = 3.0f;
+float UCActiveSkill_Global::GlobalCoolTime = 2.5f;
 
 void UCActiveSkill_Global::ActiveSkill(int InIndex)
 {
 	if (SkillDatas.Num() < 1)
 		return;
 
-	if (State->IsActionMode())
+	if (State->IsIdleMode() == false)
 		return;
 
 	Super::ActiveSkill(InIndex);

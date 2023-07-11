@@ -3,7 +3,7 @@
 #include "Component/CJobComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CTargetComponent.h"
-#include "Item/CActiveSkill.h"
+#include "Item/CSkillBase.h"
 
 FString UCAnimNotify_EndAction::GetNotifyName_Implementation() const
 {

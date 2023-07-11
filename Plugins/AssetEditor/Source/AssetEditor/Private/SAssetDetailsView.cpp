@@ -31,17 +31,23 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		category.AddProperty("JobName", type);
 	}
 
+	// Auto Attack Montage
+	{
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("AutoAttackMontages", FText::FromString("AutoAttack Montage"));
+		category.AddProperty("AutoAttackMontages", type);
+	}
+
 	// Equipment Setting
 	{
-		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("EquipData", FText::FromString("Equip Data"));
-		IDetailPropertyRow& row = category.AddProperty("EquipData", type);
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DrawWeaponData", FText::FromString("DrawWeapon Data"));
+		IDetailPropertyRow& row = category.AddProperty("DrawWeaponData", type);
 
 		if (bRefreshByCheckBoxes == false)
 		{
 			TSharedPtr<SAssetCheckBoxes> checkBoxes = SJobEquipData::CreateCheckBoxes();
 			checkBoxes->AddProperties(row.GetPropertyHandle());
 
-			FEquipData data;
+			FDrawWeaponData data;
 
 			int32 index = 0;
 			checkBoxes->CheckDefaultObject(index++, data.Montage);
@@ -52,7 +58,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 
 	// Skill Setting
 	{
-		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("SkillDatas", FText::FromString("Skill Data"));
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("GlobalSkillDatas", FText::FromString("Global Skill Data"));
 		IDetailPropertyRow& row = category.AddProperty("SkillDatas", type);
 
 		if (bRefreshByCheckBoxes == false)
@@ -76,11 +82,13 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 
 				int32 index = 0;
 				checkBoxes->CheckDefaultValue(index++, data.DemandLevel);
+				checkBoxes->CheckDefaultValue(index++, data.Name);
+				checkBoxes->CheckDefaultValue(index++, data.Description);
 				checkBoxes->CheckDefaultObject(index++, data.Montage);
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
-				checkBoxes->CheckDefaultValue(index++, data.bUseControllerRotate);
-				// ESkillCoolType
 				checkBoxes->CheckDefaultValue(index++, data.SkillCooltime);
+				checkBoxes->CheckDefaultValue(index++, data.IsRequireTarget);
+				checkBoxes->CheckDefaultObject(index++, data.Icon);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);

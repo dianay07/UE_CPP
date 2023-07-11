@@ -75,8 +75,10 @@ public:
 	bool HasRowDataptr() { return RowDatas.Num() > 0; }
 	FAssetRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }
 
-	// TODO :: JobData Type 에셋만 받는거 어캐
 	void SelectDataPtr(class UCJobDataAsset* InAsset);
+
+	FAssetRowDataPtr GetRowDataPtrByName(FString InAssetName);
+	FString SelectedRowDataPtrName();
 
 private:
 	TSharedRef<ITableRow> OnGenerateRow(FAssetRowDataPtr InRow, const TSharedRef<STableViewBase>& InTable);

@@ -101,6 +101,27 @@ void SAssetEditorLeftArea::OnSelectionChanged(FAssetRowDataPtr InDataPtr, ESelec
 	OnListViewSeletedItem.ExecuteIfBound(InDataPtr);
 }
 
+FAssetRowDataPtr SAssetEditorLeftArea::GetRowDataPtrByName(FString InAssetName)
+{
+	for (FAssetRowDataPtr ptr : RowDatas)
+	{
+		if (ptr->Name == InAssetName)
+			return ptr;
+	}
+
+	return nullptr;
+}
+
+FString SAssetEditorLeftArea::SelectedRowDataPtrName()
+{
+	TArray<FAssetRowDataPtr> ptrs = ListView->GetSelectedItems();
+
+	if (ptrs.Num() > 0)
+		return ptrs[0]->Asset->GetName();
+
+	return "";
+}
+
 void SAssetEditorLeftArea::SelectDataPtr(UCJobDataAsset* InAsset)
 {
 	if (HasRowDataptr() == false)
@@ -153,7 +174,7 @@ void SAssetEditorLeftArea::ReadDataAssetList()
 	RowDatas.Reset();
 
 	TArray<UObject*> objects;
-	EngineUtils::FindOrLoadAssetsByPath("/Game/98_Test/", objects, EngineUtils::ATL_Regular);
+	EngineUtils::FindOrLoadAssetsByPath("/Game/08_Weapon/", objects, EngineUtils::ATL_Regular);
 
 	int32 index = 0;
 	for(UObject* obj : objects)

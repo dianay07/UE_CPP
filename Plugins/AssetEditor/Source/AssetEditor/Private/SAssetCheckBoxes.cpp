@@ -18,25 +18,54 @@ void SAssetCheckBoxes::AddProperties(TSharedPtr<IPropertyHandle> InHandle)
 
 TSharedRef<SWidget> SAssetCheckBoxes::Draw(bool bBackGround)
 {
+	//TSharedPtr<SUniformGridPanel> panel;
+	//SAssignNew(panel, SUniformGridPanel);
+	//panel->SetMinDesiredSlotWidth(200);
+
+	//for(int32 i = 0; i < InternalDatas.Num(); i++)
+	//{
+	//	panel->AddSlot(i, 0)
+	//		[
+	//			SNew(SCheckBox)
+	//			.IsChecked(InternalDatas[i].bChecked)				// 체크박스가 체크되어있는지 ?
+	//			.OnCheckStateChanged(this, &SAssetCheckBoxes::OnCheckStateChanged, i)
+	//			[
+	//				SNew(STextBlock)
+	//				.Text(FText::FromString(InternalDatas[i].Name))
+	//			]
+	//		];
+	//}
+
+	//if(bBackGround == false)
+	//	return panel.ToSharedRef();
+
+	//TSharedPtr<SBorder> border = SNew(SBorder)
+	//	.BorderImage(FJobEditorStyle::Get()->Array_Image.Get())
+	//	[
+	//		panel.ToSharedRef()
+	//	];
+
+	//return  border.ToSharedRef();
+
 	TSharedPtr<SUniformGridPanel> panel;
 	SAssignNew(panel, SUniformGridPanel);
-	panel->SetMinDesiredSlotWidth(150);
+	panel->SetMinDesiredSlotWidth(200);
 
-	for(int32 i = 0; i < InternalDatas.Num(); i++)
+	for (int32 i = 0; i < InternalDatas.Num(); i++)
 	{
-		panel->AddSlot(i, 0)
+		panel->AddSlot(i % 5, i / 5)
 			[
 				SNew(SCheckBox)
 				.IsChecked(InternalDatas[i].bChecked)				// 체크박스가 체크되어있는지 ?
-				.OnCheckStateChanged(this, &SAssetCheckBoxes::OnCheckStateChanged, i)
-				[
-					SNew(STextBlock)
-					.Text(FText::FromString(InternalDatas[i].Name))
-				]
+			.OnCheckStateChanged(this, &SAssetCheckBoxes::OnCheckStateChanged, i)
+			[
+				SNew(STextBlock)
+				.Text(FText::FromString(InternalDatas[i].Name))
+			]
 			];
 	}
 
-	if(bBackGround == false)
+	if (bBackGround == false)
 		return panel.ToSharedRef();
 
 	TSharedPtr<SBorder> border = SNew(SBorder)
@@ -146,6 +175,15 @@ void SAssetCheckBoxes::CheckDefaultValue(int32 InIndex, const FVector& InValue)
 	InternalDatas[InIndex].Handle->GetValue(val);
 
 	if (InValue != val)
+		InternalDatas[InIndex].bChecked = true;
+}
+
+void SAssetCheckBoxes::CheckDefaultValue(int32 InIndex, const FText& InValue)
+{
+	FText val = FText::FromString("");
+	InternalDatas[InIndex].Handle->GetValue(val);
+
+	if (InValue.CompareTo(val) == false)
 		InternalDatas[InIndex].bChecked = true;
 }
 

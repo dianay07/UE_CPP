@@ -1,6 +1,5 @@
 #include "Component/CStateComponent.h"
 
-
 UCStateComponent::UCStateComponent()
 {
 
@@ -9,7 +8,6 @@ UCStateComponent::UCStateComponent()
 void UCStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void UCStateComponent::SetIdleMode()
@@ -40,11 +38,6 @@ void UCStateComponent::SetDeadMode()
 void UCStateComponent::SetActionMode()
 {
 	ChangeType(EStateType::Action);
-}
-
-void UCStateComponent::SetIsBattle()
-{
-	IsBattle = true;
 }
 
 void UCStateComponent::SetIsBattle(bool InValue)
