@@ -43,4 +43,8 @@ private:
 
 	UTexture2D* ProgressBar_Hp_Border_Battle;
 	FSlateBrush Border_BattleBrush;
+
+private:
+	class ACPlayer* OwnerPlayer;
+	class ACCharacterBase* Target;
 };

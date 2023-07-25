@@ -2,16 +2,12 @@
 
 UCStatusComponent::UCStatusComponent()
 {
-
-
 }
-
 
 void UCStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
+	SetHealth(MaxHealth);
 }
 
 void UCStatusComponent::SetHealth(float InValue)
@@ -107,4 +103,12 @@ void UCStatusComponent::SetHealingMagicPotency(float InValue)
 void UCStatusComponent::SetSpellSpeed(float InValue)
 {
 	
+}
+
+///////////////////////////////////////////////////////////////////////
+
+void UCStatusComponent::Damage(float InAmount)
+{
+	SetHealth(-1 * InAmount);
+	//Health = FMath::Clamp(Health, 0.0f, MaxHealth);
 }

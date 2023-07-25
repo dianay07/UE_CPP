@@ -1,10 +1,14 @@
 #include "UI/CUI_TargetInfo.h"
 
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Character/CPlayer.h"
 #include "Component/CStateComponent.h"
-#include "Components/Overlay.h"
+#include "Component/CStatusComponent.h"
+#include "Component/CTargetComponent.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+
+class ACPlayer;
 
 UCUI_TargetInfo::UCUI_TargetInfo(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -23,7 +27,7 @@ void UCUI_TargetInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	//HPBar_Overlay->Slot->Parent
+	OwnerPlayer = Cast<ACPlayer>(GetOwningPlayerPawn());
 
 	Text_Level->SetText(FText::FromString("LV_60"));
 	Text_Name->SetText(FText::FromString("Enemy Name"));
@@ -34,9 +38,9 @@ void UCUI_TargetInfo::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	// 플레이어의 StateComponent 콜
-	UCStateComponent* State = Cast<UCStateComponent>(GetOwningPlayerPawn()->GetComponentByClass(UCStateComponent::StaticClass()));
-	//FString str = State->IsBattle() ? TEXT("true") : TEXT("false");
-	//UE_LOG(LogTemp, Warning, L"%s", *str);
+	UCStateComponent* State = Cast<UCStateComponent>(OwnerPlayer->GetComponentByClass(UCStateComponent::StaticClass()));
+	// FString str = State->IsBattle() ? TEXT("true") : TEXT("false");
+	// UE_LOG(LogTemp, Warning, L"%s", *str);
 
 	if (State->IsInBattle() == true)
 	{
@@ -48,8 +52,10 @@ void UCUI_TargetInfo::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		ProgressBar_HP->WidgetStyle.SetBackgroundImage(Border_WaitBrush);
 		ProgressBar_HP->SetFillColorAndOpacity(FLinearColor(1.0f, 0.57f, 0.11f));
 	}
-		
-}
+
+	ProgressBar_HP->SetPercent(OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetHealth() / OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetMaxHealth());
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetHealth());
+}   
 
 void UCUI_TargetInfo::SetLevelText(FString Instring)
 {

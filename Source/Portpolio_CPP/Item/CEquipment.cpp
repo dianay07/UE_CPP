@@ -16,12 +16,6 @@ void UCEquipment::Equip_Implementation()
 {
 	State->SetEquipMode();
 
-	//if (Data.bCanMove == false)
-	//	Movement->Stop();
-
-	//if (Data.bUseControlRotation)
-	//	Movement->EnableControlRotation();
-
 	if (!!Data.Montage)
 	{
 		Owner->PlayAnimMontage(Data.Montage, Data.PlayRate);
@@ -46,8 +40,7 @@ void UCEquipment::End_Equip_Implementation()
 	bBeginEquip = false;
 	bEquipped = true;
 
-	if (OnEquipmentUnequip.IsBound())
-		OnEquipmentUnequip.Broadcast();
+	State->SetIdleMode();
 }
 
 void UCEquipment::Unequip_Implementation()
@@ -55,4 +48,7 @@ void UCEquipment::Unequip_Implementation()
 	bEquipped = false;
 
 	State->IsIdleMode();
+
+	if (OnEquipmentUnequip.IsBound())
+		OnEquipmentUnequip.Broadcast();
 }

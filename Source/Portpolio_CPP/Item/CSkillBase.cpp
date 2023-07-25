@@ -30,20 +30,20 @@ void UCSkillBase::ActiveSkill(int InIndex)
 	// 타겟이 있으면 스킬을 쓸때마다, 자동 공격을 할때마다 카메라는 가만히 두고 캐릭터가 타겟을 바라봐야 한다....
 	// 현 상태 : 카메라를 가만히 두는 것은 성공했지만, 컨트롤러 자체를 돌리기 때문에 ? 카메라도 획돈다
 	// 추가발견 : 첫 타겟의 방향으로 계속 바라보는 거 같다
-	if (IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s"), *OwnerCharacter->GetTarget()->GetTargetActor()->GetName())
+	//if (IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("%s"), *OwnerCharacter->GetTarget()->GetTargetActor()->GetName())
 
-		static ACCharacterBase* target = OwnerCharacter->GetTarget()->GetTargetActor();
-		FRotator direction = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), target->GetActorLocation());
+	//	static ACCharacterBase* target = OwnerCharacter->GetTarget()->GetTargetActor();
+	//	FRotator direction = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), target->GetActorLocation());
 
-		UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), direction.Roll, direction.Pitch, direction.Yaw);
+	//	UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), direction.Roll, direction.Pitch, direction.Yaw);
 
-		// pitch가 바뀌면 Y가 고정됨 -> 기존 Controller의 Y을
-		// 테스트 필요
-		FRotator ret = UKismetMathLibrary::MakeRotator(OwnerCharacter->GetControlRotation().Roll, OwnerCharacter->GetControlRotation().Pitch, direction.Yaw);
-		OwnerCharacter->GetController()->SetControlRotation(ret);
-	}
+	//	// pitch가 바뀌면 Y가 고정됨 -> 기존 Controller의 Y을
+	//	// 테스트 필요
+	//	FRotator ret = UKismetMathLibrary::MakeRotator(OwnerCharacter->GetControlRotation().Roll, OwnerCharacter->GetControlRotation().Pitch, direction.Yaw);
+	//	OwnerCharacter->GetController()->SetControlRotation(ret);
+	//}
 
 	UE_LOG(LogTemp, Display, TEXT("Current Type : Action"));
 }

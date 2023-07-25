@@ -15,6 +15,7 @@
 #include "UI/CUI_TargetInfo.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "UI/CHUDLayout.h"
 
 ACPlayer::ACPlayer()
 {
@@ -53,7 +54,6 @@ ACPlayer::ACPlayer()
 
 	// Component
 	{
-		// Camera Controller
 		CameraController = CreateDefaultSubobject<UCameraControlComponent>(TEXT("Camera Control"));
 		Job = CreateDefaultSubobject<UCJobComponent>(TEXT("Job Component"));
 		Equip = CreateDefaultSubobject<UCEquipComponent>(TEXT("Equip Component"));
@@ -63,6 +63,11 @@ ACPlayer::ACPlayer()
 	static ConstructorHelpers::FClassFinder<UCUI_TargetInfo> WB_InfoUI(TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetInfo.BP_CUI_TargetInfo_C'"));
 	if(WB_InfoUI.Succeeded())
 		UI_TargetInfoClass = WB_InfoUI.Class;
+
+	// HUDLayout
+	static ConstructorHelpers::FClassFinder<UCHUDLayout> WB_HUDLayout(TEXT("WidgetBlueprint'/Game/07_UI/BP_CHUDLayout.BP_CHUDLayout_C'"));
+	if (WB_HUDLayout.Succeeded())
+		UI_HUDLayoutClass = WB_HUDLayout.Class;
 }
 
 void ACPlayer::BeginPlay()
@@ -73,10 +78,15 @@ void ACPlayer::BeginPlay()
 	UI_TargetInfo->AddToViewport();
 	UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 
+	// ??????
+	UI_HUDLayout = Cast<UCHUDLayout>(CreateWidget(GetWorld(), UI_HUDLayoutClass));
+	UI_HUDLayout->AddToViewport();
+
 	Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	Controller->SetShowMouseCursor(true);
 
 	TestKeyBinding();
+	Job->ChangeJob(EJob::Warrior);
 }
 
 void ACPlayer::Tick(float DeltaSeconds)
@@ -107,10 +117,13 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		PlayerInputComponent->BindAction("Targeting_Tab", EInputEvent::IE_Pressed, this, &ACPlayer::TabOnTarget);
 		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_DoubleClick, this, &ACPlayer::DoubleClickOnTarget);
 
-		// 키 테스팅
-		PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSkill);
+		// 단축키 키는 고정 -> Job Component에서 스킬이 바껴야할듯
+		PlayerInputComponent->BindAction("Slot1", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFirstSlot);
+		PlayerInputComponent->BindAction("Slot2", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSecondSlot);
 
+		// 키 테스트
 		PlayerInputComponent->BindAction("SwapToWarrior", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetWarrior);
 		PlayerInputComponent->BindAction("SwapToDragoon", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetDragoon);
 	}
@@ -121,52 +134,38 @@ void ACPlayer::OnJump()
 	Jump();
 }
 
-void ACPlayer::DisplayTargetInfo(ACCharacterBase* InOther)
+void ACPlayer::DisplayTargetInfo(const ACCharacterBase& InOther)
 {
-	// 타겟 컴포넌트에 선택된 타겟이 없으면
-	if (IsValid(Target->GetTargetActor()) == false)
-		return;
-
 	// UI가 안켜져 있으면 켜주고
 	if(UI_TargetInfo->IsVisible() == false)
 		UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
 
 	// 표시될 데이터 설정
-	UI_TargetInfo->SetLevelName(Target->GetTargetActor()->GetName());
-	UI_TargetInfo->SetLevelText(" LV : 00 ");
+	UI_TargetInfo->SetLevelName(UKismetSystemLibrary::GetDisplayName(&InOther));
+	UI_TargetInfo->SetLevelText(TEXT("LV_00"));
 }
 
 void ACPlayer::TestKeyBinding()
 {
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
+
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::One, true));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::Two, true));
 }
 
 void ACPlayer::OffTargetInfo()
 {
-	if (UI_TargetInfo->IsVisible() == true)
+	if (UI_TargetInfo->IsVisible() == true)// && State->IsInBattle() == false)
 		UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 }
 
-// 지정 없이 타겟팅 실행
-void ACPlayer::TabOnTarget()
-{
-	Target->ToggleTarget();
-
-	if (Target != nullptr)
-		DisplayTargetInfo(Target->GetTargetActor());
-}
-
-// 타겟이 될 물체 클릭 이벤트
-void ACPlayer::ClickOnTarget()
+FHitResult ACPlayer::TraceByClick()
 {
 	/* 마우스 커서 위치로부터 스크린 라인 트레이스  */
 	FVector start;
 	FVector direction;
 	Controller->DeprojectMousePositionToWorld(start, direction);
-
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *start.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *direction.ToString());
 
 	float distance = 10000.0f;
 	FVector end = start + direction * distance;
@@ -182,19 +181,43 @@ void ACPlayer::ClickOnTarget()
 	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), start, end, ObjectTypes, false,
 		ignores, EDrawDebugTrace::ForDuration, hitResult, true);
 
-	//UE_LOG(LogTemp, Display, TEXT("%s"), *hitResult.GetActor()->GetName());
+	return hitResult;
+}
 
-	if(Cast<ACEnemy>(hitResult.GetActor()))
+// 지정 없이 타겟팅 실행
+void ACPlayer::TabOnTarget()
+{
+	// 타겟팅 기능 강제 ON
+	Target->ToggleTarget();
+
+	// 주변 검색해서 나온 타겟을 표시
+	if (Target != nullptr)
+		DisplayTargetInfo(*Target->GetTargetActor());
+}
+
+// 타겟이 될 물체 클릭 이벤트
+void ACPlayer::ClickOnTarget()
+{
+	// 히트된 액터가 없으면 종료
+	if (TraceByClick().GetActor() == nullptr)
+		return;
+
+	// 있으면 캐릭터로 캐스팅하고 타겟으로 등록
+	TargetActor = Cast<ACCharacterBase>(TraceByClick().GetActor());
+	Target->ToggleTarget(TargetActor);
+	DisplayTargetInfo(*TargetActor);
+}
+
+void ACPlayer::DoubleClickOnTarget()
+{
+	// 클릭된 물체가 적인지 확인후
+	if (Cast<ACEnemy>(TraceByClick().GetActor()))
 	{
-		if(GetTarget()->GetTargetActor() == hitResult.GetActor())
+		// 전투 상태가 아니면 전투로 들어간다
+		if (State->IsInBattle() == false)
 		{
+			Job->PlayEquipMotion();
 			State->SetIsBattle(true);
-			Job->OnAutoAttack();
 		}
-
-		// hitActor를 CharacterBase로 형변환 후 전달
-		ACCharacterBase* character = Cast<ACCharacterBase>(hitResult.GetActor());
-		Target->ToggleTarget(character);
-		DisplayTargetInfo(character);
 	}
 }

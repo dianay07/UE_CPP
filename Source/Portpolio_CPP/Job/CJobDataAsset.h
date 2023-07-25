@@ -22,13 +22,13 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere)
-		FDrawWeaponData DrawWeaponData;					// 장착 애니메이션
+		FDrawWeaponData DrawWeaponData;									// 장착 애니메이션
 
 	UPROPERTY(EditAnywhere)
 		TArray<UAnimMontage*> AutoAttackMontages;
 
 	UPROPERTY(EditAnywhere)
-		TArray<FSkillData> SkillDatas;									// 스킬 데이터
+		TArray<FSkillData> SkillDatas;											// 스킬 데이터
 
 	UPROPERTY(EditAnywhere)
 		TArray<FSkillDamageData> HitDatas;										// 히트 데이터
@@ -49,6 +49,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 		EJob JobName;
+
+	UPROPERTY(EditAnywhere)
+		float AttackRange = 0.0f;
 
 private:
 	UPROPERTY()

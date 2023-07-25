@@ -26,16 +26,16 @@ void FSkillDamageData::SendDamage(ACCharacterBase* InAttacker, AActor* InAttackC
 	InOther->TakeDamage(Damage, e, InAttacker->GetController(), InAttackCauser);
 }
 
-void FSkillDamageData::PlaySoundWave(ACCharacterBase* InOwner)
-{
-	if (Sound == nullptr)
-		return;
-
-	UWorld* world = InOwner->GetWorld();
-	FVector location = InOwner->GetActorLocation();
-
-	UGameplayStatics::SpawnSoundAtLocation(world, Sound, location);
-}
+//void FSkillDamageData::PlaySoundWave(ACCharacterBase* InOwner)
+//{
+//	if (Sound == nullptr)
+//		return;
+//
+//	UWorld* world = InOwner->GetWorld();
+//	FVector location = InOwner->GetActorLocation();
+//
+//	UGameplayStatics::SpawnSoundAtLocation(world, Sound, location);
+//}
 
 void FSkillDamageData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
 {

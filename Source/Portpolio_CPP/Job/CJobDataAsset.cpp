@@ -41,6 +41,15 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 	{
 		ActiveSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
 		ActiveSkill->BeginPlay(Attachment, Equipment, InOwner, SkillDatas, HitDatas);
+
+		if(!!Attachment)
+		{
+			Attachment->OnAttachmentBeginCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginCollision);
+			Attachment->OnAttachmentEndCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndCollision);
+
+			Attachment->OnAttachmentBeginOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginOverlap);
+			Attachment->OnAttachmentEndOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndOverlap);
+		}
 	}
 }
 

@@ -41,12 +41,11 @@ public:
 	void ToggleTarget(class ACCharacterBase* InTarget);				// 타겟이 마우스 클릭으로 지정 됬을 때
 
 	void Begin_Target(class ACCharacterBase* InTarget = nullptr);	// 타겟 기능 실행
-	void End_Target();												// 타겟 기능 종료
+	void FinishTargeting();												// 타겟 기능 종료
 	void ChangeTarget(class ACCharacterBase* InCandidate);			// 타겟 변경
 
-	void ControlCursor(ACCharacterBase* InTarget);					// 타겟된 액터 커서 On/Off
+	void ControlCursor(ACCharacterBase& InTarget);					// 타겟된 액터 커서 On/Off
 
-	void TickTargeting();											// 
 	bool IsTargetsArrayEmpty();
 
 public:
@@ -57,7 +56,9 @@ private:
 	class ACCharacterBase* Target;
 
 	class UCStateComponent* State;
-	TArray<class ACCharacterBase*> Targets;
 
-	int TargetIndex = 0;
+// 타겟팅된 액터 관련
+private:
+	TArray<class ACCharacterBase*> SearchedTargetArray;		// 검색된 액터 배열
+	int TargetIndex = 0;									// 배열 내 인덱스
 };

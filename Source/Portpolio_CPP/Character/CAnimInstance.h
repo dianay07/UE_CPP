@@ -25,6 +25,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		bool IsFixedCamera;
 
+	UPROPERTY(BlueprintReadOnly)
+		bool IsBattle;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 		EJob JobType = EJob::Max;

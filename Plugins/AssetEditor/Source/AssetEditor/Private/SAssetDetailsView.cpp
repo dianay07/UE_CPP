@@ -2,12 +2,13 @@
 
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
+#include "NiagaraSystem.h"
 #include "SAssetCheckBoxes.h"
 #include "SJobEquipData.h"
+#include "SJobHitData.h"
 #include "SJobSkillData.h"
 #include "Animation/AnimMontage.h"
 #include "Job/CJobDataAsset.h"
-#include "NiagaraSystem.h"
 
 bool SAssetDetailsView::bRefreshByCheckBoxes = false;
 	
@@ -29,6 +30,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		category.AddProperty("EquipmentClass", type);
 		category.AddProperty("ActiveSkillClass", type);
 		category.AddProperty("JobName", type);
+		category.AddProperty("AttackRange", type);
 	}
 
 	// Auto Attack Montage
@@ -95,4 +97,40 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 			}
 		} // if
 	}
+
+	// HitData Setting
+	{
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData", FText::FromString("Hit Data"));
+		IDetailPropertyRow& row = category.AddProperty("HitDatas", type);
+
+		if (bRefreshByCheckBoxes == false)	
+		{
+			// 스킬 배열에 들어있는 갯수 리턴받아오기
+			uint32 count = 0;
+			row.GetPropertyHandle()->GetNumChildren(count);
+
+			// 첫 등록시 체크박스 초기화
+			SJobHitData::EmptyCheckBoxes();
+
+			FSkillDamageData data;
+			for (uint32 i = 0; i < count; i++)
+			{
+				// 스킬 배열 핸들 가져와서 각 자식 핸들 가져오기
+				TSharedPtr<IPropertyHandle> handle = row.GetPropertyHandle()->GetChildHandle(i);
+
+				// 어떤 핸들을 체크박스에 넣을지 전달
+				TSharedPtr<SAssetCheckBoxes> checkBoxes = SJobHitData::AddCheckBoxes();
+				checkBoxes->AddProperties(handle);
+
+				int32 index = 0;
+				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
+				checkBoxes->CheckDefaultValue(index++, data.Damage);
+				//checkBoxes->CheckDefaultObject(index++, data.Sound);
+				checkBoxes->CheckDefaultObject(index++, data.Effect);
+				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
+				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
+			}
+		} // if
+	}
 }
+

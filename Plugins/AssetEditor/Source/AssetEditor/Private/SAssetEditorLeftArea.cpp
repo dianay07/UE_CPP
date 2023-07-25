@@ -78,10 +78,6 @@ void SAssetEditorLeftArea::Construct(const FArguments& InArgs)
 		]
 	];
 
-	//RowDatas.Add(FAssetRowData::Make(1, "oqew", nullptr));
-	//RowDatas.Add(FAssetRowData::Make(2, "qewwqe", nullptr));
-	//RowDatas.Add(FAssetRowData::Make(3, "asdsad", nullptr));
-
 	ReadDataAssetList();
 }
 

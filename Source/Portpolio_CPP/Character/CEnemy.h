@@ -1,19 +1,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ICharacter.h"
 #include "Character/CCharacterBase.h"
 #include "CEnemy.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API ACEnemy : public ACCharacterBase
+class PORTPOLIO_CPP_API ACEnemy
+	: public ACCharacterBase
+	, public IICharacter
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(VisibleAnywhere)
+		class UCJobComponent* Job;
 
-	// TODO :: 타겟임을 알리는 Widget 스프라이트, Billboard 컴포넌트로 변경 필요
+public:
 	UPROPERTY(VisibleAnywhere, Category = "Widgets")
-		class UWidgetComponent* CursorWidget;
+		class UBillboardComponent* CursorBillboard;
+
+	FORCEINLINE UBillboardComponent* GetCursor() { return CursorBillboard; }
 
 public:
 	ACEnemy();
@@ -21,10 +28,33 @@ public:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
 
-	FORCEINLINE UWidgetComponent* GetWidget() { return CursorWidget; }
+private:
+	UFUNCTION()
+		void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
 
 public:
-	void SetWidgetVisble();
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+private:
+	void Hitted();
+	void Dead();
+
+public:
+	void End_Hitted() override;
+	void End_Dead() override;
+
+private:
+	struct FDamageData
+	{
+		float Power;
+		class ACharacter* Character;
+		class AActor* Causer;
+
+		struct FSkillDamageEvent* Event;
+	} Damage;
+
+private:
+	FTimerHandle RestoreColor_TimerHandle;
 
 public:
 	UPROPERTY(VisibleAnywhere)

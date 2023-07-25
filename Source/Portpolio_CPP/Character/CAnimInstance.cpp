@@ -33,13 +33,14 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	FRotator delta = UKismetMathLibrary::NormalizedDeltaRotator(rotator, rotator2);
 	PrevRotation = UKismetMathLibrary::RInterpTo(PrevRotation, delta, DeltaSeconds, 25);
 	Direction = PrevRotation.Yaw;
-
+	
 	Pitch = UKismetMathLibrary::FInterpTo(Pitch, Owner->GetBaseAimRotation().Pitch, DeltaSeconds, 25);
 
 	IsJump = Owner->GetCharacterMovement()->IsFalling();
-
-	//
+	
 	IsFixedCamera = Owner->GetMovement()->IsFixedCamera();
+
+	IsBattle = Cast<UCStateComponent>(Owner->GetComponentByClass(UCStateComponent::StaticClass()))->IsInBattle();
 }
 
 void UCAnimInstance::OnJobTypeChanged(EJob InPrevType, EJob InNewType)

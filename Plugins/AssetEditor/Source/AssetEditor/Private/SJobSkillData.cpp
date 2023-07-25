@@ -1,10 +1,10 @@
 #include "SJobSkillData.h"
-#include "SAssetCheckBoxes.h"
 
 #include "DetailWidgetRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "IDetailPropertyRow.h"
 #include "JobEditorStyle.h"
+#include "SAssetCheckBoxes.h"
 
 TArray<TSharedPtr<class SAssetCheckBoxes>> SJobSkillData::CheckBoxes;
 

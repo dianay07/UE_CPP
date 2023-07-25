@@ -91,13 +91,13 @@ struct FSkillDamageData
 
 public:
 	UPROPERTY(EditAnywhere)
-		float PlayRate = 1.0f;
+		float PlayRate = 0.0f;
 
 	UPROPERTY(EditAnywhere)
 		float Damage = 0.0f;
 
-	UPROPERTY(EditAnywhere)
-		class USoundWave* Sound;
+	//UPROPERTY(EditAnywhere)
+	//	class USoundWave* Sound;
 
 	UPROPERTY(EditAnywhere)
 		class UFXSystemAsset* Effect;
@@ -110,7 +110,7 @@ public:
 
 public:
 	void SendDamage(class ACCharacterBase* InAttacker, AActor* InAttackCauser, class ACCharacterBase* InOther);
-	void PlaySoundWave(class ACCharacterBase* InOwner);
+	//void PlaySoundWave(class ACCharacterBase* InOwner);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
 };

@@ -4,9 +4,6 @@
 #include "Components/ActorComponent.h"
 #include "CStatusComponent.generated.h"
 
-
-
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PORTPOLIO_CPP_API UCStatusComponent : public UActorComponent
 {
@@ -14,16 +11,16 @@ class PORTPOLIO_CPP_API UCStatusComponent : public UActorComponent
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Status")
-		uint32 Health;
+		float Health;
 
 	UPROPERTY(VisibleAnywhere, Category = "Status")
-		uint32 MaxHealth;
+		float MaxHealth = 200;
 
 	UPROPERTY(VisibleAnywhere, Category = "Status")
-		uint32 Mana;
+		float Mana;
 
 	UPROPERTY(VisibleAnywhere, Category = "Status")
-		uint32 MaxMana;
+		float MaxMana;
 
 ///////////////////////////////////////////////////// 
 
@@ -94,10 +91,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE uint32 GetHealth() { return Health; }
-	FORCEINLINE uint32 GetMaxHealth() { return MaxHealth; }
-	FORCEINLINE uint32 GetMana() { return Mana; }
-	FORCEINLINE uint32 GetMaxMana() { return MaxMana; }
+	FORCEINLINE float GetHealth() { return Health; }
+	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
+	FORCEINLINE float GetMana() { return Mana; }
+	FORCEINLINE float GetMaxMana() { return MaxMana; }
 
 	FORCEINLINE float GetStrength() { return Strength; }
 	FORCEINLINE float GetDexterity() { return Dexterity; }
@@ -157,4 +154,7 @@ public:
 	
 	void SetTenacity(float InValue);
 	void SetPiety(float InValue);
+
+public:
+	void Damage(float InAmount);
 };

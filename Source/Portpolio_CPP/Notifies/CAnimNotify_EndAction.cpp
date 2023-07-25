@@ -29,6 +29,7 @@ void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	// 액션 끝낫을때 주변에 적이 없으면 Battle상태 해제
 	UCTargetComponent* Target = Cast<UCTargetComponent>(MeshComp->GetOwner()->GetComponentByClass(UCTargetComponent::StaticClass()));
 	UCStateComponent* State = Cast<UCStateComponent>(MeshComp->GetOwner()->GetComponentByClass(UCStateComponent::StaticClass()));
+
 	if (Target->IsTargetsArrayEmpty())
 	{
 		State->SetIsBattle(false);

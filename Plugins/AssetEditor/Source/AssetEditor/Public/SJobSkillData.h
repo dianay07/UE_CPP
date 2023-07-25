@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IPropertyTypeCustomization.h"
 
 class ASSETEDITOR_API SJobSkillData
 	: public IPropertyTypeCustomization

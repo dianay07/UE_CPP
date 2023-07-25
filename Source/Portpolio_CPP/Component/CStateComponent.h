@@ -28,7 +28,6 @@ public:
 	EStateType GetType() { return Type; }
 
 	FORCEINLINE bool IsInBattle() { return IsBattle; }
-	void SetInBattle(bool InValue);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -57,5 +56,6 @@ public:
 	FStateTypeChanged OnStateTypeChanged;
 
 private:
+	UPROPERTY(VisibleAnywhere)
 	EStateType Type;
 };

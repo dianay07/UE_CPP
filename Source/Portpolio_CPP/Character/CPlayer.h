@@ -16,24 +16,27 @@ public:
 	ACPlayer();
 
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class USpringArmComponent* SpringArm;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class UCEquipComponent* Equip;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class UCJobComponent* Job;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class UCameraControlComponent* CameraController;
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<class UCUI_TargetInfo> UI_TargetInfoClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<class UCHUDLayout> UI_HUDLayoutClass;
 
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
@@ -45,19 +48,27 @@ protected:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+// 기본 입력	
 protected:
 	void OnJump();
 
-	void DisplayTargetInfo(ACCharacterBase* InOther);		// 타겟이 된 캐릭터 정보 UI에 표시
+	void DisplayTargetInfo(const ACCharacterBase& InOther);		// 타겟이 된 캐릭터 정보 UI에 표시
 	void TestKeyBinding();
 
+// 타겟팅 관련
 public:
 	void OffTargetInfo();
-	void TabOnTarget();										// 지정 없이 타겟팅 실행
-	void ClickOnTarget();									// 타겟이 될 물체 클릭 이벤트
+
+	FHitResult TraceByClick();
+
+	void TabOnTarget();									// 지정 없이 타겟팅 실행
+	void ClickOnTarget();								// 타겟이 될 물체 클릭 이벤트
+	void DoubleClickOnTarget();							// 타겟이 될 물체 더블 클릭 이벤트
 
 private:
-	UCUI_TargetInfo* UI_TargetInfo;
 	ACCharacterBase* TargetActor;
 	APlayerController* Controller;
+
+	UCUI_TargetInfo* UI_TargetInfo;
+	UCHUDLayout* UI_HUDLayout;
 };

@@ -31,8 +31,6 @@ void UCJobComponent::BeginPlay()
 	State = Cast<UCStateComponent>(OwnerCharacter->GetComponentByClass(UCStateComponent::StaticClass()));
 
 	OnSkillActivate.AddDynamic(this, &UCJobComponent::SkillActivate);
-
-	//ChangeJob(EJob::Warrior);
 }
 
 void UCJobComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -58,6 +56,11 @@ UCSkillBase* UCJobComponent::GetActiveSkill()
 	return DataAssets[static_cast<int32>(JobName)]->GetActiveSkill();
 }
 
+TArray<FSkillData> UCJobComponent::GetSkillData()
+{
+	return DataAssets[static_cast<int32>(JobName)]->SkillDatas;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 EJob UCJobComponent::GetCurrentJob()
@@ -68,10 +71,17 @@ EJob UCJobComponent::GetCurrentJob()
 // TODO 퀵슬롯 : 슬롯에 번호나 ID(여튼 정보)를 넣고 받은 정보를 실행하게끔 하면 슬롯
 void UCJobComponent::SkillActivate(int InCount)
 {
+
 	if (GetActiveSkill() == nullptr)
-	{
 		return;
-	}
+
+	// 공격 거리
+	if (OwnerCharacter->GetTarget()->GetTargetActor() == nullptr)
+		return;
+
+	distance = UKismetMathLibrary::Vector_Distance(OwnerCharacter->GetActorLocation(), OwnerCharacter->GetTarget()->GetTargetActor()->GetActorLocation());
+	if (distance > DataAssets[static_cast<int32>(JobName)]->AttackRange)
+		return;
 
 	State->SetIsBattle(true);
 
@@ -86,7 +96,7 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 	/*if (JobName == InCurrentJob)
 		return;*/
 
-		// 해당 직업의 데이터 에셋이 없다면
+	// 해당 직업의 데이터 에셋 갱신
 	if (DataAssets[static_cast<int32>(JobName)] != nullptr)
 	{
 		AutoAttackMontages.Reset();
@@ -95,28 +105,37 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 		EJob prevJob = JobName;
 		JobName = InCurrentJob;
 
+		if (JobName == EJob::Max)
+			return;
+
 		static UCJobDataAsset* dataAsset = DataAssets[static_cast<int32>(JobName)];
 		for (int i = 0; i < dataAsset->AutoAttackMontages.Num(); i++)
 		{
-			UAnimMontage* montage = dataAsset->AutoAttackMontages[i];
+			static UAnimMontage* montage = dataAsset->AutoAttackMontages[i];
 
 			AutoAttackMontages.AddUnique(montage);
 		}
-
-		DataAssets[(int32)InCurrentJob]->GetEquipment()->Equip();
 
 		FString EnumString = StaticEnum<EJob>()->GetNameStringByValue(static_cast<int32>(JobName));
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *EnumString);
 	}
 }
 
+void UCJobComponent::PlayEquipMotion()
+{
+	DataAssets[(int32)JobName]->GetEquipment()->Equip();
+}
+
 // 전투 상태일 때 자동 공격
 void UCJobComponent::DoingAutoAttack()
 {
 	if(State->IsInBattle() == false)
-	{
 		GetWorld()->GetTimerManager().ClearTimer(AutoAttackTimerHandle);
-	}
+
+	// 공격 거리
+	distance = UKismetMathLibrary::Vector_Distance(OwnerCharacter->GetActorLocation(), OwnerCharacter->GetTarget()->GetTargetActor()->GetActorLocation());
+	if (distance > DataAssets[static_cast<int32>(JobName)]->AttackRange)
+		return;
 
 	AttackMontageIndex = UKismetMathLibrary::RandomIntegerInRange(0, AutoAttackMontages.Num() - 1);
 	OwnerCharacter->PlayAnimMontage(AutoAttackMontages[AttackMontageIndex], 0.8);
@@ -128,8 +147,6 @@ void UCJobComponent::DoingAutoAttack()
 
 void UCJobComponent::OnAutoAttack()
 {
-	// TODO : 왜 또 스킬 쓰면 배틀상태 끝나냐?
-
 	// 타겟이 있으면
 	if (IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
 	{
@@ -139,12 +156,16 @@ void UCJobComponent::OnAutoAttack()
 }
 
 // 스킬 사용
-void UCJobComponent::UseSkill()
+void UCJobComponent::UseFirstSlot()
 {
 	if (OnSkillActivate.IsBound())
 		OnSkillActivate.Broadcast(0);
+}
 
-	//OnAutoAttack();
+void UCJobComponent::UseSecondSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

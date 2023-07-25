@@ -36,6 +36,8 @@ public:
 	class UCEquipment* GetEquipment();			// 장착 기능을 담당할 클래스
 	class UCSkillBase* GetActiveSkill();		// 스킬을 실행할 클래스
 
+	TArray<FSkillData> GetSkillData();
+
 	EJob GetCurrentJob();
 
 public:
@@ -45,9 +47,13 @@ public:
 	UFUNCTION()
 		void ChangeJob(EJob InCurrentJob);
 
+public:
+	void PlayEquipMotion();
 	void DoingAutoAttack();
 	void OnAutoAttack();
-	void UseSkill();						// 스킬 실행
+
+	void UseFirstSlot();						// 스킬 실행
+	void UseSecondSlot();
 
 	void SetWarrior();
 	void SetDragoon();
@@ -70,4 +76,6 @@ public:
 private:
 	int32 AttackMontageIndex;
 	FTimerHandle AutoAttackTimerHandle;
+
+	float distance;
 };
