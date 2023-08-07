@@ -30,7 +30,7 @@ void UCEquipment::Equip_Implementation()
 void UCEquipment::Begin_Equip_Implementation()
 {
 	bBeginEquip = true;
-
+	
 	if (OnEquipmentBeginEquip.IsBound())
 		OnEquipmentBeginEquip.Broadcast();
 }

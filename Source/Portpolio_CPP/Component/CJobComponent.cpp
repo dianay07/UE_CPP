@@ -2,11 +2,12 @@
 
 #include "CStatusComponent.h"
 #include "CTargetComponent.h"
-#include "Item/CEquipment.h"
+#include "Utility.h"
 #include "Character/CCharacterBase.h"
+#include "Item/CEquipment.h"
 #include "Item/CSkillBase.h"
 #include "Job/CJobDataAsset.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Job/Skill/CActiveSkill_NonGlobal.h"
 
 UCJobComponent::UCJobComponent()
 {
@@ -56,6 +57,11 @@ UCSkillBase* UCJobComponent::GetActiveSkill()
 	return DataAssets[static_cast<int32>(JobName)]->GetActiveSkill();
 }
 
+UCActiveSkill_NonGlobal* UCJobComponent::GetNonGlobal()
+{
+	return DataAssets[static_cast<int32>(JobName)]->GetNonGlobal();
+}
+
 TArray<FSkillData> UCJobComponent::GetSkillData()
 {
 	return DataAssets[static_cast<int32>(JobName)]->SkillDatas;
@@ -71,7 +77,6 @@ EJob UCJobComponent::GetCurrentJob()
 // TODO 퀵슬롯 : 슬롯에 번호나 ID(여튼 정보)를 넣고 받은 정보를 실행하게끔 하면 슬롯
 void UCJobComponent::SkillActivate(int InCount)
 {
-
 	if (GetActiveSkill() == nullptr)
 		return;
 
@@ -93,12 +98,14 @@ void UCJobComponent::SkillActivate(int InCount)
 // 잡 변경될때 해야할 것들
 void UCJobComponent::ChangeJob(EJob InCurrentJob)
 {
-	/*if (JobName == InCurrentJob)
-		return;*/
+	if (State->IsInBattle())
+		return;
 
 	// 해당 직업의 데이터 에셋 갱신
 	if (DataAssets[static_cast<int32>(JobName)] != nullptr)
 	{
+		DataAssets[static_cast<int32>(JobName)]->DestroyAttachmentWeapon();
+
 		AutoAttackMontages.Reset();
 
 		// 잡 변경 절차
@@ -117,13 +124,31 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 		}
 
 		FString EnumString = StaticEnum<EJob>()->GetNameStringByValue(static_cast<int32>(JobName));
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *EnumString);
+		OnJobChanged.Broadcast(prevJob, InCurrentJob);
+
+		//UE_LOG(LogTemp, Warning, TEXT("%s"), *EnumString);
+
+		DataAssets[static_cast<int32>(JobName)]->SpawnAttachmentWeapon(OwnerCharacter);
+
+		//static ConstructorHelpers::FObjectFinder<UParticleSystem> asset(TEXT("ParticleSystem'/Game/99_Assets/AdvancedMagicFX05/Particles/P_AMFX05_auraPillar.P_AMFX05_auraPillar'"));
+		//if (asset.Succeeded())
+		//	ParticleAsset = Cast<UFXSystemAsset>(asset.Object);
+
+		Utility::PlayEffect(OwnerCharacter->GetWorld(), ParticleAsset, 
+			FTransform(OwnerCharacter->GetActorLocation() + FVector(0,0,-90)));
 	}
 }
 
 void UCJobComponent::PlayEquipMotion()
 {
 	DataAssets[(int32)JobName]->GetEquipment()->Equip();
+	State->SetIsBattle(true);
+}
+
+void UCJobComponent::PlayUnequipMotion()
+{
+	DataAssets[(int32)JobName]->GetEquipment()->Unequip();
+	State->SetIsBattle(false);
 }
 
 // 전투 상태일 때 자동 공격
@@ -139,10 +164,6 @@ void UCJobComponent::DoingAutoAttack()
 
 	AttackMontageIndex = UKismetMathLibrary::RandomIntegerInRange(0, AutoAttackMontages.Num() - 1);
 	OwnerCharacter->PlayAnimMontage(AutoAttackMontages[AttackMontageIndex], 0.8);
-
-	//FSkillDamageEvent event;
-	//event.HitData = 
-	//Cast<ACharacter>(OwnerCharacter->GetTarget())->TakeDamage(10,)
 }
 
 void UCJobComponent::OnAutoAttack()
@@ -167,6 +188,19 @@ void UCJobComponent::UseSecondSlot()
 	if (OnSkillActivate.IsBound())
 		OnSkillActivate.Broadcast(1);
 }
+
+void UCJobComponent::UseNonGlobal_Pressed()
+{
+	if (!!GetNonGlobal())
+		GetNonGlobal()->Pressed();
+}
+
+void UCJobComponent::UseNonGlobal_Released()
+{
+	if (!!GetNonGlobal())
+		GetNonGlobal()->Released();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 

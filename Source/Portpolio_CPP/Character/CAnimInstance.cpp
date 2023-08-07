@@ -15,9 +15,7 @@ void UCAnimInstance::NativeBeginPlay()
 
 	Job = Cast<UCJobComponent>(Owner->GetComponentByClass(UCJobComponent::StaticClass()));
 	if(!!Job)
-	{
 		Job->OnJobChanged.AddDynamic(this, &UCAnimInstance::OnJobTypeChanged);
-	}
 }
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

@@ -20,6 +20,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UCSkillBase> ActiveSkillClass;				// 스킬 작동 클래스
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UCActiveSkill_NonGlobal> NonGlobalClass;
+
 public:
 	UPROPERTY(EditAnywhere)
 		FDrawWeaponData DrawWeaponData;									// 장착 애니메이션
@@ -37,6 +40,7 @@ public:
 	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE class UCEquipment* GetEquipment() { return Equipment; }
 	FORCEINLINE class UCSkillBase* GetActiveSkill() { return ActiveSkill; }
+	FORCEINLINE class UCActiveSkill_NonGlobal* GetNonGlobal() { return NonGlobalSkill; }
 
 public:
 	UCJobDataAsset();
@@ -45,6 +49,10 @@ public:
 
 public:
 	int32 GetSkillDataCount();
+
+public:
+	void SpawnAttachmentWeapon(class ACCharacterBase* InOwner);
+	void DestroyAttachmentWeapon();
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -62,6 +70,12 @@ private:
 
 	UPROPERTY()
 		class UCSkillBase* ActiveSkill;
+
+	UPROPERTY()
+		class UCActiveSkill_NonGlobal* NonGlobalSkill;
+
+private:
+	ACharacter* Owner;
 
 #if WITH_EDITOR
 	void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;

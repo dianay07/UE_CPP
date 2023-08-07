@@ -16,7 +16,7 @@ class PORTPOLIO_CPP_API IICharacter
 
 public:
 	virtual void End_Hitted() {}
-	virtual void End_Dead() {}
+	virtual void Dead() {}
 
 public:
 	void CreateDynamicMaterial(class ACharacter* InCharacter);

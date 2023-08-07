@@ -5,6 +5,7 @@
 #include "Item/CSkillBase.h"
 #include "Item/CAttachment.h"
 #include "Item/CEquipment.h"
+#include "Skill/CActiveSkill_NonGlobal.h"
 
 UCJobDataAsset::UCJobDataAsset()
 {
@@ -15,7 +16,32 @@ UCJobDataAsset::UCJobDataAsset()
 
 void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 {
-	ACharacter* Owner = Cast<ACharacter>(InOwner);
+	UCSkillBase* activeSkill = nullptr;
+	if (!!ActiveSkillClass)
+	{
+		activeSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
+		activeSkill->BeginPlay(Attachment, Equipment, InOwner, SkillDatas, HitDatas);
+
+		if(!!Attachment)
+		{
+			Attachment->OnAttachmentBeginCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginCollision);
+			Attachment->OnAttachmentEndCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndCollision);
+
+			Attachment->OnAttachmentBeginOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginOverlap);
+			Attachment->OnAttachmentEndOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndOverlap);
+		}
+	}
+}
+
+int32 UCJobDataAsset::GetSkillDataCount()
+{
+	UE_LOG(LogTemp, Display, TEXT("%d"), SkillDatas.Num());
+	return SkillDatas.Num();
+}
+
+void UCJobDataAsset::SpawnAttachmentWeapon(class ACCharacterBase* InOwner)
+{
+	Owner = Cast<ACharacter>(InOwner);
 
 	if (!!AttachmentClass)
 	{
@@ -24,6 +50,8 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 
 		Attachment = Owner->GetWorld()->SpawnActor<ACAttachment>(AttachmentClass, params);
 	}
+
+
 
 	if (!!EquipmentClass)
 	{
@@ -42,7 +70,7 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 		ActiveSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
 		ActiveSkill->BeginPlay(Attachment, Equipment, InOwner, SkillDatas, HitDatas);
 
-		if(!!Attachment)
+		if (!!Attachment)
 		{
 			Attachment->OnAttachmentBeginCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginCollision);
 			Attachment->OnAttachmentEndCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndCollision);
@@ -51,12 +79,39 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 			Attachment->OnAttachmentEndOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndOverlap);
 		}
 	}
+
+	if(!!NonGlobalClass)
+	{
+		NonGlobalSkill = NewObject<UCActiveSkill_NonGlobal>(this, NonGlobalClass);
+		NonGlobalSkill->BeginPlay(InOwner, Attachment);
+	}
 }
 
-int32 UCJobDataAsset::GetSkillDataCount()
+void UCJobDataAsset::DestroyAttachmentWeapon()
 {
-	UE_LOG(LogTemp, Display, TEXT("%d"), SkillDatas.Num());
-	return SkillDatas.Num();
+	if(!!Attachment)
+	{
+		Attachment->Destroy();
+	}
+
+	/*if(!!Equipment)
+	{
+		Equipment->OnEquipmentBeginEquip.Clear();
+		Equipment->OnEquipmentUnequip.Clear();
+
+		Equipment->BeginDestroy();
+	}*/
+
+	//if(ActiveSkill != nullptr)
+	//{
+	//	Attachment->OnAttachmentBeginOverlap.Clear();
+	//	Attachment->OnAttachmentEndOverlap.Clear();
+	//	Attachment->OnAttachmentBeginCollision.Clear();
+	//	Attachment->OnAttachmentEndCollision.Clear();
+
+	//	ActiveSkill->BeginDestroy();
+	//}
+
 }
 
 #if WITH_EDITOR

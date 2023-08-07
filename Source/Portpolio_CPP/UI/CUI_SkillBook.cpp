@@ -1,6 +1,6 @@
 #include "UI/CUI_SkillBook.h"
 
-#include "CUI_SkillIcon.h"
+//#include "CUI_SkillIcon.h"
 #include "Character/CPlayer.h"
 #include "Component/CJobComponent.h"
 #include "Components/UniformGridPanel.h"
@@ -21,9 +21,9 @@ void UCUI_SkillBook::NativeConstruct()
 
 	for (int i = 0; SkillDatas.Num(); i++)
 	{
-		static UCUI_SkillIcon* SkillIcon = NewObject<UCUI_SkillIcon>();
-		SkillIcon->SetSkillData(SkillDatas[i]);
+		//static UCUI_SkillIcon* SkillIcon = NewObject<UCUI_SkillIcon>();
+		//SkillIcon->SetSkillData(SkillDatas[i]);
 
-		UniformGridPanel->AddChildToUniformGrid(SkillIcon);
+		//UniformGridPanel->AddChildToUniformGrid(SkillIcon);
 	}
 }

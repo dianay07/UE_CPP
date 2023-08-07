@@ -15,6 +15,7 @@
 #include "UI/CUI_TargetInfo.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "UI/CHUDLayout.h"
 
 ACPlayer::ACPlayer()
@@ -109,8 +110,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	// 키 바인딩
 	{
-		PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
-		PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
+		//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
+		//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
 		PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACPlayer::OnJump);
 		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::FixedCameraSetting);
 		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Released, Movement, &UCMovementComponent::FixedCharacterSetting);
@@ -122,6 +123,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		// 단축키 키는 고정 -> Job Component에서 스킬이 바껴야할듯
 		PlayerInputComponent->BindAction("Slot1", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFirstSlot);
 		PlayerInputComponent->BindAction("Slot2", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSecondSlot);
+		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Pressed, this, &ACPlayer::OnSubAction);
 
 		// 키 테스트
 		PlayerInputComponent->BindAction("SwapToWarrior", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetWarrior);
@@ -149,6 +151,8 @@ void ACPlayer::TestKeyBinding()
 {
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
+
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SubSkill", EKeys::RightMouseButton));
 
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::One, true));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::Two, true));
@@ -217,7 +221,15 @@ void ACPlayer::DoubleClickOnTarget()
 		if (State->IsInBattle() == false)
 		{
 			Job->PlayEquipMotion();
-			State->SetIsBattle(true);
 		}
 	}
+}
+
+void ACPlayer::OnSubAction()
+{
+	
+}
+
+void ACPlayer::OffSubAction()
+{
 }

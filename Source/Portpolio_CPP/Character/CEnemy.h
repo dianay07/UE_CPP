@@ -37,11 +37,9 @@ public:
 
 private:
 	void Hitted();
-	void Dead();
 
 public:
-	void End_Hitted() override;
-	void End_Dead() override;
+	void Dead() override;
 
 private:
 	struct FDamageData

@@ -10,8 +10,6 @@ class PORTPOLIO_CPP_API UCUI_TargetInfo : public UUserWidget
 	GENERATED_BODY()
 
 private:
-	//UPROPERTY(VisibleAnywhere, meta=(Bindwidget))
-	//	class USizeBox* InfoBox;
 	UPROPERTY(VisibleAnywhere, meta = (Bindwidget))
 		class UOverlay* HPBar_Overlay;
 
@@ -24,9 +22,6 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (Bindwidget))
 		class UProgressBar* ProgressBar_HP;
 
-//public:
-//	UPROPERTY(EditAnywhere, Category ="Image")
-//		UImage*
 
 public:
 	UCUI_TargetInfo(const FObjectInitializer& ObjectInitializer);

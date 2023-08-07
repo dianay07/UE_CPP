@@ -50,8 +50,8 @@ void UCStateComponent::ChangeType(EStateType InType)
 	EStateType prevType = Type;
 	Type = InType;
 
-	UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EStateType"), true);
-	UE_LOG(LogActor, Warning, TEXT("Onwer : %s, Current State : %s"), *GetOwner()->GetName(), *StateEnum->GetNameByIndex((int32)Type).ToString());
+	//UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EStateType"), true);
+	//UE_LOG(LogActor, Warning, TEXT("Onwer : %s, Current State : %s"), *GetOwner()->GetName(), *StateEnum->GetNameByIndex((int32)Type).ToString());
 
 	if (OnStateTypeChanged.IsBound())
 		OnStateTypeChanged.Broadcast(prevType, Type);

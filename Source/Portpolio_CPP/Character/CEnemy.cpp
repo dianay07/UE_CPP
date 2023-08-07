@@ -27,6 +27,8 @@ ACEnemy::ACEnemy()
 		TSubclassOf<UAnimInstance> instance;
 		instance = ConstructorHelpers::FClassFinder<UAnimInstance>(TEXT("AnimBlueprint'/Game/02_Enemy/ABP_Enemy.ABP_Enemy_C'")).Class;
 		GetMesh()->SetAnimClass(instance);
+
+		Death = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/05_Montage/Normal/Common_DeadFall_Montage.Common_DeadFall_Montage'")).Object;
 	}
 
 	// Component
@@ -127,35 +129,25 @@ void ACEnemy::Hitted()
 			FVector direction = target - start;
 			direction.Normalize();
 
-			//LaunchCharacter(-direction * data->Launch, false, false);
 			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
 	}
 
+	// Dead 호출은 되는데 요상하다?
 	if (Status->GetHealth() <= 0)
 	{
 		State->SetDeadMode();
-
 		return;
 	}
+
+	State->SetIdleMode();
 
 	Damage.Character = nullptr;
 	Damage.Causer = nullptr;
 	Damage.Event = nullptr;
-
-	State->SetIdleMode();
 }
 
 void ACEnemy::Dead()
 {
-}
-
-void ACEnemy::End_Hitted()
-{
-	State->SetIdleMode();
-}
-
-void ACEnemy::End_Dead()
-{
-	Destroy();
+	PlayAnimMontage(Death);
 }

@@ -1,5 +1,6 @@
 #include "Component/CTargetComponent.h"
 
+#include "CJobComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Character/CCharacterBase.h"
 #include "Character/CEnemy.h"
@@ -47,6 +48,9 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			{
 				ControlCursor(*Target);
 				Target = nullptr;
+
+				State->SetIsBattle(false);
+				Cast<ACPlayer>(OwnerCharacter)->GetJob()->PlayUnequipMotion();
 			}
 		}
 	}

@@ -21,6 +21,7 @@ public:
 		FVector location = InTransform.GetLocation();
 		FRotator rotation = (FRotator)InTransform.GetRotation();
 		FVector scale = InTransform.GetScale3D();
+		//FVector scale = InScale;
 
 		if (!!InMesh)
 		{

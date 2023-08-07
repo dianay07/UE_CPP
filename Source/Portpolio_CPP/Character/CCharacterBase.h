@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCTargetComponent* Target;
 
+	UPROPERTY(EditAnywhere, Category = "Animation")
+		UAnimMontage* Death;
+
 public:
 	FORCEINLINE UCMovementComponent* GetMovement() { return Movement; }
 	FORCEINLINE UCStatusComponent* GetStatus() { return Status; }

@@ -10,7 +10,7 @@ class PORTPOLIO_CPP_API UCAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 		float Speed;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -25,7 +25,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		bool IsFixedCamera;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 		bool IsBattle;
 
 protected:

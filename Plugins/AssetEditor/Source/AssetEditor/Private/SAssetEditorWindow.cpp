@@ -3,7 +3,7 @@
 #include "SAssetDetailsView.h"
 #include "SAssetEditorLeftArea.h"
 #include "SJobEquipData.h"
-#include "SJobHitData.h"
+#include "SJobSkillDamageData.h"
 #include "SJobSkillData.h"
 #include "Job/CJobDataAsset.h"
 
@@ -86,11 +86,11 @@ void FAssetEditorWindow::Open(FString InAssetName)
 		prop.RegisterCustomPropertyTypeLayout("SkillData", instance);
 	}
 
-	//HitData
+	// HitData
 	{
 		FOnGetPropertyTypeCustomizationInstance instance;
-		instance.BindStatic(&SJobHitData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("HitData", instance);
+		instance.BindStatic(&SJobSkillDamageData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("SkillDamageData", instance);
 	}
 
 
@@ -161,7 +161,7 @@ bool FAssetEditorWindow::OnRequestClose()
 			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 			prop.UnregisterCustomPropertyTypeLayout("EquipData");
 			prop.UnregisterCustomPropertyTypeLayout("SkillData");
-			prop.UnregisterCustomPropertyTypeLayout("HitData");
+			prop.UnregisterCustomPropertyTypeLayout("SkillDamageData");
 		}
 	}
 

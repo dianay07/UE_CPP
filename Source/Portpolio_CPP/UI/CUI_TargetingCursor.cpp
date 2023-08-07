@@ -19,7 +19,6 @@ void UCUI_TargetingCursor::NativeTick(const FGeometry& MyGeometry, float InDelta
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	UCStateComponent* State = Cast<UCStateComponent>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetComponentByClass(UCStateComponent::StaticClass()));
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *State->GetName());
 
 	if (!State->IsInBattle())
 		Image->SetBrushTintColor(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f)));

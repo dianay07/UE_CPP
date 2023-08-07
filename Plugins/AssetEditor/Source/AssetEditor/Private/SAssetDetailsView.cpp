@@ -5,7 +5,7 @@
 #include "NiagaraSystem.h"
 #include "SAssetCheckBoxes.h"
 #include "SJobEquipData.h"
-#include "SJobHitData.h"
+#include "SJobSkillDamageData.h"
 #include "SJobSkillData.h"
 #include "Animation/AnimMontage.h"
 #include "Job/CJobDataAsset.h"
@@ -110,7 +110,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 			row.GetPropertyHandle()->GetNumChildren(count);
 
 			// 첫 등록시 체크박스 초기화
-			SJobHitData::EmptyCheckBoxes();
+			SJobSkillDamageData::EmptyCheckBoxes();
 
 			FSkillDamageData data;
 			for (uint32 i = 0; i < count; i++)
@@ -119,7 +119,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				TSharedPtr<IPropertyHandle> handle = row.GetPropertyHandle()->GetChildHandle(i);
 
 				// 어떤 핸들을 체크박스에 넣을지 전달
-				TSharedPtr<SAssetCheckBoxes> checkBoxes = SJobHitData::AddCheckBoxes();
+				TSharedPtr<SAssetCheckBoxes> checkBoxes = SJobSkillDamageData::AddCheckBoxes();
 				checkBoxes->AddProperties(handle);
 
 				int32 index = 0;

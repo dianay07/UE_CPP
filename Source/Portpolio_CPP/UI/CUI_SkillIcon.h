@@ -10,22 +10,12 @@ class PORTPOLIO_CPP_API UCUI_SkillIcon : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-		class USizeBox* IconSize;
+public:
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		UTexture2D* Icon;
 
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-		class UImage* IconImage;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		FText Name;
 
 public:
-	UCUI_SkillIcon(const FObjectInitializer& ObjectInitializer);
-
-	virtual void NativeConstruct() override;
-
-public:
-	void SetSkillData(FSkillData InSkillData);
-
-private:
-	FSkillData SkillData;
-
 };

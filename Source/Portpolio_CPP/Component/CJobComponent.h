@@ -20,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Montage")
 		TArray<UAnimMontage*> AutoAttackMontages;
 
+	UPROPERTY(EditAnywhere, Category = "Effect")
+		UFXSystemAsset* ParticleAsset;
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Job Status")
 		float AutoAttackCoolTime = 2.5f;
@@ -34,7 +37,8 @@ protected:
 public:
 	class ACAttachment* GetAttachment();		// 인게임에서 실장착될 액터
 	class UCEquipment* GetEquipment();			// 장착 기능을 담당할 클래스
-	class UCSkillBase* GetActiveSkill();		// 스킬을 실행할 클래스
+	class UCSkillBase* GetActiveSkill();		// 스킬 실행할 클래스
+	class UCActiveSkill_NonGlobal* GetNonGlobal();
 
 	TArray<FSkillData> GetSkillData();
 
@@ -49,12 +53,21 @@ public:
 
 public:
 	void PlayEquipMotion();
+	void PlayUnequipMotion();
+	
+public:
 	void DoingAutoAttack();
 	void OnAutoAttack();
 
-	void UseFirstSlot();						// 스킬 실행
+	// SLOT
+public:
+	void UseFirstSlot();						
 	void UseSecondSlot();
 
+	void UseNonGlobal_Pressed();
+	void UseNonGlobal_Released();
+
+public:
 	void SetWarrior();
 	void SetDragoon();
 

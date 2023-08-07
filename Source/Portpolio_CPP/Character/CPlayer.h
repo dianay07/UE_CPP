@@ -41,6 +41,7 @@ public:
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
 	FORCEINLINE ACCharacterBase* GetTargetActor() { return TargetActor; }
+	FORCEINLINE UCJobComponent* GetJob() { return Job; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -64,6 +65,11 @@ public:
 	void TabOnTarget();									// 지정 없이 타겟팅 실행
 	void ClickOnTarget();								// 타겟이 될 물체 클릭 이벤트
 	void DoubleClickOnTarget();							// 타겟이 될 물체 더블 클릭 이벤트
+
+	// 서브스킬
+public:
+	void OnSubAction();
+	void OffSubAction();
 
 private:
 	ACCharacterBase* TargetActor;

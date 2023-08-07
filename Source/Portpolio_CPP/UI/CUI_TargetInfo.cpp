@@ -39,8 +39,6 @@ void UCUI_TargetInfo::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	// 플레이어의 StateComponent 콜
 	UCStateComponent* State = Cast<UCStateComponent>(OwnerPlayer->GetComponentByClass(UCStateComponent::StaticClass()));
-	// FString str = State->IsBattle() ? TEXT("true") : TEXT("false");
-	// UE_LOG(LogTemp, Warning, L"%s", *str);
 
 	if (State->IsInBattle() == true)
 	{
@@ -54,7 +52,6 @@ void UCUI_TargetInfo::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	}
 
 	ProgressBar_HP->SetPercent(OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetHealth() / OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetMaxHealth());
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerPlayer->GetTarget()->GetTargetActor()->GetStatus()->GetHealth());
 }   
 
 void UCUI_TargetInfo::SetLevelText(FString Instring)
