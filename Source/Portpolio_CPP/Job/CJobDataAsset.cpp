@@ -64,7 +64,7 @@ void UCJobDataAsset::SpawnAttachmentWeapon(class ACCharacterBase* InOwner)
 			Equipment->OnEquipmentUnequip.AddDynamic(Attachment, &ACAttachment::OnUnequip);
 		}
 	}
-
+	
 	if (!!ActiveSkillClass)
 	{
 		ActiveSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
@@ -83,7 +83,7 @@ void UCJobDataAsset::SpawnAttachmentWeapon(class ACCharacterBase* InOwner)
 	if(!!NonGlobalClass)
 	{
 		NonGlobalSkill = NewObject<UCActiveSkill_NonGlobal>(this, NonGlobalClass);
-		NonGlobalSkill->BeginPlay(InOwner, Attachment);
+		NonGlobalSkill->BeginPlay(InOwner, Attachment, ActiveSkill);
 	}
 }
 

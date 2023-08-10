@@ -71,6 +71,10 @@ public:
 	void OnSubAction();
 	void OffSubAction();
 
+public:
+	// UI â
+	void ShowSkillBook();
+
 private:
 	ACCharacterBase* TargetActor;
 	APlayerController* Controller;

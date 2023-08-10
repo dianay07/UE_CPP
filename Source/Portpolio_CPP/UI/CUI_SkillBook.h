@@ -9,19 +9,30 @@ UCLASS()
 class PORTPOLIO_CPP_API UCUI_SkillBook : public UUserWidget
 {
 	GENERATED_BODY()
-	
-private:
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-		class UUniformGridPanel* UniformGridPanel;
 
-	UPROPERTY(VisibleAnywhere)
-		TArray<FSkillData> SkillDatas;
+public:
+	UPROPERTY(meta = (BindWidget))
+		class UImage* BackGround;
+
+	UPROPERTY(meta = (BindWidget))
+		class USizeBox* Book_SizeBox;
+
+	UPROPERTY(meta = (BindWidget))
+		class UScrollBox* Book_ScrollBox;
+
+	UPROPERTY(EditAnywhere)
+		TArray<class UCUI_SkillIcon*> Icons;
 
 public:
 	UCUI_SkillBook(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 
+public:
+	void RefreshSkillData();
+
 private:
 	class ACPlayer* OwnerPlayer;
+
+	TArray<FSkillData> SkillDatas;
 };

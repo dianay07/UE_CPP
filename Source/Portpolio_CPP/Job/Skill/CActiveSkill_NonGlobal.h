@@ -13,7 +13,7 @@ public:
 	UCActiveSkill_NonGlobal();
 
 public:
-	virtual void BeginPlay(class ACCharacterBase* InOwner, class ACAttachment* InAttachment);
+	virtual void BeginPlay(class ACCharacterBase* InOwner, class ACAttachment* InAttachment, class UCSkillBase* InSkill);
 
 public:
 	virtual void Pressed();
@@ -37,7 +37,7 @@ protected:
 
 	class ACCharacterBase* Owner;
 	class ACAttachment* Attachment;
-	class UCSkillBase* Skill;
+	class UCSkillBase* ActiveSkill;
 
 	class UCStateComponent* State;
 	class UCMovementComponent* Movement;

@@ -8,10 +8,11 @@ UCActiveSkill_NonGlobal::UCActiveSkill_NonGlobal()
 {
 }
 
-void UCActiveSkill_NonGlobal::BeginPlay(ACCharacterBase* InOwner, ACAttachment* InAttachment)
+void UCActiveSkill_NonGlobal::BeginPlay(ACCharacterBase* InOwner, ACAttachment* InAttachment, UCSkillBase* InSkill)
 {
 	Owner = InOwner;
 	Attachment = InAttachment;
+	ActiveSkill = InSkill;
 
 	State = Cast<UCStateComponent>(Owner->GetComponentByClass(UCStateComponent::StaticClass()));
 	Movement = Cast<UCMovementComponent>(Owner->GetComponentByClass(UCMovementComponent::StaticClass()));

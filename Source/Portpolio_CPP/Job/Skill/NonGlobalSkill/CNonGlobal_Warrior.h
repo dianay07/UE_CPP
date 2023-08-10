@@ -6,20 +6,13 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "CNonGlobal_Warrior.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class PORTPOLIO_CPP_API UCNonGlobal_Warrior : public UCActiveSkill_NonGlobal
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category = "Trace")
-		float Distance = 1000;
+public:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Trace")
-		float Speed = 200;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Trace")
-		TEnumAsByte<EDrawDebugTrace::Type> DrawDebug;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -48,7 +41,6 @@ private:
 	FVector Start;
 	FVector End;
 
-	TArray<class ACharacter*> Overlapped;
 	TArray<class ACharacter*> Hitted;
 
 private:

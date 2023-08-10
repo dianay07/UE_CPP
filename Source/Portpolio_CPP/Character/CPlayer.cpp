@@ -12,11 +12,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "UI/CUI_TargetInfo.h"
-
 #include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "UI/CHUDLayout.h"
+#include "UI/CUI_SkillBook.h"
+#include "UI/CUI_TargetInfo.h"
 
 ACPlayer::ACPlayer()
 {
@@ -69,6 +68,7 @@ ACPlayer::ACPlayer()
 	static ConstructorHelpers::FClassFinder<UCHUDLayout> WB_HUDLayout(TEXT("WidgetBlueprint'/Game/07_UI/BP_CHUDLayout.BP_CHUDLayout_C'"));
 	if (WB_HUDLayout.Succeeded())
 		UI_HUDLayoutClass = WB_HUDLayout.Class;
+
 }
 
 void ACPlayer::BeginPlay()
@@ -124,6 +124,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		PlayerInputComponent->BindAction("Slot1", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFirstSlot);
 		PlayerInputComponent->BindAction("Slot2", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSecondSlot);
 		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Pressed, this, &ACPlayer::OnSubAction);
+		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Released, this, &ACPlayer::OffSubAction);
+
+		PlayerInputComponent->BindAction("OpenBook", EInputEvent::IE_Pressed, this, &ACPlayer::ShowSkillBook);
 
 		// 키 테스트
 		PlayerInputComponent->BindAction("SwapToWarrior", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetWarrior);
@@ -151,6 +154,8 @@ void ACPlayer::TestKeyBinding()
 {
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
+
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("OpenBook", EKeys::K));
 
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SubSkill", EKeys::RightMouseButton));
 
@@ -227,9 +232,25 @@ void ACPlayer::DoubleClickOnTarget()
 
 void ACPlayer::OnSubAction()
 {
-	
+	if(State->IsInBattle() == true)
+		Job->UseNonGlobal_Pressed();
 }
 
 void ACPlayer::OffSubAction()
 {
+	if (State->IsInBattle() == true)
+		Job->UseNonGlobal_Released();
+}
+
+void ACPlayer::ShowSkillBook()
+{
+	if (UI_HUDLayout->SkillBookWidget->GetVisibility() == ESlateVisibility::Hidden)
+	{
+		UI_HUDLayout->SkillBookWidget->RefreshSkillData();
+		UI_HUDLayout->SkillBookWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		UI_HUDLayout->SkillBookWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }

@@ -29,6 +29,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		category.AddProperty("AttachmentClass", type);
 		category.AddProperty("EquipmentClass", type);
 		category.AddProperty("ActiveSkillClass", type);
+		category.AddProperty("NonGlobalClass", type);
 		category.AddProperty("JobName", type);
 		category.AddProperty("AttackRange", type);
 	}

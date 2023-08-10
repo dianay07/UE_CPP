@@ -1,6 +1,18 @@
 #include "UI/CHUDLayout.h"
+#include "UI/CUI_SkillBook.h"
 
 #include "CDragWidget.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+
+
+void UCHUDLayout::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	SkillBookWidget = Cast<UCUI_SkillBook>(BaseCanvasPanel->GetChildAt(0));
+	SkillBookWidget->SetVisibility(ESlateVisibility::Hidden);
+}
 
 bool UCHUDLayout::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
                                UDragDropOperation* InOperation)

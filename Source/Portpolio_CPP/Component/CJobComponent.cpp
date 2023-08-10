@@ -40,6 +40,9 @@ void UCJobComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	if (!IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
 		GetWorld()->GetTimerManager().ClearTimer(AutoAttackTimerHandle);
+
+	if (!!GetNonGlobal())
+		GetNonGlobal()->Tick(DeltaTime);
 }
 
 ACAttachment* UCJobComponent::GetAttachment()
@@ -59,6 +62,8 @@ UCSkillBase* UCJobComponent::GetActiveSkill()
 
 UCActiveSkill_NonGlobal* UCJobComponent::GetNonGlobal()
 {
+	if (State->IsInBattle() == false) return nullptr;
+
 	return DataAssets[static_cast<int32>(JobName)]->GetNonGlobal();
 }
 
@@ -126,13 +131,7 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 		FString EnumString = StaticEnum<EJob>()->GetNameStringByValue(static_cast<int32>(JobName));
 		OnJobChanged.Broadcast(prevJob, InCurrentJob);
 
-		//UE_LOG(LogTemp, Warning, TEXT("%s"), *EnumString);
-
 		DataAssets[static_cast<int32>(JobName)]->SpawnAttachmentWeapon(OwnerCharacter);
-
-		//static ConstructorHelpers::FObjectFinder<UParticleSystem> asset(TEXT("ParticleSystem'/Game/99_Assets/AdvancedMagicFX05/Particles/P_AMFX05_auraPillar.P_AMFX05_auraPillar'"));
-		//if (asset.Succeeded())
-		//	ParticleAsset = Cast<UFXSystemAsset>(asset.Object);
 
 		Utility::PlayEffect(OwnerCharacter->GetWorld(), ParticleAsset, 
 			FTransform(OwnerCharacter->GetActorLocation() + FVector(0,0,-90)));
