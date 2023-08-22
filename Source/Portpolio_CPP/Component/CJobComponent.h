@@ -27,6 +27,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Job Status")
 		float AutoAttackCoolTime = 2.5f;
 
+	UPROPERTY(VisibleAnywhere, Category = "job Status")
+		class UCUI_QuickSlots* QuickSlots;
+
 public:	
 	UCJobComponent();
 
@@ -63,6 +66,12 @@ public:
 public:
 	void UseFirstSlot();						
 	void UseSecondSlot();
+	void UseThirdSlot();
+	void UseFourthSlot();
+	void UseFifthSlot();
+	void UseSixthSlot();
+	void UseSeventhSlot();
+	void UseEighthSlot();
 
 	void UseNonGlobal_Pressed();
 	void UseNonGlobal_Released();

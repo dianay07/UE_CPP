@@ -16,6 +16,13 @@ public:
 	ACPlayer();
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<class UCUI_TargetInfo> UI_TargetInfoClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<class UCHUDLayout> UI_HUDLayoutClass;
+
+public:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class USpringArmComponent* SpringArm;
 
@@ -32,15 +39,9 @@ public:
 		class UCameraControlComponent* CameraController;
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<class UCUI_TargetInfo> UI_TargetInfoClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<class UCHUDLayout> UI_HUDLayoutClass;
-
-public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
 	FORCEINLINE ACCharacterBase* GetTargetActor() { return TargetActor; }
+	FORCEINLINE UCHUDLayout* GetLayout() { return UI_HUDLayout; }
 	FORCEINLINE UCJobComponent* GetJob() { return Job; }
 
 protected:

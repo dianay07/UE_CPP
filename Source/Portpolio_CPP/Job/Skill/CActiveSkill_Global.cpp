@@ -11,6 +11,8 @@ void UCActiveSkill_Global::ActiveSkill(int InIndex)
 
 	if (State->IsActionMode())	return;
 
+	if (InIndex == 999)	return;
+
 	Super::ActiveSkill(InIndex);
 
 	State->SetIsBattle(true);

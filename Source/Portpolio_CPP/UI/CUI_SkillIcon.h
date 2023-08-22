@@ -1,12 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CUIBaseClass.h"
 #include "Blueprint/UserWidget.h"
 #include "Job/CJobStructure.h"
 #include "CUI_SkillIcon.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API UCUI_SkillIcon : public UUserWidget
+class PORTPOLIO_CPP_API UCUI_SkillIcon : public UCUIBaseClass
 {
 	GENERATED_BODY()
 
@@ -20,16 +21,12 @@ public:
 	UPROPERTY(EditAnywhere)
 		FText Name;
 
-public:
-	UCUI_SkillIcon(const FObjectInitializer& ObjectInitializer);
-	UCUI_SkillIcon(const FObjectInitializer& ObjectInitializer, const FSkillData& InData);
-
-	void NativeConstruct() override;
+	UPROPERTY()
+		int32 SkillIndex;
 
 public:
 	void SetSkillData(const FSkillData& InData);
 
 private:
 	FSkillData Data;
-
 };

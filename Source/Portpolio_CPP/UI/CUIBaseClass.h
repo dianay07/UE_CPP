@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "CUIWindow.generated.h"
+#include "CUIBaseClass.generated.h"
 
 UCLASS()
-class PORTPOLIO_CPP_API UCUIWindow : public UUserWidget
+class PORTPOLIO_CPP_API UCUIBaseClass : public UUserWidget
 {
 	GENERATED_BODY()
 

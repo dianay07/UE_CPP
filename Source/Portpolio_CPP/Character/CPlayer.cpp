@@ -24,10 +24,10 @@ ACPlayer::ACPlayer()
 		// 메쉬
 		ConstructorHelpers::FObjectFinder<USkeletalMesh>
 			SK_Mesh(TEXT("SkeletalMesh'/Game/Fallen_Knight/Mesh/SK_Fallen_Knight.SK_Fallen_Knight'"));
+
 		if (SK_Mesh.Succeeded())
-		{
 			GetMesh()->SetSkeletalMesh(SK_Mesh.Object);
-		}
+
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90.0f));
 		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
@@ -120,9 +120,16 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
 		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_DoubleClick, this, &ACPlayer::DoubleClickOnTarget);
 
-		// 단축키 키는 고정 -> Job Component에서 스킬이 바껴야할듯
+		// 단축키 키는 고정
 		PlayerInputComponent->BindAction("Slot1", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFirstSlot);
 		PlayerInputComponent->BindAction("Slot2", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSecondSlot);
+		PlayerInputComponent->BindAction("Slot3", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseThirdSlot);
+		PlayerInputComponent->BindAction("Slot4", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFourthSlot);
+		PlayerInputComponent->BindAction("Slot5", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFifthSlot);
+		PlayerInputComponent->BindAction("Slot6", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSixthSlot);
+		PlayerInputComponent->BindAction("Slot7", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSeventhSlot);
+		PlayerInputComponent->BindAction("Slot8", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseEighthSlot);
+
 		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Pressed, this, &ACPlayer::OnSubAction);
 		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Released, this, &ACPlayer::OffSubAction);
 
@@ -154,6 +161,12 @@ void ACPlayer::TestKeyBinding()
 {
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot3", EKeys::Three	));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot4", EKeys::Four));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot5", EKeys::Five));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot6", EKeys::Six));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot7", EKeys::Seven));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot8", EKeys::Eight));
 
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("OpenBook", EKeys::K));
 

@@ -4,10 +4,15 @@
 #include "CTargetComponent.h"
 #include "Utility.h"
 #include "Character/CCharacterBase.h"
+#include "Character/CPlayer.h"
+#include "Components/UniformGridPanel.h"
 #include "Item/CEquipment.h"
 #include "Item/CSkillBase.h"
 #include "Job/CJobDataAsset.h"
 #include "Job/Skill/CActiveSkill_NonGlobal.h"
+#include "UI/CHUDLayout.h"
+#include "UI/CUI_QuickSlots.h"
+#include "UI/CUI_Slot.h"
 
 UCJobComponent::UCJobComponent()
 {
@@ -20,12 +25,8 @@ void UCJobComponent::BeginPlay()
 
 	OwnerCharacter = Cast<ACCharacterBase>(GetOwner());
 	for (int i = 0; i < 2; i++)
-	{
 		if (DataAssets[i] != nullptr)
-		{
 			DataAssets[i]->BeginPlay(OwnerCharacter);
-		}
-	}
 
 	// 능력치, 상태 관리 컴포넌트 등록
 	Status = Cast<UCStatusComponent>(OwnerCharacter->GetComponentByClass(UCStatusComponent::StaticClass()));
@@ -106,6 +107,9 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 	if (State->IsInBattle())
 		return;
 
+	if (Cast<ACPlayer>(OwnerCharacter))
+		QuickSlots = Cast<ACPlayer>(OwnerCharacter)->GetLayout()->Slots;
+
 	// 해당 직업의 데이터 에셋 갱신
 	if (DataAssets[static_cast<int32>(JobName)] != nullptr)
 	{
@@ -175,17 +179,54 @@ void UCJobComponent::OnAutoAttack()
 	}
 }
 
-// 스킬 사용
+// 슬롯 사용
+// 없을때 = 0 이면 첫번쨰 나온다~
 void UCJobComponent::UseFirstSlot()
 {
 	if (OnSkillActivate.IsBound())
-		OnSkillActivate.Broadcast(0);
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(0))->SkillIndex);
 }
 
 void UCJobComponent::UseSecondSlot()
 {
 	if (OnSkillActivate.IsBound())
-		OnSkillActivate.Broadcast(1);
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(1))->SkillIndex);
+}
+
+void UCJobComponent::UseThirdSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(2))->SkillIndex);
+}
+
+void UCJobComponent::UseFourthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(3))->SkillIndex);
+}
+
+void UCJobComponent::UseFifthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(4))->SkillIndex);
+}
+
+void UCJobComponent::UseSixthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(5))->SkillIndex);
+}
+
+void UCJobComponent::UseSeventhSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(6))->SkillIndex);
+}
+
+void UCJobComponent::UseEighthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(7))->SkillIndex);
 }
 
 void UCJobComponent::UseNonGlobal_Pressed()

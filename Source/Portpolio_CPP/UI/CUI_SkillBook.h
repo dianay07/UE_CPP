@@ -12,6 +12,9 @@ class PORTPOLIO_CPP_API UCUI_SkillBook : public UUserWidget
 
 public:
 	UPROPERTY(meta = (BindWidget))
+		class UOverlay* Book_Overlay;
+
+	UPROPERTY(meta = (BindWidget))
 		class UImage* BackGround;
 
 	UPROPERTY(meta = (BindWidget))
@@ -23,10 +26,14 @@ public:
 	UPROPERTY(EditAnywhere)
 		TArray<class UCUI_SkillIcon*> Icons;
 
+	UPROPERTY()
+		TSubclassOf<UCUI_SkillIcon> IconClass;
+
 public:
 	UCUI_SkillBook(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
 	void RefreshSkillData();
