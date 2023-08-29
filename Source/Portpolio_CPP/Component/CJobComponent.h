@@ -15,7 +15,7 @@ class PORTPOLIO_CPP_API UCJobComponent : public UActorComponent
 
 public:
 	UPROPERTY(EditAnywhere, Category = "DataAsset")
-		class UCJobDataAsset* DataAssets[(int32)EJob::Max];
+		class UCJobAsset* DataAssets[(int32)EJob::Max];
 
 	UPROPERTY(EditAnywhere, Category = "Montage")
 		TArray<UAnimMontage*> AutoAttackMontages;
@@ -100,4 +100,8 @@ private:
 	FTimerHandle AutoAttackTimerHandle;
 
 	float distance;
+
+private:
+	UPROPERTY()
+		class UCJobData* Datas[(int32)EJob::Max];
 };

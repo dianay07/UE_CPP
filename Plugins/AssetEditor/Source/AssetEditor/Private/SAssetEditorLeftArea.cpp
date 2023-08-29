@@ -1,6 +1,6 @@
 ﻿#include "SAssetEditorLeftArea.h"
 
-#include "Job/CJobDataAsset.h"
+#include "Job/CJobAsset.h"
 #include "EngineUtils.h"
 #include "Widgets/Input/SSearchBox.h"
 
@@ -118,7 +118,7 @@ FString SAssetEditorLeftArea::SelectedRowDataPtrName()
 	return "";
 }
 
-void SAssetEditorLeftArea::SelectDataPtr(UCJobDataAsset* InAsset)
+void SAssetEditorLeftArea::SelectDataPtr(UCJobAsset* InAsset)
 {
 	if (HasRowDataptr() == false)
 		return;
@@ -175,7 +175,7 @@ void SAssetEditorLeftArea::ReadDataAssetList()
 	int32 index = 0;
 	for(UObject* obj : objects)
 	{
-		UCJobDataAsset* asset = Cast<UCJobDataAsset>(obj);
+		UCJobAsset* asset = Cast<UCJobAsset>(obj);
 
 		if(asset == nullptr)
 			continue;

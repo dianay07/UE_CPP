@@ -35,8 +35,8 @@ private:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-private:
-	void Hitted();
+protected:
+	virtual void Hitted();
 
 public:
 	void Dead() override;

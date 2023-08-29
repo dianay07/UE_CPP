@@ -1,5 +1,6 @@
 #include "Character/CAnimInstance.h"
 
+#include "CEnemy.h"
 #include "CPlayer.h"
 #include "Component/CMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -9,7 +10,7 @@ void UCAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	Owner = Cast<ACPlayer>(TryGetPawnOwner());
+	Owner = Cast<ACCharacterBase>(TryGetPawnOwner());
 	if (Owner == nullptr)
 		return;
 
@@ -26,6 +27,9 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 
 	Speed = Owner->GetVelocity().Size2D();
+	/*if (Cast<ACEnemy>(Owner))
+		GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, FString::SanitizeFloat(Owner->GetVelocity().Size2D()));*/
+	
 	FRotator rotator = Owner->GetVelocity().ToOrientationRotator();
 	FRotator rotator2 = Owner->GetControlRotation();
 	FRotator delta = UKismetMathLibrary::NormalizedDeltaRotator(rotator, rotator2);

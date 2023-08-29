@@ -37,7 +37,7 @@ public:
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
-	class ACPlayer* Owner;
+	class ACCharacterBase* Owner;
 	UCJobComponent* Job;
 
 private:

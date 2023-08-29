@@ -8,7 +8,7 @@
 #include "SJobSkillDamageData.h"
 #include "SJobSkillData.h"
 #include "Animation/AnimMontage.h"
-#include "Job/CJobDataAsset.h"
+#include "Job/CJobAsset.h"
 
 bool SAssetDetailsView::bRefreshByCheckBoxes = false;
 	
@@ -19,7 +19,7 @@ TSharedRef<IDetailCustomization> SAssetDetailsView::MakeInstance()
 
 void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
-	UClass* type =  UCJobDataAsset::StaticClass();
+	UClass* type =  UCJobAsset::StaticClass();
 
 	DetailBuilder.HideCategory("CJobDataAsset");
 

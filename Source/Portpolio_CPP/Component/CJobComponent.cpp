@@ -8,7 +8,8 @@
 #include "Components/UniformGridPanel.h"
 #include "Item/CEquipment.h"
 #include "Item/CSkillBase.h"
-#include "Job/CJobDataAsset.h"
+#include "Job/CJobAsset.h"
+#include "Job/CJobData.h"
 #include "Job/Skill/CActiveSkill_NonGlobal.h"
 #include "UI/CHUDLayout.h"
 #include "UI/CUI_QuickSlots.h"
@@ -24,9 +25,9 @@ void UCJobComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACCharacterBase>(GetOwner());
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < (int)EJob::Max; i++)
 		if (DataAssets[i] != nullptr)
-			DataAssets[i]->BeginPlay(OwnerCharacter);
+			DataAssets[i]->BeginPlay(OwnerCharacter, Datas);
 
 	// 능력치, 상태 관리 컴포넌트 등록
 	Status = Cast<UCStatusComponent>(OwnerCharacter->GetComponentByClass(UCStatusComponent::StaticClass()));
@@ -48,24 +49,24 @@ void UCJobComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 ACAttachment* UCJobComponent::GetAttachment()
 {
-	return DataAssets[static_cast<int32>(JobName)]->GetAttachment();
+	return Datas[static_cast<int32>(JobName)]->GetAttachment();
 }
 
 UCEquipment* UCJobComponent::GetEquipment()
 {
-	return DataAssets[static_cast<int32>(JobName)]->GetEquipment();
+	return Datas[static_cast<int32>(JobName)]->GetEquipment();
 }
 
 UCSkillBase* UCJobComponent::GetActiveSkill()
 {
-	return DataAssets[static_cast<int32>(JobName)]->GetActiveSkill();
+	return Datas[static_cast<int32>(JobName)]->GetActiveSkill();
 }
 
 UCActiveSkill_NonGlobal* UCJobComponent::GetNonGlobal()
 {
 	if (State->IsInBattle() == false) return nullptr;
 
-	return DataAssets[static_cast<int32>(JobName)]->GetNonGlobal();
+	return Datas[static_cast<int32>(JobName)]->GetNonGlobal();
 }
 
 TArray<FSkillData> UCJobComponent::GetSkillData()
@@ -124,7 +125,7 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 		if (JobName == EJob::Max)
 			return;
 
-		static UCJobDataAsset* dataAsset = DataAssets[static_cast<int32>(JobName)];
+		static UCJobAsset* dataAsset = DataAssets[static_cast<int32>(JobName)];
 		for (int i = 0; i < dataAsset->AutoAttackMontages.Num(); i++)
 		{
 			static UAnimMontage* montage = dataAsset->AutoAttackMontages[i];
@@ -180,7 +181,7 @@ void UCJobComponent::OnAutoAttack()
 }
 
 // 슬롯 사용
-// 없을때 = 0 이면 첫번쨰 나온다~
+// 없을때 = 0 이면 첫번쨰 나온다 => 초기값을 999 넣어서 해결
 void UCJobComponent::UseFirstSlot()
 {
 	if (OnSkillActivate.IsBound())

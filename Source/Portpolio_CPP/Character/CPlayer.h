@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "Character/CCharacterBase.h"
 #include "ICharacter.h"
 #include "CPlayer.generated.h"
@@ -9,11 +10,16 @@ UCLASS()
 class PORTPOLIO_CPP_API ACPlayer
 	: public ACCharacterBase
 	, public IICharacter
+	, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
 public:
 	ACPlayer();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Team")
+		uint8 TeamID = 1;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
@@ -49,6 +55,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
 
 // 기본 입력	
 protected:

@@ -14,20 +14,20 @@ struct FAssetRowData
 	int Number;
 	FString Name;
 	//AssetType* Type;
-	class UCJobDataAsset* Asset;
+	class UCJobAsset* Asset;
 
 	FAssetRowData()
 	{
 		
 	}
 
-	FAssetRowData(int32 InNumber, FString InName, class UCJobDataAsset* InAsset)
+	FAssetRowData(int32 InNumber, FString InName, class UCJobAsset* InAsset)
 		: Number(InNumber), Name(InName), Asset(InAsset)
 	{
 		
 	}
 
-	static TSharedPtr<FAssetRowData> Make(int32 InNumber, FString InName, class UCJobDataAsset* InAsset)
+	static TSharedPtr<FAssetRowData> Make(int32 InNumber, FString InName, class UCJobAsset* InAsset)
 	{
 		return MakeShareable(new FAssetRowData(InNumber, InName, InAsset));
 	}
@@ -75,7 +75,7 @@ public:
 	bool HasRowDataptr() { return RowDatas.Num() > 0; }
 	FAssetRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }
 
-	void SelectDataPtr(class UCJobDataAsset* InAsset);
+	void SelectDataPtr(class UCJobAsset* InAsset);
 
 	FAssetRowDataPtr GetRowDataPtrByName(FString InAssetName);
 	FString SelectedRowDataPtrName();
