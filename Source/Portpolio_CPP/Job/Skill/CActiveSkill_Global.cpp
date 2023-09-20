@@ -1,11 +1,14 @@
 #include "Job/Skill/CActiveSkill_Global.h"
 
 #include "Character/CCharacterBase.h"
+#include "Character/CPlayer.h"
 #include "Component/CStateComponent.h"
+#include "Component/CTargetComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 float UCActiveSkill_Global::GlobalCoolTime = 2.5f;
 
-void UCActiveSkill_Global::ActiveSkill(int InIndex)
+void UCActiveSkill_Global::ActiveAvailable(int InIndex)
 {
 	if (SkillDatas.Num() < 1)	return;
 
@@ -13,63 +16,23 @@ void UCActiveSkill_Global::ActiveSkill(int InIndex)
 
 	if (InIndex == 999)	return;
 
-	Super::ActiveSkill(InIndex);
+	Super::ActiveAvailable(InIndex);
 
 	State->SetIsBattle(true);
 	index = InIndex;
 	SkillDatas[InIndex].ActiveSkill(OwnerCharacter);
-}
 
-void UCActiveSkill_Global::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
-{
-	Super::OnAttachmentBeginOverlap(InAttacker, InAttackCauser, InOther);
+	if(SkillDatas[InIndex].Effect != nullptr)
+		SkillDatas[InIndex].PlayEffect(GetWorld(), OwnerCharacter->GetActorLocation());
 
-	if (InOther == nullptr) return;
-
-	for (ACharacter* hitted : Hitted)
-		if (hitted == InOther) return;
-
-	Hitted.AddUnique(InOther);
-
-	if (HitDatas.Num() - 1 < index)
-		return;
-
-	HitDatas[index].SendDamage(Cast<ACCharacterBase>(InAttacker), InAttackCauser, Cast<ACCharacterBase>(InOther));
-}
-
-void UCActiveSkill_Global::OnAttachmentEndOverlap(ACharacter* InAttacker, ACharacter* InOther)
-{
-	Super::OnAttachmentEndOverlap(InAttacker, InOther);
-
-	Hitted.Empty();
-
-	/*float angle = -2.0f;
-	ACharacter* candidate = nullptr;
-
-	for (ACharacter* hitted : Hitted)
+	if(Cast<ACPlayer>(OwnerCharacter))
 	{
-		FVector direction = hitted->GetActorLocation() - OwnerCharacter->GetActorLocation();
-		direction = direction.GetSafeNormal2D();
+		//UGameplayStatics::ApplyDamage(OwnerCharacter->GetTarget()->GetTargetActor(), SkillDatas[InIndex].Damage, OwnerCharacter->GetController(), OwnerCharacter, NULL);
 
+		FSkillDamageEvent e;
+		e.HitData = &HitDatas[InIndex];
 
-		FVector forward = FQuat(OwnerCharacter->GetActorRotation()).GetForwardVector();
-
-		float dot = FVector::DotProduct(direction, forward);
-		if (dot >= angle)
-		{
-			angle = dot;
-			candidate = hitted;
-		}
+		OwnerCharacter->GetTarget()->GetTargetActor()->TakeDamage(SkillDatas[InIndex].Damage, e, OwnerCharacter->GetController(), NULL);
+		UE_LOG(LogActor, Warning, TEXT("%s is Attack %s, DamageAmount is %f"), *OwnerCharacter->GetName(), *OwnerCharacter->GetTarget()->GetTargetActor()->GetName(), SkillDatas[InIndex].Damage);
 	}
-
-	if (!!candidate)
-	{
-		FRotator rotator = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), candidate->GetActorLocation());
-		FRotator target = FRotator(0, rotator.Yaw, 0);
-
-		AController* controller = OwnerCharacter->GetController<AController>();
-		controller->SetControlRotation(target);
-	}
-
-	Hitted.Empty();*/
 }

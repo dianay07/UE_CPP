@@ -20,8 +20,9 @@ void ACAttachment::BeginPlay()
 
 		if(!!shape)
 		{
-			shape->OnComponentBeginOverlap.AddDynamic(this, &ACAttachment::OnComponentBeginOverlap);
-			shape->OnComponentEndOverlap.AddDynamic(this, &ACAttachment::OnComponentEndOverlap);
+			// TODO : 충돌처리 델리게이트 연결
+			//shape->OnComponentBeginOverlap.AddDynamic(this, &ACAttachment::OnComponentBeginOverlap);
+			//shape->OnComponentEndOverlap.AddDynamic(this, &ACAttachment::OnComponentEndOverlap);
 
 			Collisions.Add(shape);
 		}

@@ -1,16 +1,16 @@
 #include "JobAssetFactory.h"
 
-#include "Job/CJobAsset.h"
+#include "Job/CJobDataAsset.h"
 
 UJobAssetFactory::UJobAssetFactory()
 {
 	bCreateNew = true;
 
-	SupportedClass = UCJobAsset::StaticClass();
+	SupportedClass = UCJobDataAsset::StaticClass();
 }
 
 UObject* UJobAssetFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
                                             UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
-	return NewObject<UCJobAsset>(InParent, InClass, InName, Flags);
+	return NewObject<UCJobDataAsset>(InParent, InClass, InName, Flags);
 }

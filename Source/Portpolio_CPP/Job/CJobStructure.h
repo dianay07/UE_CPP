@@ -55,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Basic Info")
 		FText Description;
 
+	UPROPERTY(EditAnywhere, Category = "Basic Info")
+		float Damage;
+
 	UPROPERTY(EditAnywhere, Category = "Animation")
 		class UAnimMontage* Montage;
 
@@ -81,7 +84,12 @@ public:
 
 public:
 	void ActiveSkill(class ACCharacterBase* InOwner);
+
 	void SetSkillCooltime(float InTime);
+
+	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
+	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
+
 };
 
 USTRUCT()
@@ -92,9 +100,6 @@ struct FSkillDamageData
 public:
 	UPROPERTY(EditAnywhere)
 		float PlayRate = 0.0f;
-
-	UPROPERTY(EditAnywhere)
-		float Damage = 0.0f;
 
 	//UPROPERTY(EditAnywhere)
 	//	class USoundWave* Sound;
@@ -109,10 +114,10 @@ public:
 		FVector EffectScale = FVector::OneVector;
 
 public:
-	void SendDamage(class ACCharacterBase* InAttacker, AActor* InAttackCauser, class ACCharacterBase* InOther);
 	//void PlaySoundWave(class ACCharacterBase* InOwner);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
+
 };
 
 USTRUCT()

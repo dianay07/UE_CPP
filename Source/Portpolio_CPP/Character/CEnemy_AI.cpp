@@ -1,18 +1,21 @@
 #include "Character/CEnemy_AI.h"
 
 #include "Component/CAIBehaviorComponent.h"
-#include "Component/CJobComponent.h"
 
 ACEnemy_AI::ACEnemy_AI()
 {
 	Behavior = CreateDefaultSubobject<UCAIBehaviorComponent>(TEXT("Behavior"));
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> MONTAGE(TEXT("AnimMontage'/Game/02_Enemy/Melee/Anim_WolfAttack_Montage.Anim_WolfAttack_Montage'"));
+	if(MONTAGE.Succeeded())
+	{
+		AttackMontage = MONTAGE.Object;
+	}
 }
 
 void ACEnemy_AI::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Job->SetWarrior();
 }
 
 void ACEnemy_AI::Hitted()

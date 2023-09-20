@@ -8,13 +8,17 @@
 #include "Component/CJobComponent.h"
 #include "Component/CMovementComponent.h"
 #include "Component/CTargetComponent.h"
+#include "Components/UniformGridPanel.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Item/CSkillBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/CHUDLayout.h"
+#include "UI/CUI_QuickSlots.h"
 #include "UI/CUI_SkillBook.h"
+#include "UI/CUI_Slot.h"
 #include "UI/CUI_TargetInfo.h"
 
 ACPlayer::ACPlayer()
@@ -26,13 +30,16 @@ ACPlayer::ACPlayer()
 			SK_Mesh(TEXT("SkeletalMesh'/Game/Fallen_Knight/Mesh/SK_Fallen_Knight.SK_Fallen_Knight'"));
 
 		if (SK_Mesh.Succeeded())
+		{
 			GetMesh()->SetSkeletalMesh(SK_Mesh.Object);
+		}
 
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90.0f));
 		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
 		TSubclassOf<UAnimInstance> instance;
-		instance = ConstructorHelpers::FClassFinder<UAnimInstance>(TEXT("AnimBlueprint'/Game/01_Player/ABP_Player.ABP_Player_C'")).Class;
+		instance = ConstructorHelpers::FClassFinder<UAnimInstance>(
+			TEXT("AnimBlueprint'/Game/01_Player/ABP_Player.ABP_Player_C'")).Class;
 		GetMesh()->SetAnimClass(instance);
 	}
 
@@ -60,15 +67,20 @@ ACPlayer::ACPlayer()
 	}
 
 	// Enemy Targeting Ui
-	static ConstructorHelpers::FClassFinder<UCUI_TargetInfo> WB_InfoUI(TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetInfo.BP_CUI_TargetInfo_C'"));
-	if(WB_InfoUI.Succeeded())
+	static ConstructorHelpers::FClassFinder<UCUI_TargetInfo> WB_InfoUI(
+		TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetInfo.BP_CUI_TargetInfo_C'"));
+	if (WB_InfoUI.Succeeded())
+	{
 		UI_TargetInfoClass = WB_InfoUI.Class;
+	}
 
 	// HUDLayout
-	static ConstructorHelpers::FClassFinder<UCHUDLayout> WB_HUDLayout(TEXT("WidgetBlueprint'/Game/07_UI/BP_CHUDLayout.BP_CHUDLayout_C'"));
+	static ConstructorHelpers::FClassFinder<UCHUDLayout> WB_HUDLayout(
+		TEXT("WidgetBlueprint'/Game/07_UI/BP_CHUDLayout.BP_CHUDLayout_C'"));
 	if (WB_HUDLayout.Succeeded())
+	{
 		UI_HUDLayoutClass = WB_HUDLayout.Class;
-
+	}
 }
 
 void ACPlayer::BeginPlay()
@@ -112,32 +124,42 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
 		//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
-		PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACPlayer::OnJump);
-		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::FixedCameraSetting);
-		PlayerInputComponent->BindAction("CameraControl", EInputEvent::IE_Released, Movement, &UCMovementComponent::FixedCharacterSetting);
+		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACPlayer::OnJump);
+		PlayerInputComponent->BindAction("CameraControl", IE_Pressed, Movement,
+		                                 &UCMovementComponent::FixedCameraSetting);
+		PlayerInputComponent->BindAction("CameraControl", IE_Released, Movement,
+		                                 &UCMovementComponent::FixedCharacterSetting);
 
-		PlayerInputComponent->BindAction("Targeting_Tab", EInputEvent::IE_Pressed, this, &ACPlayer::TabOnTarget);
-		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_Pressed, this, &ACPlayer::ClickOnTarget);
-		PlayerInputComponent->BindAction("Targeting_Click", EInputEvent::IE_DoubleClick, this, &ACPlayer::DoubleClickOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Tab", IE_Pressed, this, &ACPlayer::TabOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Click", IE_Pressed, this, &ACPlayer::ClickOnTarget);
+		PlayerInputComponent->BindAction("Targeting_Click", IE_DoubleClick, this, &ACPlayer::DoubleClickOnTarget);
 
 		// 단축키 키는 고정
-		PlayerInputComponent->BindAction("Slot1", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFirstSlot);
-		PlayerInputComponent->BindAction("Slot2", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSecondSlot);
-		PlayerInputComponent->BindAction("Slot3", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseThirdSlot);
-		PlayerInputComponent->BindAction("Slot4", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFourthSlot);
-		PlayerInputComponent->BindAction("Slot5", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseFifthSlot);
-		PlayerInputComponent->BindAction("Slot6", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSixthSlot);
-		PlayerInputComponent->BindAction("Slot7", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseSeventhSlot);
-		PlayerInputComponent->BindAction("Slot8", EInputEvent::IE_Pressed, Job, &UCJobComponent::UseEighthSlot);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot1", IE_Pressed, this, &ACPlayer::ActiveAvailable, 0);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot2", IE_Pressed, this, &ACPlayer::ActiveAvailable, 1);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot3", IE_Pressed, this, &ACPlayer::ActiveAvailable, 2);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot4", IE_Pressed, this, &ACPlayer::ActiveAvailable, 3);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot5", IE_Pressed, this, &ACPlayer::ActiveAvailable, 4);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot6", IE_Pressed, this, &ACPlayer::ActiveAvailable, 5);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot7", IE_Pressed, this, &ACPlayer::ActiveAvailable, 6);
+		PlayerInputComponent->BindAction<TDelegate<void
+			(int)>>("Slot8", IE_Pressed, this, &ACPlayer::ActiveAvailable, 7);
 
-		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Pressed, this, &ACPlayer::OnSubAction);
-		PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Released, this, &ACPlayer::OffSubAction);
+		//PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Pressed, this, &ACPlayer::OnSubAction);
+		//PlayerInputComponent->BindAction("SubSkill", EInputEvent::IE_Released, this, &ACPlayer::OffSubAction);
 
-		PlayerInputComponent->BindAction("OpenBook", EInputEvent::IE_Pressed, this, &ACPlayer::ShowSkillBook);
+		PlayerInputComponent->BindAction("OpenBook", IE_Pressed, this, &ACPlayer::ShowSkillBook);
 
 		// 키 테스트
-		PlayerInputComponent->BindAction("SwapToWarrior", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetWarrior);
-		PlayerInputComponent->BindAction("SwapToDragoon", EInputEvent::IE_Pressed, Job, &UCJobComponent::SetDragoon);
+		PlayerInputComponent->BindAction("SwapToWarrior", IE_Pressed, Job, &UCJobComponent::SetWarrior);
+		PlayerInputComponent->BindAction("SwapToDragoon", IE_Pressed, Job, &UCJobComponent::SetDragoon);
 	}
 }
 
@@ -149,8 +171,10 @@ void ACPlayer::OnJump()
 void ACPlayer::DisplayTargetInfo(const ACCharacterBase& InOther)
 {
 	// UI가 안켜져 있으면 켜주고
-	if(UI_TargetInfo->IsVisible() == false)
+	if (UI_TargetInfo->IsVisible() == false)
+	{
 		UI_TargetInfo->SetVisibility(ESlateVisibility::Visible);
+	}
 
 	// 표시될 데이터 설정
 	UI_TargetInfo->SetLevelName(UKismetSystemLibrary::GetDisplayName(&InOther));
@@ -161,7 +185,7 @@ void ACPlayer::TestKeyBinding()
 {
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot3", EKeys::Three	));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot3", EKeys::Three));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot4", EKeys::Four));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot5", EKeys::Five));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot6", EKeys::Six));
@@ -178,8 +202,10 @@ void ACPlayer::TestKeyBinding()
 
 void ACPlayer::OffTargetInfo()
 {
-	if (UI_TargetInfo->IsVisible() == true)// && State->IsInBattle() == false)
+	if (UI_TargetInfo->IsVisible() == true) // && State->IsInBattle() == false)
+	{
 		UI_TargetInfo->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 FHitResult ACPlayer::TraceByClick()
@@ -192,8 +218,8 @@ FHitResult ACPlayer::TraceByClick()
 	float distance = 10000.0f;
 	FVector end = start + direction * distance;
 
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;	// 히트 가능한 오브젝트 유형 담을 배열
-	TEnumAsByte<EObjectTypeQuery> Pawn = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn);
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes; // 히트 가능한 오브젝트 유형 담을 배열
+	TEnumAsByte<EObjectTypeQuery> Pawn = UEngineTypes::ConvertToObjectType(ECC_Pawn);
 	ObjectTypes.Add(Pawn);
 
 	TArray<AActor*> ignores;
@@ -201,7 +227,7 @@ FHitResult ACPlayer::TraceByClick()
 
 	FHitResult hitResult;
 	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), start, end, ObjectTypes, false,
-		ignores, EDrawDebugTrace::ForDuration, hitResult, true);
+	                                                ignores, EDrawDebugTrace::ForDuration, hitResult, true);
 
 	return hitResult;
 }
@@ -214,7 +240,9 @@ void ACPlayer::TabOnTarget()
 
 	// 주변 검색해서 나온 타겟을 표시
 	if (Target != nullptr)
+	{
 		DisplayTargetInfo(*Target->GetTargetActor());
+	}
 }
 
 // 타겟이 될 물체 클릭 이벤트
@@ -222,7 +250,9 @@ void ACPlayer::ClickOnTarget()
 {
 	// 히트된 액터가 없으면 종료
 	if (TraceByClick().GetActor() == nullptr)
+	{
 		return;
+	}
 
 	// 있으면 캐릭터로 캐스팅하고 타겟으로 등록
 	TargetActor = Cast<ACCharacterBase>(TraceByClick().GetActor());
@@ -243,16 +273,41 @@ void ACPlayer::DoubleClickOnTarget()
 	}
 }
 
+void ACPlayer::ActiveAvailable(int InIndex)
+{
+	UCUI_Slot* slot = Cast<UCUI_Slot>(UI_HUDLayout->QuickSlots->Slots->GetChildAt(InIndex));
+
+	if (slot->AvailableType == EAvailableType::Skill && slot->GetCanUse() == true
+		&& !State->IsActionMode())
+	{
+		GetJob()->GetSkillBase()->ActiveAvailable(slot->ItemIndex);
+		slot->SetCanUse(false);
+	}
+}
+
 void ACPlayer::OnSubAction()
 {
-	if(State->IsInBattle() == true)
+	if (State->IsInBattle() == true)
+	{
 		Job->UseNonGlobal_Pressed();
+	}
 }
 
 void ACPlayer::OffSubAction()
 {
 	if (State->IsInBattle() == true)
+	{
 		Job->UseNonGlobal_Released();
+	}
+}
+
+float ACPlayer::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator,
+                           AActor* DamageCauser)
+{
+	float damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogActor, Warning, TEXT("%s is Take %f Damage"), *this->GetName(), damage);
+
+	return damage;
 }
 
 void ACPlayer::ShowSkillBook()

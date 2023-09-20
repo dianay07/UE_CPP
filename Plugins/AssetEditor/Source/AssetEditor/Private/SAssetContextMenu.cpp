@@ -1,7 +1,7 @@
 #include "SAssetContextMenu.h"
 
 #include "SAssetEditorWindow.h"
-#include "Job/CJobAsset.h"
+#include "Job/CJobDataAsset.h"
 
 FAssetContextMenu::FAssetContextMenu(EAssetTypeCategories::Type InCategory)
 {
@@ -15,7 +15,7 @@ FText FAssetContextMenu::GetName() const
 
 UClass* FAssetContextMenu::GetSupportedClass() const
 {
-	return UCJobAsset::StaticClass();
+	return UCJobDataAsset::StaticClass();
 }
 
 FColor FAssetContextMenu::GetTypeColor() const

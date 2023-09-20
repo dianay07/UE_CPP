@@ -3,7 +3,7 @@
 
 #include "CDragWidget.h"
 #include "CUI_QuickSlots.h"
-#include "CUI_SkillIcon.h"
+#include "CUI_AvailableIcon.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 
@@ -15,7 +15,7 @@ void UCHUDLayout::NativeConstruct()
 	SkillBookWidget = Cast<UCUI_SkillBook>(BaseCanvasPanel->GetChildAt(0));
 	SkillBookWidget->SetVisibility(ESlateVisibility::Hidden);
 
-	Slots = Cast<UCUI_QuickSlots>(BaseCanvasPanel->GetChildAt(1));
+	QuickSlots = Cast<UCUI_QuickSlots>(BaseCanvasPanel->GetChildAt(1));
 }
 
 bool UCHUDLayout::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
@@ -34,7 +34,7 @@ bool UCHUDLayout::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent
 	const FVector2D DragWindowOffset = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
 	const FVector2D DragWindowOffsetResult = DragWindowOffset - DragWidgetResult->DragOffset;
 
-	if (Cast<UCUI_SkillIcon>(DragWidgetResult->WidgetRef))
+	if (Cast<UCUI_AvailableIcon>(DragWidgetResult->WidgetRef))
 		return false;
 
 	DragWidgetResult->WidgetRef->AddToViewport();

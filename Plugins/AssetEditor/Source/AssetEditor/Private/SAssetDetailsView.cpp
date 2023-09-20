@@ -8,7 +8,7 @@
 #include "SJobSkillDamageData.h"
 #include "SJobSkillData.h"
 #include "Animation/AnimMontage.h"
-#include "Job/CJobAsset.h"
+#include "Job/CJobDataAsset.h"
 
 bool SAssetDetailsView::bRefreshByCheckBoxes = false;
 	
@@ -19,7 +19,7 @@ TSharedRef<IDetailCustomization> SAssetDetailsView::MakeInstance()
 
 void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
-	UClass* type =  UCJobAsset::StaticClass();
+	UClass* type =  UCJobDataAsset::StaticClass();
 
 	DetailBuilder.HideCategory("CJobDataAsset");
 
@@ -87,6 +87,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.DemandLevel);
 				checkBoxes->CheckDefaultValue(index++, data.Name);
 				checkBoxes->CheckDefaultValue(index++, data.Description);
+				checkBoxes->CheckDefaultValue(index++, data.Damage);
 				checkBoxes->CheckDefaultObject(index++, data.Montage);
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.SkillCooltime);
@@ -125,7 +126,6 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 
 				int32 index = 0;
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
-				checkBoxes->CheckDefaultValue(index++, data.Damage);
 				//checkBoxes->CheckDefaultObject(index++, data.Sound);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);

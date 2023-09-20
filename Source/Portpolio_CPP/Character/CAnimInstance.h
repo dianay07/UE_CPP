@@ -28,6 +28,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 		bool IsBattle;
 
+public:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+		bool IsAttack;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 		EJob JobType = EJob::Max;

@@ -6,6 +6,8 @@
 #include "ICharacter.h"
 #include "CPlayer.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActiveAvailable, int, InIndex);
+
 UCLASS()
 class PORTPOLIO_CPP_API ACPlayer
 	: public ACCharacterBase
@@ -73,11 +75,18 @@ public:
 	void TabOnTarget();									// 지정 없이 타겟팅 실행
 	void ClickOnTarget();								// 타겟이 될 물체 클릭 이벤트
 	void DoubleClickOnTarget();							// 타겟이 될 물체 더블 클릭 이벤트
-
-	// 서브스킬
+	 
+	// 스킬 관련
 public:
+	FActiveAvailable OnActiveAvailable;
+	void ActiveAvailable(int InIndex);
+
 	void OnSubAction();
 	void OffSubAction();
+
+	// 데미지 관련
+public:
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	// UI 창

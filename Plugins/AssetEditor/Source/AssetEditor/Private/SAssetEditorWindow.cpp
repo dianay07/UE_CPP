@@ -5,7 +5,7 @@
 #include "SJobEquipData.h"
 #include "SJobSkillDamageData.h"
 #include "SJobSkillData.h"
-#include "Job/CJobAsset.h"
+#include "Job/CJobDataAsset.h"
 
 const FName FAssetEditorWindow::EditorName = "AssetEditorWindow";
 const FName FAssetEditorWindow::LeftAreaTabId = "LeftArea";
@@ -127,7 +127,7 @@ void FAssetEditorWindow::Open(FString InAssetName)
 			)
 		);
 
-	UCJobAsset* asset = nullptr;
+	UCJobDataAsset* asset = nullptr;
 	if (InAssetName.Len() > 0)
 	{
 		FAssetRowDataPtr ptr = LeftArea->GetRowDataPtrByName(InAssetName);

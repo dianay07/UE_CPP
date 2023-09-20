@@ -14,7 +14,9 @@ void UCAnimInstance::NativeBeginPlay()
 	if (Owner == nullptr)
 		return;
 
-	Job = Cast<UCJobComponent>(Owner->GetComponentByClass(UCJobComponent::StaticClass()));
+	if(Cast<ACPlayer>(Owner))
+		Job = Cast<UCJobComponent>(Owner->GetComponentByClass(UCJobComponent::StaticClass()));
+
 	if(!!Job)
 		Job->OnJobChanged.AddDynamic(this, &UCAnimInstance::OnJobTypeChanged);
 }
@@ -49,3 +51,4 @@ void UCAnimInstance::OnJobTypeChanged(EJob InPrevType, EJob InNewType)
 {
 	JobType = InNewType;
 }
+ 

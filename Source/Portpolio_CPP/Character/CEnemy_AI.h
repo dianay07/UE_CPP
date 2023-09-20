@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/CEnemy.h"
+
 #include "CEnemy_AI.generated.h"
 
 UCLASS()
@@ -16,13 +17,20 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		uint8 TeamID = 2;
 
-private:
 	UPROPERTY(EditDefaultsOnly, Category = "Label")
 		float LabelViewAmount = 3000.0f;
 
-private:
 	UPROPERTY(EditAnywhere, Category = "Patrol")
 		class ACPatrolPath* PatrolPath;
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Animation")
+		UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditAnywhere)
+		UMaterial* DecalActorTest;
+	
+
 //
 //#if WITH_EDITOR
 //private:

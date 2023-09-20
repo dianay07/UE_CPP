@@ -24,17 +24,17 @@ ACEnemy::ACEnemy()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90.0f));
 		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
-		TSubclassOf<UAnimInstance> instance;
+		/*TSubclassOf<UAnimInstance> instance;
 		instance = ConstructorHelpers::FClassFinder<UAnimInstance>(TEXT("AnimBlueprint'/Game/02_Enemy/ABP_Enemy.ABP_Enemy_C'")).Class;
-		GetMesh()->SetAnimClass(instance);
+		GetMesh()->SetAnimClass(instance);*/
 
-		Death = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/05_Montage/Normal/Common_DeadFall_Montage.Common_DeadFall_Montage'")).Object;
+		//Death = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/05_Montage/Normal/Common_DeadFall_Montage.Common_DeadFall_Montage'")).Object;
 	}
 
 	// Component
 	{
-		Equip = CreateDefaultSubobject<UCEquipComponent>(TEXT("Equip Component"));
-		Job = CreateDefaultSubobject<UCJobComponent>(TEXT("Job Component"));
+		//Equip = CreateDefaultSubobject<UCEquipComponent>(TEXT("Equip Component"));
+		//Job = CreateDefaultSubobject<UCJobComponent>(TEXT("Job Component"));
 	}
 
 	// Billboard
@@ -49,22 +49,6 @@ ACEnemy::ACEnemy()
 		CursorBillboard->SetHiddenInGame(false);
 		CursorBillboard->SetVisibility(false);
 	}
-
-	// Cursor Widget 생성 및 설정
-	/*CursorWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Targeting Cursor"));
-	CursorWidget->SetRelativeLocation(FVector(0, 0, 180.0f));
-	CursorWidget->SetupAttachment(GetMesh());
-	CursorWidget->SetWidgetSpace(EWidgetSpace::World);
-
-	static ConstructorHelpers::FClassFinder<UCUI_TargetingCursor> UI_TargetingCursor(TEXT("WidgetBlueprint'/Game/07_UI/BP_CUI_TargetingCursor.BP_CUI_TargetingCursor_C'"));
-	if (UI_TargetingCursor.Succeeded())
-	{
-		CursorWidget->SetWidgetClass(UI_TargetingCursor.Class);
-		CursorWidget->SetDrawSize(FVector2D(80, 160));
-		CursorWidget->SetPivot(FVector2D(0.5f, 0.8f));
-		CursorWidget->SetRelativeLocation(FVector(0, 0, 400));
-	}
-	CursorWidget->SetVisibility(false);*/
 }
  
 void ACEnemy::BeginPlay()
@@ -73,7 +57,7 @@ void ACEnemy::BeginPlay()
 
 	State->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
 
-	Job->ChangeJob(EJob::Warrior);
+	//Job->ChangeJob(EJob::Warrior);
 }
 
 void ACEnemy::Tick(float DeltaSeconds)
