@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "Engine/DecalActor.h"
 #include "CBTTaskNode_Attack.generated.h"
 
 struct FBTAttackTaskMemory
@@ -15,18 +14,12 @@ class PORTPOLIO_CPP_API UCBTTaskNode_Attack : public UBTTaskNode
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(Category = Wait, EditAnywhere, meta = (ClampMin = "0.0", UIMin = "0.0"))
 		float WaitTime;
 
 	UPROPERTY(Category = Wait, EditAnywhere, meta = (UIMin = 0, ClampMin = 0))
 		float RandomDeviation;
-
-public:
-	ADecalActor* Decal;
-
-	UPROPERTY(EditAnywhere)
-		UMaterialParameterCollection* test;
-
 
 public:
 	UCBTTaskNode_Attack();

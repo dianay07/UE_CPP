@@ -49,6 +49,7 @@ public:
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
 	FORCEINLINE ACCharacterBase* GetTargetActor() { return TargetActor; }
+
 	FORCEINLINE UCHUDLayout* GetLayout() { return UI_HUDLayout; }
 	FORCEINLINE UCJobComponent* GetJob() { return Job; }
 

@@ -2,10 +2,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "CPlayer.h"
-#include "Component/CEquipComponent.h"
 #include "Component/CStatusComponent.h"
-#include "Components/WidgetComponent.h"
-#include "Component/CJobComponent.h"
 #include "Components/BillboardComponent.h"
 #include "Job/CJobStructure.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -117,7 +114,6 @@ void ACEnemy::Hitted()
 		}
 	}
 
-	// Dead 호출은 되는데 요상하다?
 	if (Status->GetHealth() <= 0)
 	{
 		State->SetDeadMode();
@@ -133,5 +129,8 @@ void ACEnemy::Hitted()
 
 void ACEnemy::Dead()
 {
+	StopAnimMontage();
 	PlayAnimMontage(Death);
+
+	SetLifeSpan(3.0f);
 }

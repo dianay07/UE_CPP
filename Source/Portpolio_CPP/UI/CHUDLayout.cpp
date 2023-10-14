@@ -4,6 +4,7 @@
 #include "CDragWidget.h"
 #include "CUI_QuickSlots.h"
 #include "CUI_AvailableIcon.h"
+#include "CUI_Status.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 
@@ -16,6 +17,7 @@ void UCHUDLayout::NativeConstruct()
 	SkillBookWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	QuickSlots = Cast<UCUI_QuickSlots>(BaseCanvasPanel->GetChildAt(1));
+	Status = Cast<UCUI_Status>(BaseCanvasPanel->GetChildAt(2));
 }
 
 bool UCHUDLayout::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,

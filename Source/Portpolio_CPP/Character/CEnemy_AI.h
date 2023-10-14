@@ -27,9 +27,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 		UAnimMontage* AttackMontage;
 
-	UPROPERTY(EditAnywhere)
-		UMaterial* DecalActorTest;
-	
+public:
+	UPROPERTY(EditAnywhere, Category = "AI")
+		TSubclassOf<class ACAttackIndicator> AttackIndicatorClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "AI")
+		TArray<ACAttackIndicator*> AttackIndicators;
 
 //
 //#if WITH_EDITOR
@@ -45,7 +48,6 @@ private:
 public:
 	FORCEINLINE uint8 GetTeamID() { return TeamID; }
 	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
-
 	FORCEINLINE class ACPatrolPath* GetPatrolPath() { return PatrolPath; }
 
 public:

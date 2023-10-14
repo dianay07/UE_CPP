@@ -8,6 +8,7 @@
 #include "Component/CJobComponent.h"
 #include "Component/CMovementComponent.h"
 #include "Component/CTargetComponent.h"
+#include "Components/ProgressBar.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -19,6 +20,7 @@
 #include "UI/CUI_QuickSlots.h"
 #include "UI/CUI_SkillBook.h"
 #include "UI/CUI_Slot.h"
+#include "UI/CUI_Status.h"
 #include "UI/CUI_TargetInfo.h"
 
 ACPlayer::ACPlayer()
@@ -305,14 +307,22 @@ float ACPlayer::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, 
                            AActor* DamageCauser)
 {
 	float damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	UE_LOG(LogActor, Warning, TEXT("%s is Take %f Damage"), *this->GetName(), damage);
+
+	if(DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+	{
+		UE_LOG(LogActor, Warning, TEXT("%s is Take %f Radial Damage"), *this->GetName(), damage);
+	}
+	else
+		UE_LOG(LogActor, Warning, TEXT("%s is Take %f Damage"), *this->GetName(), damage);
+
+	GetStatus()->SetHealth(-damage);
 
 	return damage;
 }
 
 void ACPlayer::ShowSkillBook()
 {
-	if (UI_HUDLayout->SkillBookWidget->GetVisibility() == ESlateVisibility::Hidden)
+	if (UI_HUDLayout->SkillBookWidget->GetVisibility( ) == ESlateVisibility::Hidden)
 	{
 		UI_HUDLayout->SkillBookWidget->RefreshSkillData();
 		UI_HUDLayout->SkillBookWidget->SetVisibility(ESlateVisibility::Visible);

@@ -6,8 +6,6 @@
 #include "Character/CEnemy.h"
 #include "Character/CPlayer.h"
 #include "Components/BillboardComponent.h"
-#include "Components/WidgetComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/CUI_TargetingCursor.h"
 

@@ -4,10 +4,7 @@
 #include "Character/CEnemy_AI.h"
 #include "Component/CAIBehaviorComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Engine/DecalActor.h"
-#include "Components/DecalComponent.h"
-
-#include "Kismet/KismetMaterialLibrary.h"
+#include "AddOns/CAttackIndicator.h"
 
 UCBTTaskNode_Attack::UCBTTaskNode_Attack()
 {
@@ -31,18 +28,17 @@ EBTNodeResult::Type UCBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Own
 	if (behavior->GetTarget() == nullptr)
 		return EBTNodeResult::Failed;
 
-	float Damage = 50.0f;
-	UGameplayStatics::ApplyDamage(behavior->GetTarget(), Damage, ai->GetController(), nullptr, NULL);
-	UE_LOG(LogActor, Warning, TEXT("%s is Attack %s, DamageAmount is %f"), *ai->GetName(), *behavior->GetTarget()->GetName(), Damage);
-
 	ai->PlayAnimMontage(ai->AttackMontage, 1.0f);
-	//Decal = GetWorld()->SpawnActor<ADecalActor>(FVector(behavior->GetTarget()->GetActorLocation().X,
-		//behavior->GetTarget()->GetActorLocation().Y, -22745.0f), FRotator());
-	//Decal->SetDecalMaterial(ai->DecalActorTest);
-	//Decal->GetDecal()->DecalSize = FVector(15.0f, 30.0f, 30.0f);
-	
-	//Decal->SetLifeSpan(3.0f);
 
+	if (ai->AttackIndicatorClass == nullptr)
+		return EBTNodeResult::Failed;
+
+	FTransform transform;
+	transform.SetLocation(ai->GetActorLocation() + ai->GetActorForwardVector() * 300);
+
+	ACAttackIndicator* indicator =
+		GetWorld()->SpawnActorDeferred<ACAttackIndicator>(ai->AttackIndicatorClass, transform, ai, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	UGameplayStatics::FinishSpawningActor(indicator, transform);
 
 	return EBTNodeResult::InProgress;
 }
@@ -53,16 +49,6 @@ void UCBTTaskNode_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 	FBTAttackTaskMemory* MyMemory = (FBTAttackTaskMemory*)NodeMemory;
 	MyMemory->RemainingWaitTime -= DeltaSeconds;
-
-	if(IsValid(Decal))
-	{
-		FVector DecalSize = Decal->GetDecal()->DecalSize;
-
-		//Decal->GetDecal()->DecalSize = FVector(DecalSize.X, DecalSize.Y + DeltaSeconds * 500.0f, DecalSize.Z + DeltaSeconds * 500.0f);
-		//float testValue = UKismetMaterialLibrary::GetScalarParameterValue(GetWorld(), test, TEXT("Radius"));
-		//UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), test, TEXT("Radius"), testValue + DeltaSeconds);
-	}
-		
 
 	if (MyMemory->RemainingWaitTime <= 0.0f)
 	{
