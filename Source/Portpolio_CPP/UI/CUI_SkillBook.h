@@ -24,10 +24,10 @@ public:
 		class UScrollBox* Book_ScrollBox;
 
 	UPROPERTY(EditAnywhere)
-		TArray<class UCUI_SkillIcon*> Icons;
+		TArray<class UCUI_AvailableIcon*> Icons;
 
 	UPROPERTY()
-		TSubclassOf<UCUI_SkillIcon> IconClass;
+		TSubclassOf<UCUI_AvailableIcon> IconClass;
 
 public:
 	UCUI_SkillBook(const FObjectInitializer& ObjectInitializer);

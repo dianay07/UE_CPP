@@ -6,8 +6,6 @@
 #include "Character/CEnemy.h"
 #include "Character/CPlayer.h"
 #include "Components/BillboardComponent.h"
-#include "Components/WidgetComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/CUI_TargetingCursor.h"
 
@@ -34,6 +32,7 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// 타겟이 존재할때 기동
 	if(IsValid(Target))
 	{
+		// 죽고나서 타겟초기화 해야됨
 		UCStateComponent* TargetState = Cast<UCStateComponent>(Target->GetComponentByClass(UCStateComponent::StaticClass()));
 
 		if (TargetState->IsDeadMode() == true)

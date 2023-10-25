@@ -10,7 +10,9 @@ public class Portpolio_CPP : ModuleRules
 
         PublicIncludePaths.Add(ModuleDirectory);
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Niagara", "UMG", "EngineSettings" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Niagara", "UMG",
+            "AIModule", "GameplayTasks", "NavigationSystem",
+            "EngineSettings" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore"});
 		

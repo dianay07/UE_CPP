@@ -4,13 +4,11 @@
 #include "Components/ActorComponent.h"
 #include "CStatusComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PORTPOLIO_CPP_API UCStatusComponent : public UActorComponent
+USTRUCT()
+struct FStatusList
 {
 	GENERATED_BODY()
-
-private:
-	UPROPERTY(VisibleAnywhere, Category = "Status")
+		UPROPERTY(VisibleAnywhere, Category = "Status")
 		float Health;
 
 	UPROPERTY(VisibleAnywhere, Category = "Status")
@@ -20,9 +18,9 @@ private:
 		float Mana;
 
 	UPROPERTY(VisibleAnywhere, Category = "Status")
-		float MaxMana;
+		float MaxMana = 200;
 
-///////////////////////////////////////////////////// 
+	///////////////////////////////////////////////////// 
 
 	UPROPERTY(VisibleAnywhere, Category = "Basic Status")
 		float Strength;		// Èû
@@ -83,46 +81,70 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Roll")
 		float Piety;				// ½Å¾Ó
+};
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class PORTPOLIO_CPP_API UCStatusComponent : public UActorComponent
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY()
+		FStatusList Status;
 
 public:	
 	UCStatusComponent();
+	UCStatusComponent(FStatusList& InStatus);
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE float GetHealth() { return Health; }
-	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
-	FORCEINLINE float GetMana() { return Mana; }
-	FORCEINLINE float GetMaxMana() { return MaxMana; }
+	FORCEINLINE float GetHealth() { return Status.Health; }
+	FORCEINLINE float GetMaxHealth() { return Status.MaxHealth; }
+	FORCEINLINE float GetMana() { return Status.Mana; }
+	FORCEINLINE float GetMaxMana() { return Status.MaxMana; }
 
-	FORCEINLINE float GetStrength() { return Strength; }
-	FORCEINLINE float GetDexterity() { return Dexterity; }
-	FORCEINLINE float GetConstitution() { return Constitution; }
-	FORCEINLINE float GetIntelligence() { return Intelligence; }
-	FORCEINLINE float GetMind() { return Mind; }
+	FORCEINLINE float GetStrength() { return Status.Strength; }
+	FORCEINLINE float GetDexterity() { return Status.Dexterity; }
+	FORCEINLINE float GetConstitution() { return Status.Constitution; }
+	FORCEINLINE float GetIntelligence() { return Status.Intelligence; }
+	FORCEINLINE float GetMind() { return Status.Mind; }
 
-	FORCEINLINE float GetCriticalHitRate() { return CriticalHitRate; }
-	FORCEINLINE float GetDetermination() { return Determination; }
-	FORCEINLINE float GetDirectHitRate() { return DirectHitRate; }
+	FORCEINLINE float GetCriticalHitRate() { return Status.CriticalHitRate; }
+	FORCEINLINE float GetDetermination() { return Status.Determination; }
+	FORCEINLINE float GetDirectHitRate() { return Status.DirectHitRate; }
 
-	FORCEINLINE float GetDefense() { return Defense; }
-	FORCEINLINE float GetMagicDefense() { return MagicDefense; }
+	FORCEINLINE float GetDefense() { return Status.Defense; }
+	FORCEINLINE float GetMagicDefense() { return Status.MagicDefense; }
 
-	FORCEINLINE float GetAttackPower() { return AttackPower; }
-	FORCEINLINE float GetSkillSpeed() { return SkillSpeed; }
+	FORCEINLINE float GetAttackPower() { return Status.AttackPower; }
+	FORCEINLINE float GetSkillSpeed() { return Status.SkillSpeed; }
 
-	FORCEINLINE float GetAttackMagicPotency() { return AttackMagicPotency; }
-	FORCEINLINE float GetHealingMagicPotency() { return HealingMagicPotency; }
-	FORCEINLINE float GetSpellSpeed() { return SpellSpeed; }
+	FORCEINLINE float GetAttackMagicPotency() { return Status.AttackMagicPotency; }
+	FORCEINLINE float GetHealingMagicPotency() { return Status.HealingMagicPotency; }
+	FORCEINLINE float GetSpellSpeed() { return Status.SpellSpeed; }
 
-	FORCEINLINE float GetItemLevelAverage() { return ItemLevelAverage; }
+	FORCEINLINE float GetItemLevelAverage() { return Status.ItemLevelAverage; }
 
-	FORCEINLINE float GetTenacity() { return Tenacity; }
-	FORCEINLINE float GetPiety() { return Piety; }
+	FORCEINLINE float GetTenacity() { return Status.Tenacity; }
+	FORCEINLINE float GetPiety() { return Status.Piety; }
 
 public:
 	//void AddEquipmentAdditionalStatus(class ACEquipment InEquipped);
+
+public:
+	UFUNCTION()
+		float CalcHpPercent();
+
+	UFUNCTION()
+		FText CalcHpText();
+
+	UFUNCTION()
+		float CalcMpPercent();
+
+	UFUNCTION()
+		FText CalcMpText();
 
 public:
 	void SetHealth(float InValue);

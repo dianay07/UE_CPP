@@ -96,7 +96,7 @@ void SJobSkillData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHand
 			row.CustomWidget()
 				.NameContent()
 				[
-					name.ToSharedRef()
+					name.ToSharedRef()	
 				]
 			.ValueContent()
 				.MinDesiredWidth(FJobEditorStyle::Get()->DesiredWidth.X)

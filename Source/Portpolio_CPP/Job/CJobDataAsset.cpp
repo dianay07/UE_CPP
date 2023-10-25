@@ -21,15 +21,6 @@ void UCJobDataAsset::BeginPlay(ACCharacterBase* InOwner)
 	{
 		activeSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
 		activeSkill->BeginPlay(Attachment, Equipment, InOwner, SkillDatas, HitDatas);
-
-		if(!!Attachment)
-		{
-			Attachment->OnAttachmentBeginCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginCollision);
-			Attachment->OnAttachmentEndCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndCollision);
-
-			Attachment->OnAttachmentBeginOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginOverlap);
-			Attachment->OnAttachmentEndOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndOverlap);
-		}
 	}
 }
 
@@ -64,23 +55,14 @@ void UCJobDataAsset::SpawnAttachmentWeapon(class ACCharacterBase* InOwner)
 			Equipment->OnEquipmentUnequip.AddDynamic(Attachment, &ACAttachment::OnUnequip);
 		}
 	}
-	
+
 	if (!!ActiveSkillClass)
 	{
 		ActiveSkill = NewObject<UCSkillBase>(this, ActiveSkillClass);
 		ActiveSkill->BeginPlay(Attachment, Equipment, InOwner, SkillDatas, HitDatas);
-
-		if (!!Attachment)
-		{
-			Attachment->OnAttachmentBeginCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginCollision);
-			Attachment->OnAttachmentEndCollision.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndCollision);
-
-			Attachment->OnAttachmentBeginOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentBeginOverlap);
-			Attachment->OnAttachmentEndOverlap.AddDynamic(ActiveSkill, &UCSkillBase::OnAttachmentEndOverlap);
-		}
 	}
 
-	if(!!NonGlobalClass)
+	if (!!NonGlobalClass)
 	{
 		NonGlobalSkill = NewObject<UCActiveSkill_NonGlobal>(this, NonGlobalClass);
 		NonGlobalSkill->BeginPlay(InOwner, Attachment, ActiveSkill);
@@ -90,28 +72,7 @@ void UCJobDataAsset::SpawnAttachmentWeapon(class ACCharacterBase* InOwner)
 void UCJobDataAsset::DestroyAttachmentWeapon()
 {
 	if(!!Attachment)
-	{
 		Attachment->Destroy();
-	}
-
-	/*if(!!Equipment)
-	{
-		Equipment->OnEquipmentBeginEquip.Clear();
-		Equipment->OnEquipmentUnequip.Clear();
-
-		Equipment->BeginDestroy();
-	}*/
-
-	//if(ActiveSkill != nullptr)
-	//{
-	//	Attachment->OnAttachmentBeginOverlap.Clear();
-	//	Attachment->OnAttachmentEndOverlap.Clear();
-	//	Attachment->OnAttachmentBeginCollision.Clear();
-	//	Attachment->OnAttachmentEndCollision.Clear();
-
-	//	ActiveSkill->BeginDestroy();
-	//}
-
 }
 
 #if WITH_EDITOR

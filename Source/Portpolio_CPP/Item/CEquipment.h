@@ -14,6 +14,10 @@ class PORTPOLIO_CPP_API UCEquipment : public UObject
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE bool GetBeginEquip() { return bBeginEquip; }
+	FORCEINLINE const bool* GetEquipped() { return &bEquipped; }
+
+public:
 	virtual void BeginPlay(class ACCharacterBase* InOwner, const FDrawWeaponData& InEquipData);
 
 public:
@@ -46,7 +50,7 @@ protected:
 	class UCMovementComponent* Movement;
 	class UCStateComponent* State;
 
-protected:
+private:
 	bool bBeginEquip;
 	bool bEquipped;
 };
