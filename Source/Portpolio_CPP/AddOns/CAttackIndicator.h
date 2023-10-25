@@ -19,11 +19,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UDecalComponent* Area;
 
-	UPROPERTY(EditAnywhere, meta = (ClampMin = "0.1", ClampMax = "0.5", ToolTip = "Boundary Min 0.1, Max 0.5"))
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0.1", ClampMax = "0.5", ToolTip = "Boundary Min 0.1, Max 0.5", category = "Setting"))
 		float BoundarySize;
 
 	// 기본 10, 최소 0.1배, 최대 2배
-	UPROPERTY(EditAnywhere, meta = (ClampMin = "1", ClampMax = "20", ToolTip = "Base 10, Min 0.1, Max 2"))
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "1", ClampMax = "20", ToolTip = "Base 10, Min 0.1, Max 2", category = "Setting"))
 		float ActionSpeed = 10.0f;
 
 public:	

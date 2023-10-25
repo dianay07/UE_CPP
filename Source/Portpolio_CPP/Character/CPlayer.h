@@ -46,6 +46,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 		class UCameraControlComponent* CameraController;
 
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+		class UCKeySettingComponent* KeySettingComponent;
+
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() { return SpringArm; }
 	FORCEINLINE ACCharacterBase* GetTargetActor() { return TargetActor; }
@@ -65,7 +68,6 @@ protected:
 	void OnJump();
 
 	void DisplayTargetInfo(const ACCharacterBase& InOther);		// 타겟이 된 캐릭터 정보 UI에 표시
-	void TestKeyBinding();
 
 // 타겟팅 관련
 public:

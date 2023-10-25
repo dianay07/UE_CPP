@@ -6,9 +6,9 @@
 #include "Component/CameraControlComponent.h"
 #include "Component/CEquipComponent.h"
 #include "Component/CJobComponent.h"
+#include "Component/CKeySettingComponent.h"
 #include "Component/CMovementComponent.h"
 #include "Component/CTargetComponent.h"
-#include "Components/ProgressBar.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -66,6 +66,8 @@ ACPlayer::ACPlayer()
 		CameraController = CreateDefaultSubobject<UCameraControlComponent>(TEXT("Camera Control"));
 		Job = CreateDefaultSubobject<UCJobComponent>(TEXT("Job Component"));
 		Equip = CreateDefaultSubobject<UCEquipComponent>(TEXT("Equip Component"));
+
+		KeySettingComponent = CreateDefaultSubobject<UCKeySettingComponent>(TEXT("KeySetting Component"));
 	}
 
 	// Enemy Targeting Ui
@@ -100,7 +102,9 @@ void ACPlayer::BeginPlay()
 	Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	Controller->SetShowMouseCursor(true);
 
-	TestKeyBinding();
+	//TestKeyBinding();
+	KeySettingComponent->SetBasicSetting();
+	//KeySettingComponent->ChangeActionKeySetting("Slot1", EKeys::T);
 	Job->ChangeJob(EJob::Warrior);
 }
 
@@ -181,25 +185,6 @@ void ACPlayer::DisplayTargetInfo(const ACCharacterBase& InOther)
 	// 표시될 데이터 설정
 	UI_TargetInfo->SetLevelName(UKismetSystemLibrary::GetDisplayName(&InOther));
 	UI_TargetInfo->SetLevelText(TEXT("LV_00"));
-}
-
-void ACPlayer::TestKeyBinding()
-{
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot1", EKeys::One));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot2", EKeys::Two));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot3", EKeys::Three));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot4", EKeys::Four));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot5", EKeys::Five));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot6", EKeys::Six));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot7", EKeys::Seven));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Slot8", EKeys::Eight));
-
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("OpenBook", EKeys::K));
-
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SubSkill", EKeys::RightMouseButton));
-
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToWarrior", EKeys::One, true));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SwapToDragoon", EKeys::Two, true));
 }
 
 void ACPlayer::OffTargetInfo()
