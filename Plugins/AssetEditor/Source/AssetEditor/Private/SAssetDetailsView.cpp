@@ -87,7 +87,6 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.DemandLevel);
 				checkBoxes->CheckDefaultValue(index++, data.Name);
 				checkBoxes->CheckDefaultValue(index++, data.Description);
-				checkBoxes->CheckDefaultValue(index++, data.Damage);
 				checkBoxes->CheckDefaultObject(index++, data.Montage);
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.SkillCooltime);
@@ -126,6 +125,7 @@ void SAssetDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 
 				int32 index = 0;
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
+				checkBoxes->CheckDefaultValue(index++, data.Damage);
 				//checkBoxes->CheckDefaultObject(index++, data.Sound);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);

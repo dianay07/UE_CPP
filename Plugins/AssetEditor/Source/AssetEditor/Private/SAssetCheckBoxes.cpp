@@ -59,23 +59,18 @@ void SAssetCheckBoxes::DrawProperties(TSharedRef<IPropertyHandle> InPropertyHand
 		TSharedPtr<IPropertyHandle> handle = InPropertyHandle->GetChildHandle(i);
 		IDetailPropertyRow& row = InChildrenBuilder->AddProperty(handle.ToSharedRef());
 
-		TSharedPtr<SWidget> Name;
-		TSharedPtr<SWidget> Value;
-
-		row.GetDefaultWidgets(Name, Value);
-
 		FString name = FString("Name ") + FString::FromInt(i + 1);
 
 		row.CustomWidget()
 			.NameContent()
 			[
-				Name.ToSharedRef()
+				handle->CreatePropertyNameWidget()
 			]
 		.ValueContent()
 			.MinDesiredWidth(FJobEditorStyle::Get()->DesiredWidth.X)
 			.MaxDesiredWidth(FJobEditorStyle::Get()->DesiredWidth.Y)
 			[
-				Value.ToSharedRef()
+				handle->CreatePropertyValueWidget()
 			];
 	}
 }

@@ -19,8 +19,8 @@ void UCAnimNotify_BeginAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 	if (job == nullptr)
 		return;
 
-	if (job->GetSkillBase() == nullptr)
+	if (job->GetActiveSkill() == nullptr)
 		return;
 
-	job->GetSkillBase()->Begin_ActiveSkill();
+	job->GetActiveSkill()->Begin_ActiveSkill();
 }

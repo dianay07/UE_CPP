@@ -11,6 +11,11 @@ class PORTPOLIO_CPP_API ACEnemy
 	, public IICharacter
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere)
+		class UCJobComponent* Job;
+
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Widgets")
 		class UBillboardComponent* CursorBillboard;
@@ -27,10 +32,11 @@ private:
 	UFUNCTION()
 		void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
 
-protected:
-	virtual auto TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	                        AActor* DamageCauser) -> float override;
-	virtual void Hitted();
+public:
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+private:
+	void Hitted();
 
 public:
 	void Dead() override;

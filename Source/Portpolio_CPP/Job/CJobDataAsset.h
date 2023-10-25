@@ -39,7 +39,7 @@ public:
 public:
 	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE class UCEquipment* GetEquipment() { return Equipment; }
-	FORCEINLINE class UCSkillBase* GetSkillBase() { return ActiveSkill; }
+	FORCEINLINE class UCSkillBase* GetActiveSkill() { return ActiveSkill; }
 	FORCEINLINE class UCActiveSkill_NonGlobal* GetNonGlobal() { return NonGlobalSkill; }
 
 public:

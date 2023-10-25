@@ -38,7 +38,7 @@ private:
 private:
 	class ACCharacterBase* OwnerCharacter;
 
-public:
+private:
 	void SetSpeed(ESpeedType InType);
 
 public:

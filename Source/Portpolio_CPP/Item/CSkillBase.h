@@ -2,12 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "IAvailable.h"
 #include "Job/CJobStructure.h"
 #include "CSkillBase.generated.h"
 
 UCLASS(Abstract)
-class PORTPOLIO_CPP_API UCSkillBase : public UObject, public IIAvailable
+class PORTPOLIO_CPP_API UCSkillBase : public UObject
 {
 	GENERATED_BODY()
 
@@ -33,13 +32,26 @@ public:
 		FVector EffectScale = FVector::OneVector;
 
 public:
-	virtual void ActiveAvailable(int InIndex) override;
-
+	virtual void ActiveSkill(int InIndex);
 	virtual void Begin_ActiveSkill();
 	virtual void End_ActiveSkill();
 
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
+
+public:
+	UFUNCTION()
+		virtual void OnAttachmentBeginCollision() {}
+
+	UFUNCTION()
+		virtual void OnAttachmentEndCollision() {}
+
+	UFUNCTION()
+		virtual void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCuaser, class ACharacter* InOther) {}
+
+	UFUNCTION()
+		virtual void OnAttachmentEndOverlap(class ACharacter* InAttacker, class ACharacter* InOther) {}
+
 
 protected:
 	bool bBeginAction;

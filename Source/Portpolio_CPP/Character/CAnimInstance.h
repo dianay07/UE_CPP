@@ -28,10 +28,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 		bool IsBattle;
 
-public:
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-		bool IsAttack;
-
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 		EJob JobType = EJob::Max;
@@ -41,7 +37,7 @@ public:
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
-	class ACCharacterBase* Owner;
+	class ACPlayer* Owner;
 	UCJobComponent* Job;
 
 private:

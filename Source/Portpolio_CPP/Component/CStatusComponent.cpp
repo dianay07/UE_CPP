@@ -2,90 +2,57 @@
 
 UCStatusComponent::UCStatusComponent()
 {
-	
-}
-
-UCStatusComponent::UCStatusComponent(FStatusList& InStatus)
-{
-	Status = InStatus;
 }
 
 void UCStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	SetHealth(Status.MaxHealth);
-	SetMana(Status.MaxMana);
-}
-
-float UCStatusComponent::CalcHpPercent()
-{
-	return GetHealth() / GetMaxHealth(); 
-}
-
-FText UCStatusComponent::CalcHpText()
-{
-	FString strText;
-	strText = FString::Printf(TEXT("%0.f"), GetHealth());
-
-	return FText::FromString(strText);
-}
-
-float UCStatusComponent::CalcMpPercent()
-{
-	return GetMana() / GetMaxMana();
-}
-
-FText UCStatusComponent::CalcMpText()
-{
-	FString strText;
-	strText = FString::Printf(TEXT("%0.f"), GetMana());
-
-	return FText::FromString(strText);
+	SetHealth(MaxHealth);
 }
 
 void UCStatusComponent::SetHealth(float InValue)
 {
-	Status.Health = GetHealth() + InValue;
+	Health = GetHealth() + InValue;
 }
 
 void UCStatusComponent::SetMaxHealth(float InValue)
 {
-	Status.MaxHealth = InValue;
+	MaxHealth = InValue;
 }
 
 void UCStatusComponent::SetMana(float InValue)
 {
-	Status.Mana = GetMana() + InValue;
+	Mana = GetMana() + InValue;
 }
 
 void UCStatusComponent::SetMaxMana(float InValue)
 {
-	Status.MaxMana = InValue;
+	MaxMana = InValue;
 }
 
 void UCStatusComponent::SetStrength(float InValue)
 {
-	Status.Strength = GetStrength() + InValue;
+	Strength = GetStrength() + InValue;
 }
 
 void UCStatusComponent::SetDexterity(float InValue)
 {
-	Status.Dexterity = GetDexterity() + InValue;
+	Dexterity = GetDexterity() + InValue;
 }
 
 void UCStatusComponent::SetConstitution(float InValue)
 {
-	Status.Constitution = GetConstitution() + InValue;
+	Constitution = GetConstitution() + InValue;
 }
 
 void UCStatusComponent::SetIntelligence(float InValue)
 {
-	Status.Intelligence = GetIntelligence() + InValue;
+	Intelligence = GetIntelligence() + InValue;
 }
 
 void UCStatusComponent::SetMind(float InValue)
 {
-	Status.Mind = GetMind() + InValue;
+	Mind = GetMind() + InValue;
 }
 
 void UCStatusComponent::SetCriticalHitRate(float InValue)

@@ -32,6 +32,10 @@ public:
 	virtual void Tick_Implementation(float InDeltaTime) override;
 
 private:
+	UFUNCTION()
+		void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCuaser, class ACharacter* InOther);
+
+private:
 	bool bMoving;
 
 	FVector Start;

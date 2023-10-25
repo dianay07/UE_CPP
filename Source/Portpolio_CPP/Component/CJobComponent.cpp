@@ -1,4 +1,4 @@
-ï»¿#include "Component/CJobComponent.h"
+#include "Component/CJobComponent.h"
 
 #include "CStatusComponent.h"
 #include "CTargetComponent.h"
@@ -28,7 +28,7 @@ void UCJobComponent::BeginPlay()
 		if (DataAssets[i] != nullptr)
 			DataAssets[i]->BeginPlay(OwnerCharacter);
 
-	// ëŠ¥ë ¥ì¹˜, ìƒíƒœ ê´€ë¦¬ ì»´í¬ë„ŒíŠ¸ ë“±ë¡
+	// ´É·ÂÄ¡, »óÅÂ °ü¸® ÄÄÆ÷³ÍÆ® µî·Ï
 	Status = Cast<UCStatusComponent>(OwnerCharacter->GetComponentByClass(UCStatusComponent::StaticClass()));
 	State = Cast<UCStateComponent>(OwnerCharacter->GetComponentByClass(UCStateComponent::StaticClass()));
 
@@ -56,9 +56,9 @@ UCEquipment* UCJobComponent::GetEquipment()
 	return DataAssets[static_cast<int32>(JobName)]->GetEquipment();
 }
 
-UCSkillBase* UCJobComponent::GetSkillBase()
+UCSkillBase* UCJobComponent::GetActiveSkill()
 {
-	return DataAssets[static_cast<int32>(JobName)]->GetSkillBase();
+	return DataAssets[static_cast<int32>(JobName)]->GetActiveSkill();
 }
 
 UCActiveSkill_NonGlobal* UCJobComponent::GetNonGlobal()
@@ -80,13 +80,13 @@ EJob UCJobComponent::GetCurrentJob()
 	return JobName;
 }
 
-// í€µìŠ¬ë¡¯ : ìŠ¬ë¡¯ì— ID(ì—¬íŠ¼ ì •ë³´)ë¥¼ ë„£ê³  ë°›ì€ ì •ë³´ë¥¼ ì‹¤í–‰
+// TODO Äü½½·Ô : ½½·Ô¿¡ ¹øÈ£³ª ID(¿©Æ° Á¤º¸)¸¦ ³Ö°í ¹ŞÀº Á¤º¸¸¦ ½ÇÇàÇÏ°Ô²û ÇÏ¸é ½½·Ô
 void UCJobComponent::SkillActivate(int InCount)
 {
-	if (GetSkillBase() == nullptr)
+	if (GetActiveSkill() == nullptr)
 		return;
 
-	// ê³µê²© ê±°ë¦¬
+	// °ø°İ °Å¸®
 	if (OwnerCharacter->GetTarget()->GetTargetActor() == nullptr)
 		return;
 
@@ -96,28 +96,28 @@ void UCJobComponent::SkillActivate(int InCount)
 
 	State->SetIsBattle(true);
 
-	// TODO : ê¸€ì¿¨ / ë…¼ê¸€ì¿¨ ìŠ¤í‚¬ë“¤ì–´ê°€ê²Œ ì‘ì„±
-	GetSkillBase()->ActiveAvailable(InCount);
+	// TODO : ±ÛÄğ / ³í±ÛÄğ ½ºÅ³µé¾î°¡°Ô ÀÛ¼º
+	GetActiveSkill()->ActiveSkill(InCount);
 }
 
 
-// ì¡ ë³€ê²½ë ë•Œ í•´ì•¼í•  ê²ƒë“¤
+// Àâ º¯°æµÉ¶§ ÇØ¾ßÇÒ °Íµé
 void UCJobComponent::ChangeJob(EJob InCurrentJob)
 {
 	if (State->IsInBattle())
 		return;
 
 	if (Cast<ACPlayer>(OwnerCharacter))
-		QuickSlots = Cast<ACPlayer>(OwnerCharacter)->GetLayout()->QuickSlots;
+		QuickSlots = Cast<ACPlayer>(OwnerCharacter)->GetLayout()->Slots;
 
-	// í•´ë‹¹ ì§ì—…ì˜ ë°ì´í„° ì—ì…‹ ê°±ì‹ 
+	// ÇØ´ç Á÷¾÷ÀÇ µ¥ÀÌÅÍ ¿¡¼Â °»½Å
 	if (DataAssets[static_cast<int32>(JobName)] != nullptr)
 	{
 		DataAssets[static_cast<int32>(JobName)]->DestroyAttachmentWeapon();
 
 		AutoAttackMontages.Reset();
 
-		// ì¡ ë³€ê²½ ì ˆì°¨
+		// Àâ º¯°æ ÀıÂ÷
 		EJob prevJob = JobName;
 		JobName = InCurrentJob;
 
@@ -137,8 +137,8 @@ void UCJobComponent::ChangeJob(EJob InCurrentJob)
 
 		DataAssets[static_cast<int32>(JobName)]->SpawnAttachmentWeapon(OwnerCharacter);
 
-		Utility::PlayEffect(OwnerCharacter->GetWorld(), ParticleAsset,
-			FTransform(OwnerCharacter->GetActorLocation() + FVector(0, 0, -90)));
+		Utility::PlayEffect(OwnerCharacter->GetWorld(), ParticleAsset, 
+			FTransform(OwnerCharacter->GetActorLocation() + FVector(0,0,-90)));
 	}
 }
 
@@ -154,13 +154,13 @@ void UCJobComponent::PlayUnequipMotion()
 	State->SetIsBattle(false);
 }
 
-// ì „íˆ¬ ìƒíƒœì¼ ë•Œ ìë™ ê³µê²©
+// ÀüÅõ »óÅÂÀÏ ¶§ ÀÚµ¿ °ø°İ
 void UCJobComponent::DoingAutoAttack()
 {
-	if (State->IsInBattle() == false)
+	if(State->IsInBattle() == false)
 		GetWorld()->GetTimerManager().ClearTimer(AutoAttackTimerHandle);
 
-	// ê³µê²© ê±°ë¦¬
+	// °ø°İ °Å¸®
 	distance = UKismetMathLibrary::Vector_Distance(OwnerCharacter->GetActorLocation(), OwnerCharacter->GetTarget()->GetTargetActor()->GetActorLocation());
 	if (distance > DataAssets[static_cast<int32>(JobName)]->AttackRange)
 		return;
@@ -171,12 +171,62 @@ void UCJobComponent::DoingAutoAttack()
 
 void UCJobComponent::OnAutoAttack()
 {
-	// íƒ€ê²Ÿì´ ìˆìœ¼ë©´
+	// Å¸°ÙÀÌ ÀÖÀ¸¸é
 	if (IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("%s"), *OwnerCharacter->GetTarget()->GetTarget()->GetName());
 		GetWorld()->GetTimerManager().SetTimer(AutoAttackTimerHandle, this, &UCJobComponent::DoingAutoAttack, AutoAttackCoolTime, true);
 	}
+}
+
+// ½½·Ô »ç¿ë
+// ¾øÀ»¶§ = 0 ÀÌ¸é Ã¹¹ø¤Š ³ª¿Â´Ù~
+void UCJobComponent::UseFirstSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(0))->SkillIndex);
+}
+
+void UCJobComponent::UseSecondSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(1))->SkillIndex);
+}
+
+void UCJobComponent::UseThirdSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(2))->SkillIndex);
+}
+
+void UCJobComponent::UseFourthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(3))->SkillIndex);
+}
+
+void UCJobComponent::UseFifthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(4))->SkillIndex);
+}
+
+void UCJobComponent::UseSixthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(5))->SkillIndex);
+}
+
+void UCJobComponent::UseSeventhSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(6))->SkillIndex);
+}
+
+void UCJobComponent::UseEighthSlot()
+{
+	if (OnSkillActivate.IsBound())
+		OnSkillActivate.Broadcast(Cast<UCUI_Slot>(QuickSlots->Slots->GetChildAt(7))->SkillIndex);
 }
 
 void UCJobComponent::UseNonGlobal_Pressed()

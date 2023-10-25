@@ -3,6 +3,8 @@
 #include "Utility.h"
 #include "Character/CCharacterBase.h"
 #include "Component/CMovementComponent.h"
+#include "Component/CTargetComponent.h"
+#include "Component/CStatusComponent.h"
 
 UCSkillBase::UCSkillBase()
 {
@@ -21,11 +23,13 @@ void UCSkillBase::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment
 	HitDatas = InHitDatas;
 }
 
-void UCSkillBase::ActiveAvailable(int InIndex)
+void UCSkillBase::ActiveSkill(int InIndex)
 {
 	State->SetActionMode();
 
 	// 타겟이 있으면 스킬을 쓸때마다, 자동 공격을 할때마다 카메라는 가만히 두고 캐릭터가 타겟을 바라봐야 한다....
+	// 현 상태 : 카메라를 가만히 두는 것은 성공했지만, 컨트롤러 자체를 돌리기 때문에 ? 카메라도 획돈다
+	// 추가발견 : 첫 타겟의 방향으로 계속 바라보는 거 같다
 	//if (IsValid(OwnerCharacter->GetTarget()->GetTargetActor()))
 	//{
 	//	UE_LOG(LogTemp, Error, TEXT("%s"), *OwnerCharacter->GetTarget()->GetTargetActor()->GetName())

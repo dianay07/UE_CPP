@@ -8,7 +8,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FJobChanged, EJob, InPrevJob, EJob, InNewJob);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActivateSkill, int, InSkillIndex);
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PORTPOLIO_CPP_API UCJobComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -30,7 +30,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "job Status")
 		class UCUI_QuickSlots* QuickSlots;
 
-public:
+public:	
 	UCJobComponent();
 
 protected:
@@ -40,7 +40,7 @@ protected:
 public:
 	class ACAttachment* GetAttachment();		// 인게임에서 실장착될 액터
 	class UCEquipment* GetEquipment();			// 장착 기능을 담당할 클래스
-	class UCSkillBase* GetSkillBase();		// 스킬 실행할 클래스
+	class UCSkillBase* GetActiveSkill();		// 스킬 실행할 클래스
 	class UCActiveSkill_NonGlobal* GetNonGlobal();
 
 	TArray<FSkillData> GetSkillData();
@@ -57,10 +57,21 @@ public:
 public:
 	void PlayEquipMotion();
 	void PlayUnequipMotion();
-
+	
 public:
 	void DoingAutoAttack();
 	void OnAutoAttack();
+
+	// SLOT
+public:
+	void UseFirstSlot();						
+	void UseSecondSlot();
+	void UseThirdSlot();
+	void UseFourthSlot();
+	void UseFifthSlot();
+	void UseSixthSlot();
+	void UseSeventhSlot();
+	void UseEighthSlot();
 
 	void UseNonGlobal_Pressed();
 	void UseNonGlobal_Released();
@@ -82,7 +93,7 @@ public:
 	class UCStatusComponent* Status;
 
 	EJob JobName;
-
+	
 	// 자동 공격 관련
 private:
 	int32 AttackMontageIndex;

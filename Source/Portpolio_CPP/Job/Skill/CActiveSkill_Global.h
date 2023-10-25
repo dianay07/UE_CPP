@@ -13,7 +13,13 @@ private:
 	static float GlobalCoolTime;
 
 public:
-	virtual void ActiveAvailable(int InIndex) override;
+	virtual void ActiveSkill(int InIndex) override;
+
+	//float GetGlobalCoolTime() { return GlobalCoolTime; }
+
+public:
+	void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther) override;
+	void OnAttachmentEndOverlap(ACharacter* InAttacker, ACharacter* InOther) override;
 
 private:
 	int index = 0;

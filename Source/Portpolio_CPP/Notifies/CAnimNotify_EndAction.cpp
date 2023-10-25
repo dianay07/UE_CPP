@@ -21,10 +21,10 @@ void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	if (job == nullptr)
 		return;
 
-	if (job->GetSkillBase() == nullptr)
+	if (job->GetActiveSkill() == nullptr)
 		return;
 
-	job->GetSkillBase()->End_ActiveSkill();
+	job->GetActiveSkill()->End_ActiveSkill();
 
 	// 액션 끝낫을때 주변에 적이 없으면 Battle상태 해제
 	UCTargetComponent* Target = Cast<UCTargetComponent>(MeshComp->GetOwner()->GetComponentByClass(UCTargetComponent::StaticClass()));

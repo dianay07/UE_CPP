@@ -17,10 +17,7 @@ public:
 		class UCUI_SkillBook* SkillBookWidget;
 
 	UPROPERTY()
-		class UCUI_QuickSlots* QuickSlots;
-
-	UPROPERTY()
-		class UCUI_Status* Status;
+		class UCUI_QuickSlots* Slots;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")

@@ -47,10 +47,7 @@ void UCStateComponent::SetIsBattle(bool InValue)
 
 void UCStateComponent::ChangeType(EStateType InType)
 {
-	if (this == nullptr) return;
-
-	EStateType prevType = GetType();
-
+	EStateType prevType = Type;
 	Type = InType;
 
 	//UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EStateType"), true);

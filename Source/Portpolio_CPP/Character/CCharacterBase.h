@@ -15,6 +15,9 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
+		class UCMontageComponent* Montages;
+
+	UPROPERTY(VisibleAnywhere)
 		class UCMovementComponent* Movement;
 
 	UPROPERTY(VisibleAnywhere)

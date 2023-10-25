@@ -1,7 +1,7 @@
 #include "UI/CUIBaseClass.h"
 
 #include "CDragWidget.h"
-#include "CUI_AvailableIcon.h"
+#include "CUI_SkillIcon.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
 FReply UCUIBaseClass::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -33,7 +33,7 @@ void UCUIBaseClass::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDr
 {
 	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
 
-	if(Cast<UCUI_AvailableIcon>(this))
+	if(Cast<UCUI_SkillIcon>(this))
 		UE_LOG(LogTemp, Display, TEXT("Test OK"));
 		//RemoveFromParent();
 }
