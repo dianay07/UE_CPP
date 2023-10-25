@@ -72,8 +72,8 @@ void ACAttackIndicator::ApplyDamage()
 
 	// boundary 에 실제 radius offset 곱해주기
 	//UKismetSystemLibrary::SphereOverlapActors(GetWorld(), this->GetActorLocation(), BoundarySize * 400, TypeQueries, nullptr, Ignores, IsHitActor);
-	/*DrawDebugSphere(GetWorld(), this->GetActorLocation(), 200, 10, FColor(0, 180, 0),
-		true, -1, 0, 2);*/
+	DrawDebugSphere(GetWorld(), this->GetActorLocation(), 200, 10, FColor(0, 180, 0),
+		true, -1, 0, 2);
 
 	UGameplayStatics::ApplyRadialDamage(GetWorld(), 50.0f, this->GetActorLocation(),
 		BoundarySize * 400, nullptr, Ignores, this, nullptr, true);
