@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "CBTTaskNode_Attack.generated.h"
+#include "CBTTaskNode_AttackNode.generated.h"
 
 struct FBTAttackTaskMemory
 {
@@ -10,7 +10,7 @@ struct FBTAttackTaskMemory
 };
 
 UCLASS()
-class PORTPOLIO_CPP_API UCBTTaskNode_Attack : public UBTTaskNode
+class PORTPOLIO_CPP_API UCBTTaskNode_AttackNode : public UBTTaskNode
 {
 	GENERATED_BODY()
 
@@ -22,9 +22,14 @@ public:
 		float RandomDeviation;
 
 public:
-	UCBTTaskNode_Attack();
+	UCBTTaskNode_AttackNode();
 
 protected:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+protected:
+	class ACAIController* controller;
+	class ACEnemy_AI* ai;
+	class UCAIBehaviorComponent* behavior;
 };

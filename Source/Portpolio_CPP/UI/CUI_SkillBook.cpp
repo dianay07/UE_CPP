@@ -46,8 +46,8 @@ void UCUI_SkillBook::RefreshSkillData()
 	{
 		UCUI_AvailableIcon* icon = CreateWidget<UCUI_AvailableIcon>(GetWorld(), IconClass);
 		//icon->Icon_Image->SetBrushFromTexture(SkillDatas[i].Icon);
-		icon->Icon_SizeBox->WidthOverride = 100.0f;
-		icon->Icon_SizeBox->HeightOverride = 100.f;
+		icon->Icon_SizeBox->WidthOverride = 150.f;
+		icon->Icon_SizeBox->HeightOverride = 150.f;
 
 		icon->Data = SkillDatas[i];
 		icon->Icon_Image->GetDynamicMaterial()->SetTextureParameterValue("Texture", icon->Data.Icon);
@@ -55,7 +55,6 @@ void UCUI_SkillBook::RefreshSkillData()
 		icon->AvailableIndex = i;
 
 		Book_ScrollBox->AddChild(icon);
-
 
 	}
 }
